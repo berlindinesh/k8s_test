@@ -1,0 +1,21 @@
+  /* src/components/Dashboard.css */
+.dashboard {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .dashboard h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    position: absolute;
+    margin-left: 45%;
+    margin-bottom: 30px;
+  }
+  
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 20px;
+    justify-items: center;
+  }
+  

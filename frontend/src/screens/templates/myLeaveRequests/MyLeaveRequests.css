@@ -1,0 +1,84 @@
+.App {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-actions button {
+  margin-left: 10px;
+}
+
+.leave-cards {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+.leave-card {
+  padding: 20px;
+  min-width: 250px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #f0f0f0;
+}
+
+.card-content p {
+  margin: 5px 0;
+}
+
+.leave-table {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f8f8f8;
+}
+
+@media screen and (max-width: 768px) {
+  .headers {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .header-actions {
+    justify-content: flex-start;
+  }
+  
+  .TextField {
+    width: 100%;
+  }
+}
+
+.leave-table td:last-child {
+  white-space: nowrap;
+}
+
+.leave-table button {
+  padding: 6px;
+  transition: background-color 0.2s;
+}
+
+.leave-table button:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}

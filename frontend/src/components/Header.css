@@ -1,0 +1,743 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.custom-navbar {
+  margin-top: 0;
+  top: 0;
+  border-top: 0;
+  background-color: #0a0a0a;
+  backdrop-filter: blur(8px);
+  padding: 0.5rem 1rem;
+  height: 60px;
+  position: fixed;
+  width: 100%;
+  z-index: 1001;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+#root {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.brand {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  color: white !important;
+}
+
+.responsive-logo {
+  height: 120px;
+  width: auto;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 992px) {
+  .responsive-logo {
+    height: 80px;
+  }
+}
+
+/* Adjust sizes for different breakpoints */
+@media (min-width: 1200px) {
+  .responsive-logo {
+    height: 50px;
+    max-height: 50px;
+  }
+}
+
+@media (max-width: 992px) {
+  .responsive-logo {
+    height: 45px;
+    max-height: 35px;
+  }
+}
+
+/* Modify the brand class in the media query */
+@media (max-width: 768px) {
+  .responsive-logo {
+    height: 60px;
+  }
+
+  .brand {
+    display: flex;
+    justify-content: flex-start; /* Change from center to flex-start */
+    align-items: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .responsive-logo {
+    height: 50px;
+  }
+}
+
+.navbar-brand.brand {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-right: 1rem;
+}
+
+/* Add this to ensure logo is always left-aligned */
+.custom-navbar .navbar-brand {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.path-indicator {
+  color: white;
+  margin-right: auto;
+  font-size: 1rem;
+}
+
+.path-link:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+.path-indicator span {
+  margin-right: 5px;
+}
+
+.check-in-out-box {
+  margin-right: 15px;
+  position: relative;
+}
+
+.timer-button {
+  background-color: #28a745 !important;
+  border: none !important;
+  padding: 8px 16px !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  border-radius: 50px !important;
+  min-width: 140px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.timer-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0)
+  );
+  border-radius: 50px;
+}
+
+.timer-button.active {
+  background-color: #dc3545 !important;
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3) !important;
+}
+
+.timer-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.timer-button:active {
+  transform: translateY(1px) !important;
+}
+
+.timer-icon-container {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.timer-icon {
+  color: white;
+  font-size: 16px;
+}
+
+.timer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+
+.timer-label {
+  font-size: 12px;
+  opacity: 0.9;
+  font-weight: 400;
+  color: white;
+}
+
+.timer-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  font-family: "Courier New", monospace;
+  letter-spacing: 0.5px;
+}
+
+.rotate {
+  animation: rotate 2s linear infinite;
+}
+
+.beat {
+  animation: beat 1.2s ease infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes beat {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 992px) {
+  .navbar-collapse-container .check-in-out-box {
+    flex: 0 0 auto !important;
+    width: calc(33.333% - 10px) !important;
+    margin: 5px !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 15px 5px !important;
+    text-align: center !important;
+    min-height: 100px !important;
+  }
+
+  .navbar-collapse-container .timer-button {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    min-width: auto !important;
+  }
+
+  .navbar-collapse-container .timer-button.active {
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .navbar-collapse-container .timer-icon-container {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 5px;
+  }
+
+  .navbar-collapse-container .timer-icon {
+    font-size: 20px;
+  }
+
+  .navbar-collapse-container .timer-content {
+    align-items: center;
+  }
+
+  .navbar-collapse-container .timer-label {
+    font-size: 12px;
+    margin-bottom: 2px;
+  }
+
+  .navbar-collapse-container .timer-value {
+    font-size: 14px;
+  }
+}
+
+.icon-link {
+  position: relative;
+  color: white !important;
+  margin-right: 15px;
+}
+
+.icon-link:hover {
+  color: #ddd !important;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+}
+
+/* Ensure icons are visible with proper color and size */
+.icon-link svg,
+.profile-dropdown-toggle svg,
+.profile-dropdown .dropdown-toggle svg {
+  color: white !important;
+  fill: white !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+}
+
+/* Profile dropdown container */
+.profile-dropdown-container {
+  position: relative;
+  display: inline-block;
+  z-index: 1050;
+}
+
+/* Profile dropdown styling */
+.profile-dropdown {
+  position: relative;
+}
+
+.profile-dropdown .dropdown-toggle {
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.profile-dropdown .dropdown-toggle::after {
+  display: none;
+}
+
+/* Dropdown menu styling */
+.dropdown-menu.show {
+  display: block;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  float: left;
+  min-width: 10rem;
+  padding: 0.5rem 0;
+  margin: 0.125rem 0 0;
+  font-size: 1rem;
+  color: #ffffff;
+  text-align: left;
+  list-style: none;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.25rem;
+}
+
+.profile-dropdown .dropdown-header {
+  background-color: rgba(0, 0, 0, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.dropdown-menu .dropdown-item {
+  color: #ffffff;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.logout-item {
+  cursor: pointer;
+}
+
+/* Custom dropdown menu for mobile/tablet */
+.custom-dropdown-menu {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1300;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 10px;
+  animation: fadeIn 0.2s ease-in-out !important;
+}
+
+.custom-dropdown-menu .dropdown-header {
+  width: 100%;
+  text-align: center;
+  padding: 8px;
+  margin-bottom: 10px;
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.custom-dropdown-menu .dropdown-item {
+  flex: 0 0 auto;
+  width: calc(33.333% - 10px);
+  margin: 5px;
+  text-align: center;
+  padding: 10px;
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-dropdown-menu .dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.profile-dropdown-toggle {
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-dropdown-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.rotate {
+  animation: rotate 2s linear infinite;
+}
+
+.beat {
+  animation: beat 1s ease infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes beat {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Add this to ensure the navbar collapse has proper z-index and positioning */
+.navbar-collapse {
+  z-index: 1200 !important;
+  transition: height 0.35s ease !important;
+}
+
+/* Add this to ensure clicking anywhere closes the dropdown */
+.dropdown-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1100;
+}
+
+/* Add a specific class for the collapsed state */
+.navbar-collapsed {
+  display: none !important;
+}
+
+/* Ensure the navbar toggle button is properly styled and visible */
+.navbar-toggler {
+  z-index: 1400 !important;
+  position: relative !important;
+  padding: 0.5rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  border-radius: 0.25rem !important;
+  background-color: transparent !important;
+}
+
+.navbar-toggler:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Add these styles to ensure the navbar collapse works properly */
+.navbar-collapse-container {
+  transition: all 0.3s ease-in-out !important;
+}
+
+.navbar-collapse-container.show {
+  display: block !important;
+}
+
+.navbar-collapse-container.d-none {
+  display: none !important;
+}
+
+@media (min-width: 992px) {
+  .navbar-collapse-container.d-lg-block {
+    display: block !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .path-indicator {
+    display: none;
+  }
+
+  /* Make the navbar collapse container fixed and above everything */
+  .navbar-collapse-container {
+    position: fixed !important;
+    top: 60px !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    background-color: rgba(0, 0, 0, 0.9) !important;
+    backdrop-filter: blur(8px) !important;
+    z-index: 1200 !important; /* Higher than sidebar */
+    padding: 15px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
+
+  /* Make the nav items container full width */
+  .navbar-collapse-container .nav {
+    width: 100% !important;
+  }
+
+  /* Make the d-flex container full width and centered */
+  .navbar-collapse-container .d-flex {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important; /* Horizontal layout */
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  /* Style each navigation item as a card */
+  .check-in-out-box,
+  .icon-link,
+  .profile-dropdown-container {
+    flex: 0 0 auto !important;
+    width: calc(33.333% - 10px) !important;
+    margin: 5px !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 15px 5px !important;
+    text-align: center !important;
+    min-height: 100px !important;
+  }
+
+  /* Style the timer button */
+  .timer-button {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+  }
+
+  .timer-button.active {
+    background-color: transparent !important;
+  }
+
+  .timer-button:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .timer-button svg {
+    font-size: 24px !important;
+    margin-bottom: 5px !important;
+  }
+
+  .timer-button span {
+    font-size: 12px !important;
+    white-space: normal !important;
+    text-align: center !important;
+  }
+
+  /* Style the home icon */
+  .icon-link {
+    margin: 0 !important;
+    padding: 15px 5px !important;
+  }
+
+  .icon-link svg {
+    font-size: 24px !important;
+    margin-bottom: 5px !important;
+  }
+
+  .icon-link::after {
+    content: "Home" !important;
+    font-size: 12px !important;
+    margin-left: 0 !important;
+    margin-top: 5px !important;
+  }
+
+  /* Style the profile dropdown toggle */
+  .profile-dropdown-toggle {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  .profile-dropdown-toggle svg {
+    font-size: 24px !important;
+    margin-bottom: 5px !important;
+  }
+
+  .profile-dropdown-toggle::after {
+    content: "Profile" !important;
+    font-size: 12px !important;
+    margin-left: 0 !important;
+    margin-top: 5px !important;
+  }
+
+  /* Ensure the custom dropdown menu is properly positioned */
+  .custom-dropdown-menu {
+    position: fixed !important;
+    top: 60px !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 1300 !important; /* Higher than navbar collapse */
+  }
+}
+
+/* Specific adjustments for smaller screens */
+@media (max-width: 576px) {
+  .check-in-out-box,
+  .icon-link,
+  .profile-dropdown-container {
+    width: calc(50% - 10px) !important; /* 2 columns on very small screens */
+  }
+
+  .custom-dropdown-menu .dropdown-item {
+    width: calc(50% - 10px) !important; /* 2 columns for dropdown items */
+  }
+}
+
+/* iPad-specific fixes */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* For iPad in portrait and landscape */
+  .custom-dropdown-menu {
+    position: fixed !important;
+    top: 60px !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 1300 !important;
+  }
+
+  .custom-dropdown-menu .dropdown-item {
+    width: calc(25% - 10px) !important; /* 4 columns on iPad */
+  }
+}
+
+/* Force navbar collapse to close when clicking on items */
+.navbar-collapse.collapsing {
+  height: 0 !important;
+  transition: height 0.35s ease !important;
+  overflow: hidden !important;
+}
+
+/* Ensure the navbar collapse container is properly hidden when collapsed */
+.navbar-collapse:not(.show) {
+  display: none !important;
+}
+
+/* Add this to ensure the navbar toggle button works properly */
+.navbar-toggler[aria-expanded="false"] + .navbar-collapse {
+  display: none !important;
+}
+
+.navbar-toggler[aria-expanded="true"] + .navbar-collapse {
+  display: block !important;
+}
+
+/* Fix for iOS devices */
+@supports (-webkit-touch-callout: none) {
+  /* CSS specific to iOS devices */
+  .navbar-collapse {
+    position: absolute !important;
+    width: 100% !important;
+    top: 60px !important;
+    left: 0 !important;
+  }
+
+  .custom-dropdown-menu {
+    position: absolute !important;
+  }
+}

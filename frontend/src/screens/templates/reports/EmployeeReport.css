@@ -1,0 +1,469 @@
+.er-container {
+  background-color: #f0f2f5;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+.er-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.er-header-title {
+  color: #1a237e;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.er-action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+/* Stats cards styling */
+.er-stats-row {
+  margin-bottom: 24px;
+}
+
+.er-stat-card {
+  height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  transition: all 0.3s;
+}
+
+.er-stat-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.er-stat-onboarded .ant-statistic-title,
+.er-stat-onboarded .ant-statistic-content {
+  color: #1890ff;
+}
+
+.er-stat-offboarded .ant-statistic-title,
+.er-stat-offboarded .ant-statistic-content {
+  color: #ff4d4f;
+}
+
+.er-stat-avg-time .ant-statistic-title,
+.er-stat-avg-time .ant-statistic-content {
+  color: #722ed1;
+}
+
+.er-stat-completion .ant-statistic-title,
+.er-stat-completion .ant-statistic-content {
+  color: #52c41a;
+}
+
+.er-recent-stat {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #ff4d4f;
+  font-weight: 500;
+}
+
+/* Chart cards styling */
+.er-chart-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  height: 100%;
+  overflow: hidden;
+}
+
+.er-chart-card .ant-card-head {
+  background-color: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.er-chart-card .ant-card-head-title {
+  font-weight: 600;
+  color: #1a237e;
+}
+
+.er-chart-container {
+  height: 300px;
+}
+
+/* Table card styling */
+.er-table-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+  margin-top: 16px;
+}
+
+.er-table-filters {
+  margin-bottom: 16px;
+  padding: 16px;
+  background-color: #fafafa;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+/* Employee name with avatar styling */
+.er-employee-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Add specific styling for the date picker container */
+.er-date-picker-container {
+  min-width: 240px; /* Set minimum width */
+  z-index: 2; /* Ensure date picker appears above other elements */
+  position: relative; /* Add position relative */
+}
+
+/* Style for the date picker dropdown */
+.er-date-picker-container .ant-picker-dropdown {
+  z-index: 1050 !important; /* Higher z-index for the dropdown */
+}
+
+/* Fix calendar panel alignment */
+.ant-picker-panel-container {
+  box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.er-date-picker-dropdown {
+  z-index: 1050 !important;
+}
+
+/* Ensure the date picker has proper spacing */
+.er-date-picker {
+  width: 100% !important; /* Ensure it takes full width */
+}
+
+/* Ensure calendar cells are properly sized and aligned */
+.ant-picker-cell {
+  padding: 3px 0;
+  min-width: 24px;
+  height: 24px;
+}
+/* Fix calendar header alignment */
+.ant-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+/* Fix calendar content alignment */
+.ant-picker-content {
+  width: 100%;
+  table-layout: fixed;
+}
+/* Fix the date range picker specific issues */
+.ant-picker-range {
+  width: 100%;
+  min-width: 300px;
+}
+
+/* Ensure the range picker panels are properly aligned */
+.ant-picker-range-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Fix the range separator alignment */
+.ant-picker-range-separator {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* Ensure proper spacing between the two calendar panels */
+.ant-picker-panel {
+  border-width: 0;
+}
+
+/* Fix mobile view for the date picker */
+@media (max-width: 768px) {
+  .ant-picker-panels {
+    flex-direction: column;
+  }
+  
+  .ant-picker-panel-container {
+    width: 100%;
+  }
+  
+  .ant-picker-range {
+    width: 100%;
+  }
+}
+
+/* Responsive adjustments for filters */
+@media (max-width: 768px) {
+  .er-table-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .er-table-filters .ant-space {
+    width: 100%;
+  }
+  
+  .er-date-picker-container {
+    width: 100% ;
+  }
+}
+
+.er-employee-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Tab styling */
+.er-tabs .ant-tabs-tab {
+  font-weight: 500;
+}
+
+.er-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #1890ff;
+  font-weight: 600;
+}
+
+/* Offboarding specific styles */
+.er-offboarded-badge {
+  background-color: #ff4d4f;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.er-in-progress-badge {
+  background-color: #faad14;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Reason for leaving tags */
+.er-reason-tag {
+  margin: 2px;
+  font-size: 12px;
+}
+
+.er-reason-better-opportunity {
+  color: #1890ff;
+  background-color: #e6f7ff;
+  border-color: #91d5ff;
+}
+
+.er-reason-relocation {
+  color: #722ed1;
+  background-color: #f9f0ff;
+  border-color: #d3adf7;
+}
+
+.er-reason-work-life-balance {
+  color: #52c41a;
+  background-color: #f6ffed;
+  border-color: #b7eb8f;
+}
+
+.er-reason-career-change {
+  color: #fa8c16;
+  background-color: #fff7e6;
+  border-color: #ffd591;
+}
+
+.er-reason-other {
+  color: #fa541c;
+  background-color: #fff2e8;
+  border-color: #ffbb96;
+}
+
+/* Offboarding charts */
+.er-offboarding-chart-container {
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.er-offboarding-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 16px;
+  gap: 8px;
+}
+
+.er-offboarding-legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.er-offboarding-legend-color {
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+  border-radius: 2px;
+}
+
+/* Empty state styling */
+.er-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+  color: #8c8c8c;
+}
+
+.er-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: #d9d9d9;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .er-chart-col {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .er-container {
+    padding: 16px;
+  }
+  
+  .er-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .er-action-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .er-table-filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .er-table-filters .ant-space {
+    width: 100%;
+  }
+  
+  .er-table-filters .ant-select,
+  .er-table-filters .ant-picker {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .er-stat-col {
+    padding: 8px !important;
+  }
+  
+  .er-offboarding-chart-container {
+    height: 250px;
+  }
+  
+  .er-table-card .ant-table {
+    font-size: 12px;
+  }
+  
+  .er-table-card .ant-table-cell {
+    padding: 8px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .er-container {
+    background-color: white;
+    padding: 0;
+  }
+  
+  .er-action-buttons,
+  .er-table-filters,
+  .ant-pagination,
+  .er-tabs .ant-tabs-nav {
+    display: none !important;
+  }
+  
+  .er-chart-card,
+  .er-table-card,
+  .er-stat-card {
+    box-shadow: none !important;
+    border: 1px solid #f0f0f0;
+  }
+  
+  .er-table-card .ant-table-thead > tr > th {
+    background-color: #f0f0f0 !important;
+    color: black !important;
+  }
+}
+
+
+/* Add these styles to the end of your EmployeeReport.css file */
+
+/* Fix for calendar dropdown positioning */
+.er-calendar-dropdown {
+  z-index: 1050 !important;
+}
+
+.er-table-filters .ant-picker {
+  margin-bottom: 8px;
+  position: relative;
+}
+
+/* Fix for calendar dropdown positioning and overlapping */
+.ant-picker-dropdown {
+  position: absolute !important;
+  z-index: 1060 !important;
+}
+
+/* Ensure only one calendar is visible */
+.ant-picker-dropdown-hidden {
+  display: none !important;
+}
+
+/* Prevent multiple calendars from stacking */
+.ant-picker-dropdown-placement-bottomLeft {
+  left: auto !important;
+  top: auto !important;
+}
+
+.er-date-filters {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.er-date-filters .ant-picker {
+  border-radius: 6px;
+}
+
+@media (max-width: 768px) {
+  .er-date-filters {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .er-date-filters .ant-picker {
+    width: 100%;
+  }
+}

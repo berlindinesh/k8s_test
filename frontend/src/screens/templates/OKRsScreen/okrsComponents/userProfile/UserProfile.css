@@ -1,0 +1,27 @@
+.user-profile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .user-profile img {
+    border-radius: 50%;
+    width: 350px;
+    height: 250px;
+  }
+  
+  .user-profile h2 {
+    font-size: 18px;
+    margin: 0;
+    font-weight: bold;
+    color: #444;
+  }
+  
+  .user-profile span {
+    font-size: 14px;
+    color: #777;
+  }
+  

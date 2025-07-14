@@ -1,0 +1,133 @@
+.faq-category-manager {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.category-actions {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.category-actions input {
+    padding: 8px;
+    width: 70%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.category-actions button {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.category-actions button:hover {
+    background-color: #0056b3;
+}
+
+.category-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.category-card {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.category-card:hover {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.category-card h3 {
+    margin: 0;
+    color: #333;
+}
+
+.category-card p {
+    color: #666;
+    margin: 10px 0;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.card-actions button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.card-actions button:nth-child(1) {
+    background-color: #28a745;
+    color: white;
+}
+
+.card-actions button:nth-child(2) {
+    background-color: #ffc107;
+    color: black;
+}
+
+.card-actions button:nth-child(3) {
+    background-color: #dc3545;
+    color: white;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+.modal-content .error {
+    color: red;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+
+.modal-content button {
+    margin-right: 10px;
+}
+.modal {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.category-card {
+    background-color: rgba(255, 255, 255, 0.95);
+}

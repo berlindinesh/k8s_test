@@ -1,0 +1,102 @@
+.document-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  
+  padding: 10px;
+  border: 1px solid #eee;
+  margin: 10px;
+  border-radius: 5px;
+}
+
+
+.title{
+  font-size: 14px !important;
+  margin-left: 12px;
+  color: black !important;
+}
+
+.document-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.plus-icon {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: black;
+}
+
+.counter {
+  background-color: transparent;
+  color: #ea1f09;
+  padding: 5px;
+  border-radius: 5px;
+  border: 2px solid #ea1f09;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.actions-dropdown .actions-button {
+  margin-left: auto;
+  background-color: #eee;
+  border: none;
+  padding: 5px 10px;
+  color: rgb(66, 61, 61);
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+
+.detail-item {
+  display: flex;
+  flex-direction: row;
+  
+  padding: 8px 0;
+  border: 1px solid rgb(239, 229, 229);
+  margin: 5px;
+  justify-content: space-between;
+}
+
+.small-plus-icon {
+  background-color: #e74c3c;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 50%;
+  margin-right: 10px;
+  
+}
+
+.actions{
+  display: flex;
+  height: 100%;
+}
+
+.actions button {
+  border: none;
+  margin: 2px;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  
+}
+
+.approve-button {
+  background-color: #17f485;
+  color: #f2f8f5;
+}
+
+.reject-button {
+  background-color: #c0392b;
+  color: #f2f8f5;
+}
+
+.delete-button {
+  background-color: #e74c3c;
+  color: #f2f8f5;
+}

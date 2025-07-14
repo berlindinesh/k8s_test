@@ -1,0 +1,2236 @@
+:root {
+  --primary-color: #2563eb;
+  --primary-light: #3b82f6;
+  --primary-dark: #1d4ed8;
+  --secondary-color: #64748b;
+  --success-color: #10b981;
+  --error-color: #ef4444;
+  --warning-color: #f59e0b;
+  --background-light: #f8fafc;
+  --background-dark: #1e293b;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-light: #f8fafc;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --sky-light: #bae6fd;
+  --sky-medium: #38bdf8;
+  --sky-dark: #0284c7;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-10px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Improved Container Responsiveness */
+.payroll-container {
+  margin: 1.5rem auto;
+  max-width: 1400px;
+  min-height: calc(100vh - 4rem);
+  background: linear-gradient(145deg, var(--background-light), #ffffff);
+  padding: 2rem;
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
+}
+
+.main-paper {
+  border-radius: 20px;
+  overflow: hidden;
+  background: white;
+  transition: var(--transition-base);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+/* Desktop to Tablet Transition */
+@media (max-width: 1200px) {
+  .payroll-container {
+    padding: 1.75rem;
+    margin: 1.25rem;
+  }
+}
+
+/* Tablet Styles */
+@media (max-width: 900px) {
+  .payroll-container {
+    padding: 1.5rem;
+    margin: 1rem;
+    border-radius: 20px;
+  }
+  
+  .main-paper {
+    border-radius: 16px;
+  }
+}
+
+/* Small Tablet Styles */
+@media (max-width: 768px) {
+  .payroll-container {
+    padding: 1.25rem;
+    margin: 0.75rem;
+    border-radius: 16px;
+  }
+  
+  .main-paper {
+    border-radius: 14px;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 600px) {
+  .payroll-container {
+    padding: 1rem;
+    margin: 0.5rem;
+    border-radius: 14px;
+  }
+  
+  .main-paper {
+    border-radius: 12px;
+  }
+}
+
+/* Very Small Mobile Styles */
+@media (max-width: 400px) {
+  .payroll-container {
+    padding: 0.75rem;
+    margin: 0.25rem;
+    border-radius: 12px;
+  }
+  
+  .main-paper {
+    border-radius: 10px;
+  }
+}
+
+/* Completely revised tab navigation for better responsiveness */
+.payroll-appbar {
+  background: linear-gradient(135deg, var(--sky-medium), var(--sky-dark));
+  padding: 0;
+  border-radius: 20px 20px 0 0;
+}
+
+.payroll-tabs {
+  min-height: 64px;
+  width: 100%;
+}
+
+.tab-item {
+  min-height: 64px;
+  padding: 0 !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+  color: white !important;
+  opacity: 0.8;
+  transition: var(--transition-base);
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.tab-item.Mui-selected {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.tab-item:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  opacity: 1;
+}
+
+.tab-icon {
+  margin-right: 8px !important;
+  margin-bottom: 0 !important;
+  font-size: 1.25rem !important;
+}
+
+.tab-label {
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+/* Tablet Styles */
+@media (max-width: 900px) {
+  .payroll-tabs {
+    min-height: 56px;
+  }
+  
+  .tab-item {
+    min-height: 56px;
+  }
+  
+  .tab-icon {
+    font-size: 1.1rem !important;
+  }
+  
+  .tab-label {
+    font-size: 0.9rem;
+  }
+}
+
+/* Small Tablet Styles */
+@media (max-width: 768px) {
+  .payroll-tabs {
+    min-height: 50px;
+  }
+  
+  .tab-item {
+    min-height: 50px;
+  }
+  
+  .tab-icon {
+    font-size: 1rem !important;
+    margin-right: 6px !important;
+  }
+  
+  .tab-label {
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 600px) {
+  .payroll-tabs {
+    min-height: 48px;
+  }
+  
+  .tab-item {
+    min-height: 48px;
+    flex-direction: column !important;
+  }
+  
+  .tab-icon {
+    margin-right: 0 !important;
+    margin-bottom: 4px !important;
+    font-size: 1.1rem !important;
+  }
+  
+  .tab-label {
+    font-size: 0.7rem;
+    line-height: 1;
+  }
+}
+
+/* Very Small Mobile Styles */
+@media (max-width: 400px) {
+  .payroll-tabs {
+    min-height: 44px;
+  }
+  
+  .tab-item {
+    min-height: 44px;
+  }
+  
+  .tab-icon {
+    font-size: 1rem !important;
+    margin-bottom: 2px !important;
+  }
+  
+  .tab-label {
+    font-size: 0.65rem;
+  }
+}
+
+/* Header container styles */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 1.25rem 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.employee-header {
+  background: linear-gradient(to right, #f8fafc, #e8f4ff);
+  border-left: 4px solid #1976d2;
+}
+
+.section-title {
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.title-badge {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 12px;
+  margin-left: 12px;
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Blue button variations */
+.blue-button {
+  text-transform: none !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08) !important;
+  padding: 0.5rem 1rem !important;
+  transition: all 0.3s ease !important;
+  font-weight: 500 !important;
+}
+
+.import-button {
+  background-color: #2196f3 !important; /* Standard blue */
+}
+
+.import-button:hover {
+  background-color: #1e88e5 !important;
+}
+
+.export-button {
+  background-color: #1976d2 !important; /* Darker blue */
+}
+
+.export-button:hover {
+  background-color: #1565c0 !important;
+}
+
+.create-button {
+  background-color: #0d47a1 !important; /* Deep blue */
+}
+
+.create-button:hover {
+  background-color: #0a3880 !important;
+}
+
+.button-text {
+  margin-left: 4px;
+  font-weight: 500;
+}
+
+/* iPad specific adjustments */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .header-container {
+    padding: 1rem 1.25rem;
+  }
+  
+  .header-actions {
+    gap: 8px;
+  }
+  
+  .blue-button {
+    padding: 8px 12px !important;
+  }
+  
+  .button-text {
+    font-size: 0.85rem;
+  }
+  
+  .title-badge {
+    margin-left: 8px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Mobile view adjustments */
+@media (max-width: 767px) {
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .section-title {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  
+  .title-badge {
+    margin-left: 8px;
+  }
+  
+  .header-actions {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .blue-button {
+    flex: 1;
+    min-width: 0 !important;
+    padding: 8px 12px !important;
+    justify-content: center;
+  }
+  
+  /* Keep button text visible on mobile */
+  .button-text {
+    display: inline-block;
+    font-size: 0.8rem;
+    margin-left: 4px;
+  }
+}
+
+/* Very small mobile adjustments */
+@media (max-width: 480px) {
+  .header-container {
+    padding: 12px;
+  }
+  
+  .section-title {
+    font-size: 1.1rem !important;
+  }
+  
+  .title-badge {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+  }
+  
+  .header-actions {
+    gap: 6px;
+  }
+  
+  /* Adjust for very small screens but keep text */
+  .blue-button {
+    padding: 6px 8px !important;
+  }
+  
+  .button-text {
+    font-size: 0.75rem;
+  }
+}
+
+/* Specific iPad Pro adjustments */
+@media only screen and (min-width: 1024px) and (max-width: 1366px) {
+  .header-actions {
+    gap: 10px;
+  }
+  
+  .blue-button {
+    padding: 10px 16px !important;
+  }
+}
+
+/* Landscape orientation for tablets */
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .header-container {
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .header-actions {
+    width: auto;
+    flex-wrap: nowrap;
+  }
+}
+
+/* Extra small devices - adjust layout for tiny screens */
+@media (max-width: 360px) {
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .blue-button {
+    width: 100%;
+    margin-bottom: 6px;
+  }
+}/* Button Styles */
+.create-button, .import-button, .export-button {
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  transition: var(--transition-base) !important;
+  white-space: nowrap;
+}
+
+/* Responsive Table Styles */
+.table-container {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  background: white;
+  overflow: hidden;
+  margin: 0 1rem 1.5rem 1rem;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.responsive-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Update the create button for allowances tab */
+.allowance-create-button {
+  background: linear-gradient(135deg, var(--sky-medium), var(--sky-dark)) !important;
+  color: white !important;
+}
+
+.allowance-create-button:hover {
+  background: linear-gradient(135deg, var(--sky-dark), var(--primary-dark)) !important;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--shadow-lg) !important;
+}
+
+/* Ensure table headers have consistent styling across tabs */
+.table-header {
+  background-color: #1976d2;
+}
+
+.table-header .table-cell {
+  color: white !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 0.5px;
+  padding: 1rem 1.25rem;
+  border-bottom: none;
+  background-color: #1976d2 !important;
+}
+
+/* Responsive styles for the allowances tab */
+@media (max-width: 768px) {
+  /* Adjust table for tablet view */
+  [value="1"] .table-cell[data-priority="2"] {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Convert to card view on mobile for allowances tab */
+  [value="1"] .table-header {
+    display: none;
+  }
+  
+  [value="1"] .table-row {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+  }
+  
+  [value="1"] .table-row::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, var(--sky-medium), var(--sky-dark));
+    opacity: 0.7;
+  }
+  
+  [value="1"] .table-cell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    text-align: right;
+  }
+  
+  [value="1"] .table-cell:before {
+    content: attr(data-label);
+    font-weight: 600;
+    text-align: left;
+    padding-right: 0.5rem;
+  }
+  
+  [value="1"] .table-cell:last-child {
+    border-bottom: none;
+  }
+  
+  /* Style the net impact specially */
+  [value="1"] .table-cell[data-label="Net Impact"] {
+    font-weight: 600;
+    background-color: rgba(25, 118, 210, 0.05);
+    border-radius: 6px;
+    padding: 0.6rem 0.5rem;
+    margin: 0.3rem 0;
+  }
+  
+  [value="1"] .action-cell {
+    justify-content: space-around;
+    padding-top: 0.75rem;
+    margin-top: 0.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  [value="1"] .action-cell:before {
+    content: none !important;
+  }
+}
+
+/* Very small mobile adjustments */
+@media (max-width: 400px) {
+  [value="1"] .table-cell {
+    padding: 0.4rem 0;
+    font-size: 0.8rem;
+  }
+  
+  [value="1"] .table-cell:before {
+    font-size: 0.8rem;
+  }
+  
+  [value="1"] .action-cell {
+    padding: 0.4rem 0 0 0;
+  }
+}
+
+.table-row {
+  transition: var(--transition-base);
+}
+
+.table-row:hover {
+  background-color: var(--background-light);
+}
+
+.table-cell {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.action-cell {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.action-icon {
+  font-size: 1.25rem !important;
+  transition: var(--transition-base);
+}
+
+.preview-icon {
+  color: var(--success-color) !important;
+}
+
+.edit-icon {
+  color: var(--primary-color) !important;
+}
+
+.delete-icon {
+  color: var(--error-color) !important;
+}
+
+.action-icon:hover {
+  transform: scale(1.2);
+}
+
+/* Dialog Styles */
+.dialog-title {
+  background: linear-gradient(135deg, var(--sky-medium), var(--sky-dark));
+  color: white !important;
+  padding: 1.25rem 1.5rem !important;
+}
+
+.dialog-content {
+  padding: 1.5rem !important;
+}
+
+.dialog-actions {
+  padding: 1rem 1.5rem !important;
+  background-color: var(--background-light);
+}
+
+/* Payslip Tab Styles */
+.payslip-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 1.25rem 1.5rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  animation: slideIn 0.5s ease-out;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.payslip-section-title {
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.payslip-title-badge {
+  background-color: #e3f2fd !important;
+  font-weight: 500;
+}
+
+.payslip-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.payslip-employee-card {
+  border-radius: 12px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+  overflow: hidden;
+  background-color: white;
+}
+
+.payslip-section {
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.payslip-section:first-child {
+  background-color: #e8f4ff;
+  border-radius: 8px 8px 0 0;
+  transition: background-color 0.3s ease;
+}
+
+.payslip-section:last-child {
+  border-bottom: none;
+}
+
+.payslip-employee-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(25, 118, 210, 0.2);
+  padding-bottom: 12px;
+}
+
+.payslip-header-title {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  color: #1976d2;
+  margin: 0;
+}
+
+.payslip-emp-id-chip {
+  background-color: rgba(25, 118, 210, 0.15) !important;
+  color: #1976d2 !important;
+  font-weight: 500;
+  border: 1px solid rgba(25, 118, 210, 0.3);
+}
+
+.payslip-details-grid {
+  margin-top: 8px;
+}
+
+.payslip-detail-group {
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  padding: 10px;
+  transition: all 0.2s ease;
+}
+
+.payslip-detail-group:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.payslip-detail-item {
+  margin-bottom: 12px;
+}
+
+.payslip-detail-label {
+  color: #666;
+  font-size: 0.85rem !important;
+  margin-bottom: 4px;
+}
+
+.payslip-detail-value {
+  font-weight: 500;
+  font-size: 0.95rem !important;
+}
+
+.payslip-section-header {
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  color: #333;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.payslip-attendance-grid {
+  margin: 8px 0;
+}
+
+.payslip-stat-card {
+  padding: 16px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  background-color: #fafafa;
+  text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.payslip-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15) !important;
+}
+
+.payslip-stat-label {
+  color: #666;
+  margin-bottom: 8px;
+  font-size: 0.85rem !important;
+}
+
+.payslip-stat-value {
+  font-weight: 600 !important;
+  color: #333;
+}
+
+.payslip-calculations-grid {
+  margin: 8px 0;
+}
+
+.payslip-earnings-section,
+.payslip-deductions-section {
+  padding: 16px;
+  border-radius: 8px !important;
+  height: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.payslip-earnings-section {
+  background-color: #f9fff9;
+}
+
+.payslip-deductions-section {
+  background-color: #fff9f9;
+}
+
+.payslip-amount-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.payslip-amount-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed #eee;
+}
+
+.payslip-amount-label {
+  font-weight: 400;
+  word-break: break-word;
+  padding-right: 8px;
+}
+
+.payslip-amount-value {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.payslip-empty-row {
+  padding: 16px 0;
+  border-bottom: none;
+}
+
+.payslip-total-row {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 2px solid #eee;
+  border-bottom: none;
+}
+
+.payslip-total-label {
+  font-weight: 600 !important;
+}
+
+.payslip-total-value {
+  font-weight: 600 !important;
+}
+
+.payslip-net-salary-section {
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.payslip-net-salary-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.payslip-net-salary-amount {
+  display: flex;
+  align-items: center;
+}
+
+.payslip-net-salary-label {
+  color: #1976d2;
+  font-weight: 600 !important;
+}
+
+.payslip-download-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.payslip-download-button {
+  background-color: #1976d2 !important;
+  transition: all 0.3s ease !important;
+}
+
+.payslip-download-button:hover {
+  background-color: #1565c0 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Tablet/iPad specific styles */
+@media (min-width: 600px) and (max-width: 960px) {
+  .payslip-section {
+    padding: 16px;
+  }
+  
+  .payslip-header-title {
+    font-size: 1.2rem !important;
+  }
+  
+  .payslip-detail-item {
+    margin-bottom: 10px;
+  }
+  
+  .payslip-detail-label {
+    font-size: 0.8rem !important;
+  }
+  
+  .payslip-detail-value {
+    font-size: 0.9rem !important;
+  }
+  
+  .payslip-section-header {
+    font-size: 1rem !important;
+    margin-bottom: 12px;
+  }
+  
+  .payslip-stat-card {
+    padding: 12px !important;
+  }
+  
+  .payslip-stat-label {
+    font-size: 0.8rem !important;
+    margin-bottom: 6px;
+  }
+  
+  .payslip-stat-value {
+    font-size: 1rem !important;
+  }
+  
+  .payslip-earnings-section,
+  .payslip-deductions-section {
+    padding: 14px;
+  }
+  
+  .payslip-amount-row {
+    padding: 6px 0;
+  }
+  
+  .payslip-amount-label,
+  .payslip-amount-value {
+    font-size: 0.9rem !important;
+  }
+  
+  .payslip-total-row {
+    margin-top: 12px;
+    padding-top: 10px;
+  }
+  
+  .payslip-net-salary-section {
+    padding: 16px;
+  }
+  
+  .payslip-net-salary-label {
+    font-size: 1.1rem !important;
+  }
+  
+  .payslip-download-container {
+    margin-top: 0;
+    justify-content: flex-end;
+  }
+  
+  .payslip-download-button {
+    padding: 6px 16px !important;
+  }
+}
+
+/* Mobile specific styles */
+@media (max-width: 599px) {
+  .payslip-header-container {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .payslip-section-title {
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+  }
+  
+  .payslip-section {
+    padding: 14px;
+  }
+  
+  .payslip-employee-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .payslip-header-title {
+    font-size: 1.1rem !important;
+    margin-bottom: 4px;
+  }
+  
+  .payslip-emp-id-chip {
+    align-self: flex-start;
+  }
+  
+  .payslip-detail-group {
+    margin-bottom: 12px;
+  }
+  
+  .payslip-detail-item {
+    margin-bottom: 8px;
+  }
+  
+  .payslip-detail-label {
+    font-size: 0.75rem !important;
+  }
+  
+  .payslip-detail-value {
+    font-size: 0.85rem !important;
+  }
+  
+  .payslip-section-header {
+    font-size: 0.95rem !important;
+    margin-bottom: 10px;
+  }
+  
+  .payslip-stat-card {
+    padding: 10px !important;
+  }
+  
+  .payslip-stat-label {
+    font-size: 0.7rem !important;
+    margin-bottom: 4px;
+  }
+  
+  .payslip-stat-value {
+    font-size: 0.9rem !important;
+  }
+  
+  .payslip-earnings-section,
+  .payslip-deductions-section {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .payslip-amount-row {
+    padding: 5px 0;
+  }
+  
+  .payslip-amount-label {
+    font-size: 0.8rem !important;
+    max-width: 70%;
+  }
+  
+  .payslip-amount-value {
+    font-size: 0.8rem !important;
+  }
+  
+  .payslip-empty-row {
+    padding: 10px 0;
+  }
+  
+  .payslip-total-row {
+    margin-top: 10px;
+    padding-top: 8px;
+  }
+  
+  .payslip-total-label,
+  .payslip-total-value {
+    font-size: 0.85rem !important;
+  }
+  
+  .payslip-net-salary-section {
+    padding: 14px;
+  }
+  
+  .payslip-net-salary-grid {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .payslip-net-salary-amount {
+    justify-content: center;
+  }
+  
+  .payslip-net-salary-label {
+    font-size: 1rem !important;
+    text-align: center;
+  }
+  
+  .payslip-download-container {
+    justify-content: center;
+  }
+  
+  .payslip-download-button {
+    width: 100%;
+    padding: 8px 16px !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+/* Very small mobile styles */
+@media (max-width: 360px) {
+  .payslip-section {
+    padding: 12px;
+  }
+  
+  .payslip-header-title {
+    font-size: 1rem !important;
+  }
+  
+  .payslip-detail-label {
+    font-size: 0.7rem !important;
+  }
+  
+  .payslip-detail-value {
+    font-size: 0.8rem !important;
+  }
+  
+  .payslip-section-header {
+    font-size: 0.9rem !important;
+  }
+  
+  .payslip-stat-label {
+    font-size: 0.65rem !important;
+  }
+  
+  .payslip-stat-value {
+    font-size: 0.85rem !important;
+  }
+  
+  .payslip-amount-label,
+  .payslip-amount-value {
+    font-size: 0.75rem !important;
+  }
+  
+  .payslip-net-salary-label {
+    font-size: 0.9rem !important;
+  }
+  
+  .payslip-download-button {
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Specific iPad fixes */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .payslip-net-salary-grid {
+    align-items: center;
+  }
+  
+  .payslip-download-container {
+    justify-content: flex-end;
+    padding-right: 8px;
+  }
+  
+  .payslip-download-button {
+    width: auto;
+  }
+  
+  .payslip-detail-group {
+    padding: 0 8px;
+  }
+  
+  .payslip-calculations-grid .MuiGrid-item {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  
+  .payslip-earnings-section,
+  .payslip-deductions-section {
+    height: 100%;
+  }
+}
+
+/* Specific iPad Pro fixes */
+@media only screen and (min-width: 1024px) and (max-width: 1366px) and (orientation: portrait) {
+  .payslip-download-container {
+    justify-content: flex-end;
+  }
+  
+  .payslip-detail-group {
+    padding: 0 12px;
+  }
+  
+  .payslip-net-salary-grid {
+    align-items: center;
+  }
+}
+
+/* Landscape orientation fixes for tablets */
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .payslip-net-salary-grid {
+    flex-direction: row;
+  }
+  
+  .payslip-download-container {
+    justify-content: flex-end;
+  }
+  
+  .payslip-download-button {
+    width: auto;
+  }
+}
+/* Fix for short-label in tabs */
+.short-label {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .full-label {
+    display: none;
+  }
+  
+  .short-label {
+    display: inline;
+  }
+}
+
+/* Employee Tab Specific Styles */
+.employee-header {
+  background: linear-gradient(to right, #f8fafc, #e8f4ff);
+  border-left: 4px solid #1976d2;
+}
+
+.employee-table-container {
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  background: white;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.employee-table {
+  min-width: 650px;
+}
+
+.employee-row {
+  transition: all 0.2s ease;
+}
+
+.employee-row:hover {
+  background-color: #f5f9ff;
+}
+
+.amount-cell {
+  font-weight: 600;
+  color: #1976d2;
+}
+
+/* Responsive styles for Employee Table */
+@media (max-width: 1200px) {
+  .employee-table .table-cell[data-priority="3"] {
+    display: none;
+  }
+  
+  .button-text {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .employee-table .table-cell[data-priority="2"] {
+    display: none;
+  }
+  
+  .header-actions {
+    gap: 0.5rem;
+  }
+  
+  .import-button, .export-button, .create-button {
+    padding: 0.6rem 1.2rem !important;
+  }
+  
+  .button-text {
+    font-size: 0.85rem;
+  }
+}
+
+/* Employee Table Mobile View Styles */
+.employee-table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+  max-width: 100%;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.employee-table {
+  min-width: 1000px; /* Ensure table is wide enough to need scrolling on mobile */
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* Table header styles */
+.employee-table .table-header {
+  background-color: #f5f5f5;
+}
+
+.employee-table .table-header .table-cell {
+  font-weight: 600;
+  color: #333;
+  padding: 12px 16px;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background-color: #f5f5f5;
+  z-index: 1;
+}
+
+/* Table row styles */
+.employee-table .employee-row {
+  transition: background-color 0.2s;
+}
+
+.employee-table .employee-row:hover {
+  background-color: #f9f9f9;
+}
+
+.employee-table .table-cell {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  white-space: nowrap;
+}
+
+.employee-table .amount-cell {
+  font-weight: 500;
+  color: #1976d2;
+}
+
+.employee-table .action-cell {
+  white-space: nowrap;
+  padding: 8px 16px;
+}
+
+/* Action buttons */
+.employee-table .action-icon {
+  font-size: 1.2rem;
+}
+
+.employee-table .preview-icon {
+  color: #4caf50;
+}
+
+.employee-table .edit-icon {
+  color: #2196f3;
+}
+
+.employee-table .delete-icon {
+  color: #f44336;
+}
+
+/* Mobile-specific styles to ensure table remains a table */
+@media (max-width: 767px) {
+  /* Override any responsive table styles that might be converting to cards */
+  .employee-table-container {
+    overflow-x: auto !important;
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  .employee-table {
+    display: table !important;
+    width: 100% !important;
+  }
+  
+  .employee-table thead {
+    display: table-header-group !important;
+  }
+  
+  .employee-table tbody {
+    display: table-row-group !important;
+  }
+  
+  .employee-table tr {
+    display: table-row !important;
+  }
+  
+  .employee-table th,
+  .employee-table td {
+    display: table-cell !important;
+  }
+  
+  /* Add a hint for users to scroll horizontally */
+  .employee-table-container::after {
+    content: "← Scroll →";
+    display: block;
+    text-align: center;
+    padding: 8px;
+    color: #666;
+    font-size: 0.8rem;
+    background-color: #f5f5f5;
+    border-top: 1px solid #e0e0e0;
+  }
+  
+  /* Make sure the action column is always visible */
+  .employee-table .action-column {
+    position: sticky;
+    right: 0;
+    background-color: #fff;
+    box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+  }
+  
+  .employee-table .action-cell {
+    position: sticky;
+    right: 0;
+    background-color: #fff;
+    box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+  }
+}
+
+/* Ensure the table header text is visible in mobile */
+@media (max-width: 480px) {
+  .employee-table .table-header .table-cell {
+    font-size: 0.8rem;
+    padding: 10px 12px;
+  }
+  
+  .employee-table .table-cell {
+    font-size: 0.8rem;
+    padding: 10px 12px;
+  }
+}
+/* Very small mobile adjustments */
+@media (max-width: 480px) {
+  .employee-table .table-cell {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+  
+  .employee-table .table-cell:before {
+    font-size: 0.85rem;
+  }
+  
+  .title-badge {
+    display: inline-block;
+    margin-top: 8px;
+    margin-left: 0;
+  }
+  
+  .section-title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .header-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .import-button, .export-button, .create-button {
+    flex: 1;
+    min-width: 0 !important;
+  }
+}
+
+/* iPad specific adjustments */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .employee-table {
+    min-width: 700px;
+  }
+  
+  .employee-table .table-cell {
+    padding: 12px 16px;
+  }
+  
+  .header-actions {
+    flex-wrap: nowrap;
+  }
+  
+  .import-button, .export-button, .create-button {
+    white-space: nowrap;
+    padding: 0.7rem 1rem !important;
+  }
+  
+  .button-text {
+    font-size: 0.8rem;
+  }
+}
+
+/* iPad Pro specific adjustments */
+@media only screen and (min-width: 1024px) and (max-width: 1366px) {
+  .employee-table {
+    min-width: 900px;
+  }
+  
+  .button-text {
+    font-size: 0.9rem;
+  }
+}
+/* Allowance & Deduction Dialog Styles */
+.allowance-dialog .dialog-title {
+  background-color: #1976d2;
+  color: white;
+  padding: 16px 24px;
+  font-weight: 600;
+}
+
+.allowance-dialog-content {
+  padding: 24px !important;
+  overflow-x: hidden;
+}
+
+.dialog-section-title {
+  margin-bottom: 12px !important;
+  font-weight: 600 !important;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.deduction-title {
+  color: #d32f2f;
+  margin-top: 16px !important;
+}
+
+.dialog-table-container {
+  max-height: 300px;
+  margin-bottom: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.dialog-table {
+  min-width: 450px;
+}
+
+.dialog-table-cell {
+  padding: 8px 12px !important;
+}
+
+.dialog-table-row:hover {
+  background-color: #f5f5f5;
+}
+
+.percentage-input {
+  width: 100px;
+}
+
+.custom-allowance-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 16px 0;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.selected-count {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.custom-input-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.custom-allowance-input {
+  width: 180px;
+}
+
+.custom-percentage-input {
+  width: 100px;
+}
+
+.custom-add-button {
+  height: 40px;
+  background-color: #1976d2 !important;
+}
+
+.selected-items-preview {
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.deduction-preview {
+  background-color: #fff8f8;
+}
+
+.deduction-preview-title {
+  color: #d32f2f;
+}
+
+.preview-table-container {
+  max-height: 150px;
+  margin-top: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.preview-table {
+  background-color: white;
+}
+
+.dialog-actions {
+  padding: 16px 24px !important;
+  background-color: #f5f5f5;
+  border-top: 1px solid #e0e0e0;
+}
+
+.dialog-button {
+  padding: 8px 16px !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+}
+
+.cancel-button {
+  border-color: #d32f2f !important;
+  color: #d32f2f !important;
+}
+
+.submit-button {
+  background-color: #1976d2 !important;
+}
+  /* iPad-specific fixes for Allowance & Deduction Dialog */
+  @media only screen and (min-width: 768px) and (max-width: 1024px) {
+    /* Dialog container fixes */
+    .MuiDialog-paper {
+      width: 95% !important;
+      max-width: 700px !important;
+      margin: 10px auto !important;
+    }
+  
+    /* Content padding and overflow handling */
+    .allowance-dialog-content {
+      padding: 16px !important;
+      overflow-x: hidden !important;
+    }
+  
+    /* Table container adjustments */
+    .dialog-table-container {
+      max-height: 220px;
+      width: 100%;
+      overflow-x: auto;
+    }
+  
+    /* Table width adjustment */
+    .dialog-table {
+      width: 100%;
+      min-width: 500px;
+      table-layout: fixed;
+    }
+  
+    /* Cell width adjustments */
+    .dialog-table-cell {
+      padding: 8px !important;
+      font-size: 0.9rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  
+    /* Column widths */
+    .dialog-table-cell:nth-child(1) {
+      width: 10%;
+    }
+  
+    .dialog-table-cell:nth-child(2) {
+      width: 40%;
+    }
+  
+    .dialog-table-cell:nth-child(3) {
+      width: 30%;
+    }
+  
+    .dialog-table-cell:nth-child(4) {
+      width: 20%;
+    }
+  
+    /* Percentage input field */
+    .percentage-input {
+      width: 85px !important;
+    }
+  
+    /* Custom allowance section */
+    .custom-allowance-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin: 16px 0;
+      width: 100%;
+    }
+  
+    .selected-count {
+      margin-bottom: 0;
+    }
+  
+    .custom-input-group {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 8px;
+      width: 100%;
+      align-items: center;
+    }
+  
+    .custom-allowance-input {
+      width: 100% !important;
+    }
+  
+    .custom-percentage-input {
+      width: 100% !important;
+    }
+  
+    .custom-add-button {
+      width: 100% !important;
+      height: 40px;
+    }
+  
+    /* Preview section */
+    .selected-items-preview {
+      padding: 12px;
+      width: 100%;
+    }
+  
+    .preview-table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+  
+    .preview-table {
+      min-width: 450px;
+      width: 100%;
+    }
+  
+    /* Deductions section */
+    .deductions-section {
+      margin-top: 20px;
+    }
+  
+    /* Dialog actions */
+    .dialog-actions {
+      padding: 16px !important;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+  
+    .dialog-button {
+      min-width: 120px !important;
+    }
+  }
+
+  /* iPad Pro specific fixes */
+  @media only screen and (min-width: 1024px) and (max-width: 1366px) {
+    .MuiDialog-paper {
+      max-width: 800px !important;
+    }
+  
+    .dialog-table-container {
+      max-height: 250px;
+    }
+  
+    .dialog-table {
+      min-width: 600px;
+    }
+  
+    .custom-input-group {
+      grid-template-columns: 3fr 1fr 1fr;
+    }
+  }
+
+  /* iPad landscape orientation fixes */
+  @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .dialog-table-container {
+      max-height: 180px;
+    }
+  
+    .custom-allowance-container {
+      grid-template-columns: 1fr 2fr;
+      align-items: center;
+    }
+  
+    .selected-count {
+      margin-bottom: 0;
+    }
+  
+    .custom-input-group {
+      margin: 0;
+    }
+  }  
+  /* Allowance & Deduction Dialog Styles */
+  .allowance-dialog .dialog-title {
+    background-color: #1976d2;
+    color: white;
+    padding: 16px 24px;
+    font-weight: 600;
+  }
+
+  .allowance-dialog-content {
+    padding: 24px !important;
+    overflow-x: hidden;
+  }
+
+  .dialog-section-title {
+    margin-bottom: 12px !important;
+    font-weight: 600 !important;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+  }
+
+  .deduction-title {
+    color: #d32f2f;
+    margin-top: 16px !important;
+  }
+
+  .dialog-table-container {
+    max-height: 300px;
+    margin-bottom: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .dialog-table {
+    min-width: 450px;
+  }
+
+  .dialog-table-cell {
+    padding: 8px 12px !important;
+  }
+
+  .dialog-table-row:hover {
+    background-color: #f5f5f5;
+  }
+
+  .percentage-input {
+    width: 100px;
+  }
+
+  .custom-allowance-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px 0;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .selected-count {
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .custom-input-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .custom-allowance-input {
+    width: 180px;
+  }
+
+  .custom-percentage-input {
+    width: 100px;
+  }
+
+  .custom-add-button {
+    height: 40px;
+    background-color: #1976d2 !important;
+  }
+
+  .selected-items-preview {
+    padding: 16px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+
+  .deduction-preview {
+    background-color: #fff8f8;
+  }
+
+  .deduction-preview-title {
+    color: #d32f2f;
+  }
+
+  .preview-table-container {
+    max-height: 150px;
+    margin-top: 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .preview-table {
+    background-color: white;
+  }
+
+  .dialog-actions {
+    padding: 16px 24px !important;
+    background-color: #f5f5f5;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .dialog-button {
+    padding: 8px 16px !important;
+    font-weight: 500 !important;
+    text-transform: none !important;
+  }
+
+  .cancel-button {
+    border-color: #d32f2f !important;
+    color: #d32f2f !important;
+  }
+
+  .submit-button {
+    background-color: #1976d2 !important;
+  }
+
+  /* iPad-specific fixes for Allowance & Deduction Dialog */
+  @media only screen and (min-width: 768px) and (max-width: 1024px) {
+    /* Dialog container fixes */
+    .MuiDialog-paper {
+      width: 95% !important;
+      max-width: 700px !important;
+      margin: 10px auto !important;
+    }
+  
+    /* Content padding and overflow handling */
+    .allowance-dialog-content {
+      padding: 16px !important;
+      overflow-x: hidden !important;
+    }
+  
+    /* Table container adjustments */
+    .dialog-table-container {
+      max-height: 220px;
+      width: 100%;
+      overflow-x: auto;
+    }
+  
+    /* Table width adjustment */
+    .dialog-table {
+      width: 100%;
+      min-width: 500px;
+      table-layout: fixed;
+    }
+  
+    /* Cell width adjustments */
+    .dialog-table-cell {
+      padding: 8px !important;
+      font-size: 0.9rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  
+    /* Column widths */
+    .dialog-table-cell:nth-child(1) {
+      width: 10%;
+    }
+  
+    .dialog-table-cell:nth-child(2) {
+      width: 40%;
+    }
+  
+    .dialog-table-cell:nth-child(3) {
+      width: 30%;
+    }
+  
+    .dialog-table-cell:nth-child(4) {
+      width: 20%;
+    }
+  
+    /* Percentage input field */
+    .percentage-input {
+      width: 85px !important;
+    }
+  
+    /* Custom allowance section */
+    .custom-allowance-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin: 16px 0;
+      width: 100%;
+    }
+  
+    .selected-count {
+      margin-bottom: 0;
+    }
+  
+    .custom-input-group {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 8px;
+      width: 100%;
+      align-items: center;
+    }
+  
+    .custom-allowance-input {
+      width: 100% !important;
+    }
+  
+    .custom-percentage-input {
+      width: 100% !important;
+    }
+  
+    .custom-add-button {
+      width: 100% !important;
+      height: 40px;
+    }
+  
+    /* Preview section */
+    .selected-items-preview {
+      padding: 12px;
+      width: 100%;
+    }
+  
+    .preview-table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+  
+    .preview-table {
+      min-width: 450px;
+      width: 100%;
+    }
+  
+    /* Deductions section */
+    .deductions-section {
+      margin-top: 20px;
+    }
+  
+    /* Dialog actions */
+    .dialog-actions {
+      padding: 16px !important;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+  
+    .dialog-button {
+      min-width: 120px !important;
+    }
+  
+    /* Hide description column on iPad */
+    .dialog-hide-sm {
+      display: none !important;
+    }
+  }
+
+  /* iPad Pro specific fixes */
+  @media only screen and (min-width: 1024px) and (max-width: 1366px) {
+    .MuiDialog-paper {
+      max-width: 800px !important;
+    }
+  
+    .dialog-table-container {
+      max-height: 250px;
+    }
+  
+    .dialog-table {
+      min-width: 600px;
+    }
+  
+    .custom-input-group {
+      grid-template-columns: 3fr 1fr 1fr;
+    }
+  
+    /* Show description column on iPad Pro */
+    .dialog-hide-sm {
+      display: table-cell !important;
+    }
+  }
+
+  /* iPad landscape orientation fixes */
+  @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .dialog-table-container {
+      max-height: 180px;
+    }
+  
+    .custom-allowance-container {
+      grid-template-columns: 1fr 2fr;
+      align-items: center;
+    }
+  
+    .selected-count {
+      margin-bottom: 0;
+    }
+  
+    .custom-input-group {
+      margin: 0;
+    }
+  
+    /* Show description column in landscape */
+    .dialog-hide-sm {
+      display: table-cell !important;
+    }
+  }
+
+  /* Mobile view adjustments */
+  @media (max-width: 767px) {
+    .allowance-dialog-content {
+      padding: 16px !important;
+    }
+  
+    .dialog-section-title {
+      font-size: 1rem !important;
+    }
+  
+    .dialog-table-container {
+      max-height: 200px;
+    }
+  
+    .dialog-hide-sm {
+      display: none !important;
+    }
+  
+    .dialog-table {
+      min-width: 300px;
+    }
+  
+    .dialog-table-cell {
+      padding: 4px 8px !important;
+      font-size: 0.85rem;
+    }
+  
+    .percentage-input {
+      width: 70px !important;
+    }
+  
+    .custom-allowance-container {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+  
+    .custom-input-group {
+      width: 100%;
+      justify-content: space-between;
+    }
+  
+    .custom-allowance-input {
+      width: 45% !important;
+    }
+  
+    .custom-percentage-input {
+      width: 25% !important;
+    }
+  
+    .custom-add-button {
+      width: 20% !important;
+      min-width: 60px !important;
+    }
+  
+    .selected-items-preview {
+      padding: 10px;
+    }
+  
+    .preview-table-container {
+      max-height: 100px;
+    }
+  
+    .dialog-actions {
+      padding: 12px 16px !important;
+    }
+  
+    .dialog-button {
+      padding: 6px 12px !important;
+      font-size: 0.85rem !important;
+    }
+  }
+
+  /* Very small screens */
+  @media (max-width: 360px) {
+    .dialog-table-cell {
+      padding: 4px 6px !important;
+      font-size: 0.8rem;
+    }
+  
+    .percentage-input {
+      width: 60px !important;
+    }
+  
+    .custom-allowance-input {
+      width: 40% !important;
+    }
+  
+    .custom-percentage-input {
+      width: 30% !important;
+    }
+  
+    .custom-add-button {
+      width: 20% !important;
+      min-width: 50px !important;
+      padding: 4px !important;
+    }
+  }
+/* Force table to remain a table in mobile view */
+.non-responsive-mobile {
+  /* This will override any responsive table styles */
+  width: 100% !important;
+  display: table !important;
+}
+
+.non-responsive-mobile thead,
+.non-responsive-mobile tbody,
+.non-responsive-mobile tr,
+.non-responsive-mobile th,
+.non-responsive-mobile td {
+  display: revert !important;
+  width: auto !important;
+}
+
+.mobile-scroll-table {
+  -webkit-overflow-scrolling: touch;
+  overflow-x: auto !important;
+  max-width: 100vw;
+}

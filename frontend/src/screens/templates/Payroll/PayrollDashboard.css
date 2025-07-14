@@ -1,0 +1,509 @@
+/* PayrollDashboard.css - Scoped with pd- prefix to avoid conflicts */
+
+.pd-dashboard {
+  padding: 24px;
+  background-color: #f5f7fa;
+  width: 100%;
+  min-height: 100vh;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+}
+
+.pd-dashboard-title {
+  margin-bottom: 24px !important;
+  color: #2c3e50;
+  font-weight: 500 !important;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+.pd-dashboard-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background-color: #3498db;
+  border-radius: 2px;
+}
+
+/* Loading and Error States */
+.pd-loading-container,
+.pd-error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  gap: 20px;
+  background-color: #f5f7fa;
+}
+
+.pd-loading-text {
+  color: #7f8c8d;
+  margin-top: 16px !important;
+}
+
+.pd-error-alert {
+  width: 100%;
+  max-width: 500px;
+}
+
+.pd-no-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+/* Status Cards */
+.pd-status-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.pd-status-card {
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.pd-status-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0,0,0,0.12) !important;
+}
+
+.pd-status-content {
+  padding: 20px !important;
+  display: flex;
+  align-items: center;
+}
+
+.pd-status-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.pd-status-icon {
+  font-size: 32px !important;
+  color: white;
+}
+
+.pd-status-details {
+  flex: 1;
+}
+
+.pd-status-title {
+  margin: 0 !important;
+  font-size: 16px !important;
+  color: #7f8c8d;
+}
+
+.pd-status-count {
+  margin: 0 !important;
+  font-weight: 600 !important;
+  font-size: 32px !important;
+}
+
+/* Update the status card colors */
+.pd-status-employees .pd-status-icon-container {
+  background-color: #3498db;
+}
+
+.pd-status-allowances .pd-status-icon-container {
+  background-color: #27ae60;
+}
+
+.pd-status-deductions .pd-status-icon-container {
+  background-color: #e74c3c;
+}
+
+.pd-status-payslips .pd-status-icon-container {
+  background-color: #f39c12;
+}
+
+/* Date Selector */
+.pd-date-selector-card {
+  margin-bottom: 24px;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+}
+
+.pd-date-selector-content {
+  padding: 16px !important;
+}
+
+.pd-date-selector {
+  display: flex;
+  align-items: center;
+}
+
+.pd-date-icon {
+  color: #3498db;
+  margin-right: 12px;
+}
+
+.pd-date-label {
+  margin-right: 16px !important;
+  color: #34495e;
+  font-weight: 500 !important;
+}
+
+.pd-date-input {
+  padding: 10px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #2c3e50;
+  background-color: #f8f9fa;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pd-date-input:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  outline: none;
+}
+
+/* Dashboard Grid */
+.pd-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.pd-chart-card,
+.pd-contributions-card,
+.pd-contracts-card,
+.pd-department-card {
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.pd-chart-card:hover,
+.pd-contributions-card:hover,
+.pd-contracts-card:hover,
+.pd-department-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0,0,0,0.1) !important;
+}
+
+.pd-card-header {
+  background-color: #f8f9fa;
+  padding: 16px 20px !important;
+}
+
+.pd-card-header .MuiCardHeader-title {
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  color: #2c3e50;
+}
+
+.pd-card-header .MuiCardHeader-subheader {
+  font-size: 14px !important;
+  color: #7f8c8d;
+}
+
+.pd-chart-content,
+.pd-contributions-content,
+.pd-contracts-content,
+.pd-department-content {
+  padding: 20px !important;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Charts */
+.pd-payslip-chart,
+.pd-department-chart {
+  height: 300px;
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pd-fadeIn 0.8s ease-in-out;
+}
+
+@keyframes pd-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Employee Dropdown */
+.pd-employee-dropdown {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #2c3e50;
+  background-color: #f8f9fa;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%232c3e50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+
+.pd-employee-dropdown:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  outline: none;
+}
+
+/* Contributions Table */
+.pd-contributions-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.pd-contributions-table th {
+  padding: 12px 16px;
+  text-align: left;
+  background-color: #f8f9fa;
+  color: #34495e;
+  font-weight: 500;
+  border-bottom: 2px solid #ecf0f1;
+}
+
+.pd-contributions-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #ecf0f1;
+  color: #2c3e50;
+}
+
+.pd-contribution-row:hover {
+  background-color: #f5f7fa;
+}
+
+.pd-contribution-type {
+  display: flex;
+  align-items: center;
+}
+
+.pd-avatar {
+  width: 36px !important;
+  height: 36px !important;
+  font-size: 14px !important;
+  background-color: #3498db !important;
+  margin-right: 12px !important;
+}
+
+.pd-contribution-amount {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+/* Contracts Section */
+.pd-contract-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  max-height: 300px;
+  padding-right: 5px;
+}
+
+.pd-contract-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.pd-contract-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.pd-contract-list::-webkit-scrollbar-thumb {
+  background: #bdc3c7;
+  border-radius: 10px;
+}
+
+.pd-contract-list::-webkit-scrollbar-thumb:hover {
+  background: #95a5a6;
+}
+
+.pd-contract-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.pd-contract-item:hover {
+  background-color: #e3f2fd;
+  transform: translateX(5px);
+}
+
+.pd-contract-avatar {
+  width: 42px !important;
+  height: 42px !important;
+  font-size: 16px !important;
+  background-color: #3498db !important;
+}
+
+.pd-contract-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.pd-employee-name {
+  font-weight: 500 !important;
+  color: #2c3e50 !important;
+  margin-bottom: 4px !important;
+}
+
+.pd-contract-date {
+  color: #7f8c8d !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .pd-status-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .pd-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .pd-date-selector {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .pd-date-label {
+    margin-bottom: 10px;
+    margin-right: 0;
+  }
+  
+  .pd-date-icon {
+    display: none;
+  }
+  
+  .pd-date-input {
+    width: 100%;
+  }
+  
+  .pd-status-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .pd-dashboard {
+    padding: 16px;
+  }
+  
+  .pd-status-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .pd-status-icon-container {
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+  
+  .pd-contribution-type {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .pd-avatar {
+    margin-right: 0 !important;
+    margin-bottom: 8px !important;
+  }
+}
+
+/* Animation for hover effects */
+@keyframes pd-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pd-status-count {
+  transition: transform 0.3s ease;
+}
+
+.pd-status-card:hover .pd-status-count {
+  animation: pd-pulse 1.5s infinite;
+}
+
+/* Enhanced shadows for depth */
+.pd-chart-card,
+.pd-contributions-card,
+.pd-contracts-card,
+.pd-department-card {
+  position: relative;
+}
+
+.pd-chart-card::before,
+.pd-contributions-card::before,
+.pd-contracts-card::before,
+.pd-department-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #3498db, #2ecc71);
+  z-index: 1;
+}
+
+.pd-contributions-card::before {
+  background: linear-gradient(90deg, #2ecc71, #3498db);
+}
+
+.pd-contracts-card::before {
+  background: linear-gradient(90deg, #f39c12, #e74c3c);
+}
+
+.pd-department-card::before {
+  background: linear-gradient(90deg, #9b59b6, #3498db);
+}
+

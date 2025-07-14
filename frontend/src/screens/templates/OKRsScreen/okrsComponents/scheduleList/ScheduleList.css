@@ -1,0 +1,39 @@
+.schedule-list {
+    background-color: transparent;
+    margin-left: 10px;
+    width: 100%;
+  }
+  
+  .schedule-list h6 {
+    font-size: 16px;
+    color: #333;
+    
+  }
+  
+  .schedule-item {
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+    justify-content: space-around;
+    margin-top: 5px;
+    width: 100%;
+    border: 1px solid rgb(107, 244, 189);
+    border-radius: 5px;
+  }
+  
+  
+  
+  .schedule-item img {
+    margin-right: 10px;
+  }
+  
+  .schedule-item div {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .schedule-item .time,
+  .schedule-item .location {
+    margin: 5px 0;
+  }
+  

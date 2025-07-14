@@ -1,0 +1,20 @@
+.dashboard {
+    display: flex;
+  }
+
+  .profile-calender-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .left-panel {
+    display: flex;
+    width: 100%;
+  }
+  
+  .right-panel {
+    width: 70%;
+    padding: 20px;
+  }
+  

@@ -1,0 +1,103 @@
+{
+  "name": "hrms",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://localhost:5002",
+  "dependencies": {
+    "-": "^0.0.1",
+    "@ant-design/icons": "^5.6.1",
+    "@date-io/date-fns": "^2.16.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@fortawesome/fontawesome-free": "^6.6.0",
+    "@fortawesome/fontawesome-svg-core": "^6.6.0",
+    "@fortawesome/free-brands-svg-icons": "^6.6.0",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@mui/icons-material": "^6.4.1",
+    "@mui/lab": "^6.0.0-beta.24",
+    "@mui/material": "^6.4.9",
+    "@mui/system": "^7.0.0",
+    "@mui/utils": "^6.4.1",
+    "@mui/x-date-pickers": "^5.0.20",
+    "@mui/x-date-pickers-pro": "^7.24.1",
+    "@reduxjs/toolkit": "^2.8.0",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "ajv": "^8.17.1",
+    "antd": "^5.24.1",
+    "axios": "^1.7.9",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "chart.js": "^4.4.6",
+    "chartjs": "^0.3.24",
+    "date-fns": "^2.29.3",
+    "file-saver": "^2.0.5",
+    "fontawesome": "^5.6.3",
+    "formik": "^2.4.6",
+    "framer-motion": "^11.15.0",
+    "generative": "^1.0.4",
+    "gsap": "^3.12.5",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
+    "moment": "^2.30.1",
+    "motion": "^11.11.15",
+    "nodemailer": "^6.9.16",
+    "react": "^18.3.1",
+    "react-bootstrap": "^2.10.4",
+    "react-calendar": "^5.0.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-cli": "^0.3.1",
+    "react-csv": "^2.2.2",
+    "react-datepicker": "^7.5.0",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.3.0",
+    "react-quill": "^2.0.0",
+    "react-redux": "^9.2.0",
+    "react-router-bootstrap": "^0.26.3",
+    "react-router-dom": "^6.27.0",
+    "react-scripts": "^5.0.1",
+    "react-toastify": "^11.0.5",
+    "recharts": "^2.15.1",
+    "redux-persist": "^6.0.0",
+    "socket.io-client": "^4.8.1",
+    "use-debounce": "^10.0.4",
+    "uuid": "^11.1.0",
+    "uvcanvas": "^0.2.2",
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5",
+    "yup": "^1.6.1"
+  },
+  "scripts": {
+    "start": "cross-env HOST=0.0.0.0 PORT=3000 DANGEROUSLY_DISABLE_HOST_CHECK=true react-scripts start",
+    "start:dev": "react-scripts start",
+    "start:public": "HOST=0.0.0.0 PORT=3000 DANGEROUSLY_DISABLE_HOST_CHECK=true react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/preset-react": "^7.26.3",
+    "cross-env": "^7.0.3"
+  }
+}

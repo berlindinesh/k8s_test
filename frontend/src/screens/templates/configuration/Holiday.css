@@ -1,0 +1,178 @@
+/* General Styling */
+.holiday-manager {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+.holiday-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.holiday-actions input {
+    padding: 8px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.holiday-actions button {
+    padding: 8px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.holiday-actions button:hover {
+    background-color: #45a049;
+}
+
+.holiday-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.holiday-table th, .holiday-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.holiday-table th {
+    background-color: #f2f2f2;
+}
+
+.holiday-table td button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.holiday-table td button:hover {
+    opacity: 0.8;
+}
+
+/* Edit and Delete Buttons */
+.holiday-table td .edit-button {
+    background-color: #2196F3;
+    color: white;
+}
+
+.holiday-table td .edit-button:hover {
+    background-color: #1976D2;
+}
+
+.holiday-table td .delete-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.holiday-table td .delete-button:hover {
+    background-color: #d32f2f;
+}
+
+/* Modal Styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+.modal-content label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="date"],
+.modal-content input[type="checkbox"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.modal-content input[type="checkbox"] {
+    width: auto;
+}
+
+.modal-content button {
+    padding: 8px 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-content button:hover {
+    opacity: 0.8;
+}
+
+/* Submit and Cancel buttons in Modal */
+.submit-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.cancel-button {
+    background-color: #f44336;
+    color: white;
+    margin-left: 10px;
+}
+
+.submit-button:hover {
+    background-color: #45a049;
+}
+
+.cancel-button:hover {
+    background-color: #d32f2f;
+}
+
+/* Filter Modal */
+.modal-content .filter-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal-content .filter-modal input[type="date"] {
+    width: 100%;
+}
+
+.modal-content .filter-modal .radio-group {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-content .filter-modal .radio-group input {
+    width: auto;
+}

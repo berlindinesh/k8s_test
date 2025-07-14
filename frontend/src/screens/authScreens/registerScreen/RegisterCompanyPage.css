@@ -1,0 +1,385 @@
+/* Main container styles */
+.register-page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+    padding: 40px 20px;
+  }
+  
+  .velustro-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+  
+  .register-content {
+    width: 80%;
+    max-width: 1200px;
+    position: relative;
+    z-index: 1;
+    margin: 0 auto;
+  }
+  
+  /* Card styling */
+  .register-card {
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    color: white;
+    padding: 20px;
+  }
+  
+  .register-card h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  .register-card h3 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  
+  .register-card h4 {
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 500;
+  }
+  
+  /* Form section styling */
+  .form-section {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 25px;
+    color: white;
+  }
+  
+  /* Form control styling */
+  .form-control {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 8px;
+    padding: 10px 15px;
+  }
+  
+  .form-control:focus {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 0.25rem rgba(74, 144, 226, 0.25);
+    color: white;
+  }
+  
+  .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .form-control:disabled {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: rgba(255, 255, 255, 0.4);
+  }
+  
+  /* Form labels */
+  .form-label {
+    color: white;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-text {
+    color: white;
+    font-size: 0.8rem;
+  }
+  
+  /* Input group styling */
+  .input-group .btn-outline-secondary {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .input-group .btn-outline-secondary:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+  }
+  
+  .input-group .form-control {
+    border-radius: 8px 0 0 8px;
+  }
+  
+  .input-group .btn {
+    border-radius: 0 8px 8px 0;
+  }
+  
+  /* Password strength container */
+  .password-strength-container {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    font-size: 0.8rem;
+  }
+  
+  .password-criteria-header {
+    margin-bottom: 5px;
+    color: white;
+  }
+  
+  .password-criteria {
+    display: flex;
+    align-items: center;
+    color: white;
+    margin-bottom: 3px;
+  }
+  
+  .password-criteria.valid {
+    color: #51cf66;
+  }
+  
+  .criteria-icon {
+    margin-right: 5px;
+    color: #ff6b6b;
+  }
+  
+  .criteria-icon.valid {
+    color: #51cf66;
+  }
+  
+  /* Submit button */
+  .submit-button {
+    background-color: #4a90e2;
+    border: none;
+    padding: 12px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 10px;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+  }
+  
+  .submit-button:hover {
+    background-color: #357abd;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+    transition: all 0.3s ease;
+  }
+  
+  .submit-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 10px rgba(74, 144, 226, 0.3);
+  }
+  
+  /* Auth links */
+  .auth-link {
+    color: #4a90e2;
+    text-decoration: none;
+  }
+  
+  .auth-link:hover {
+    text-decoration: underline;
+  }
+  
+  /* Success modal styling */
+  .success-modal .modal-content {
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .success-modal .modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+  
+  .success-modal .modal-title {
+    color: white;
+    font-weight: 600;
+  }
+  
+  .success-modal .modal-body {
+    color: white;
+  }
+  
+  .success-modal p,
+  .success-modal h4 {
+    color: white;
+  }
+  
+  .success-icon-container {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background-color: rgba(40, 167, 69, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .success-icon {
+    font-size: 40px;
+    color: #28a745;
+  }
+  
+  /* Alert styling */
+  .alert-danger {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: white;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    border-radius: 10px;
+  }
+  
+  .alert-success {
+    background-color: rgba(40, 167, 69, 0.2);
+    color: white;
+    border: 1px solid rgba(40, 167, 69, 0.3);
+    border-radius: 10px;
+  }
+  
+  /* Form validation messages */
+  .invalid-feedback {
+    color: #ff8d85;
+  }
+  
+  .valid-feedback {
+    color: #8bef9f;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(74, 144, 226, 0.5);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(74, 144, 226, 0.7);
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 1200px) {
+    .register-content {
+      width: 90%;
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .register-content {
+      width: 95%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .register-page-wrapper {
+      padding: 20px 10px;
+    }
+    
+    .register-card {
+      padding: 15px;
+    }
+    
+    .form-section {
+      padding: 15px;
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+    }
+    
+    h3 {
+      font-size: 1.3rem;
+    }
+    
+    h4 {
+      font-size: 1.1rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .register-page-wrapper {
+      padding: 10px 5px;
+    }
+    
+    .register-content {
+      width: 100%;
+    }
+    
+    .register-card {
+      padding: 10px;
+      border-radius: 15px;
+    }
+    
+    .form-section {
+      padding: 10px;
+    }
+    
+    .password-strength-container {
+      font-size: 0.7rem;
+    }
+    
+    .submit-button {
+      font-size: 1rem;
+      padding: 10px 0;
+    }
+  }
+/* Add this to your existing CSS file */
+
+/* Error message styling */
+.error-message {
+    color: #ff6b6b !important;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+  
+  .form-control.is-invalid {
+    border-color: #ff6b6b;
+    background-image: none; /* Remove the default Bootstrap error icon */
+  }
+  
+  .form-control.is-invalid:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 107, 107, 0.25);
+  }
+  
+  /* Make sure all text in form controls is white */
+  .form-control, 
+  .form-control:focus, 
+  .form-control::placeholder,
+  .form-control.is-invalid,
+  .form-control.is-valid {
+    color: white;
+  }
+  
+  /* Make sure all form text is white */
+  .form-text, 
+  .form-label, 
+  .form-check-label {
+    color: white;
+  }
+  
+  /* Ensure validation feedback is visible */
+  .invalid-feedback {
+    display: block;
+    color: #ff6b6b !important;
+  }
+    

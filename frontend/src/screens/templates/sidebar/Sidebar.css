@@ -1,0 +1,122 @@
+.sidebar {
+    width: 250px;
+    background-color: #0a0a0a !important;
+    padding: 20px;
+    border-right: 1px solid #ddd !important;
+    margin: 0;
+    position: fixed;
+    height: calc(100vh - 60px);
+    top: 60px;
+    left: 0;
+    transition: all 0.3s ease-in-out;
+    overflow-x: hidden;
+    z-index: 1001;
+}
+
+.sidebar-closed .sidebar {
+    width: 60px !important;
+    padding: 20px 10px;
+}
+
+.sidebar-closed .sidebar:hover {
+    width: 250px !important;
+    padding: 20px;
+}
+
+.sidebar-closed .sidebar:hover ~ .main-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+}
+
+.sidebar-closed .sidebar ul li span,
+.sidebar-closed .sidebar h5,
+.sidebar-closed .sidebar p,
+.sidebar-closed .sidebar hr,
+.sidebar-closed .sidebar .sub-menu {
+    display: none;
+}
+
+.sidebar-closed .sidebar:hover ul li span,
+.sidebar-closed .sidebar:hover h5,
+.sidebar-closed .sidebar:hover p,
+.sidebar-closed .sidebar:hover hr,
+.sidebar-closed .sidebar:hover .sub-menu {
+    display: block;
+}
+
+.sidebar-closed .sidebar:hover ul li {
+    padding: 10px 15px;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.sidebar-closed .sidebar:hover ul li svg {
+    margin-right: 10px;
+}
+
+
+.sidebar-closed .sidebar ul li {
+    padding: 10px 0;
+    justify-content: center;
+    width: 40px;  /* Fixed width for icon container */
+}
+
+.sidebar-closed .sidebar ul li svg {
+    margin-right: 0;
+    font-size: 20px;
+    display: block;  /* Ensures icon is always visible */
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.sidebar ul li {
+    padding: 10px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #f4f5f8 !important;
+    background-color: transparent !important;
+    border: none !important;
+    white-space: nowrap;
+}
+ 
+.sidebar ul li:hover {
+    background-color: #3b3d3d !important;
+    color: aqua !important;
+}
+ 
+.sidebar ul li svg {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.sub-menu {
+    margin-left: 20px !important;
+}
+
+.sub-menu li {
+    font-size: 14px !important;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: #0a0a0a;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}

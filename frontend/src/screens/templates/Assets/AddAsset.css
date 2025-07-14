@@ -1,0 +1,92 @@
+/* AddAsset.css */
+
+/* Overlay for modal background */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal container with increased width for better layout */
+.modal-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 60%;
+  max-width: 500px;
+  position: relative;
+}
+
+/* Close button styling */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 18px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* Form group styling for consistent spacing */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Save button styling for better responsiveness */
+.submit-button {
+  background-color: #ff5a5a;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #e04848;
+}
+
+.submit-button:active {
+  background-color: #c83737;
+}
+
+/* Responsive styling for smaller screens */
+@media (max-width: 600px) {
+  .modal-container {
+    width: 90%;
+    padding: 15px;
+  }
+  .submit-button {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
