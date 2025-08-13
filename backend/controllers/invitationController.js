@@ -24,8 +24,8 @@ import bcrypt from 'bcryptjs';
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'a.dineshsundar02@gmail.com',
-    pass: 'xnbj tvjf odej ynit'
+    user: process.env.USER,
+    pass: process.env.PASS
   }
 });
 
@@ -90,7 +90,7 @@ export const sendInvitationEmail = async (userData, password) => {
   const fullName = `${userData.firstName} ${userData.middleName ? userData.middleName + ' ' : ''}${userData.lastName}`;
   
   const mailOptions = {
-    from: '"HRMS Support" <a.dineshsundar02@gmail.com>',
+    from: `"HRMS Support" <${process.env.USER}>`,
     to: userData.email,
     subject: 'Welcome to HRMS - Your Account Invitation',
     html: `

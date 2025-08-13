@@ -38,7 +38,7 @@ export const sendOnboardingEmail = async (
   { name, jobPosition, joiningDate, companyName }
 ) => {
   const mailOptions = {
-    from: process.env.USER,
+    from: `"HRMS Support" <${process.env.USER}>`,
     to: email,
     subject: `Welcome to ${companyName || 'Our Company'}!`,
     html: `
@@ -64,8 +64,8 @@ const transporter = nodemailer.createTransport({
   auth: {
     // user: process.env.USER, // Your email
     // pass: process.env.PASS // Your email password or app password
-    user: 'a.dineshsundar02@gmail.com',
-    pass : 'xnbj tvjf odej ynit' 
+    user: process.env.USER ,
+    pass : process.env.PASS 
   }
 }
 );
@@ -85,7 +85,7 @@ export const sendOtpEmail = async (email, otp, userData = {}) => {
     const subjectPrefix = isContactEmail ? 'Contact Email Verification' : 'Admin Account Verification';
     
     const mailOptions = {
-      from: process.env.USER || `rickyharish30@gmail.com`,
+      from: `"HRMS Support" <${process.env.USER}>` ,
       to: email,
       subject: `${subjectPrefix} - OTP Code`,
       html: `
@@ -143,7 +143,7 @@ export const sendResetEmail = async (email, resetToken) => {
     const resetLink = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
    
     const mailOptions = {
-        from: process.env.USER,
+        from: `"HRMS Support" <${process.env.USER}>`,
         to: email,
         subject: 'Password Reset Request',
         html: `

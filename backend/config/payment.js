@@ -17,7 +17,7 @@ export const PAYMENT_CONFIG = {
   REMINDER_DAYS: [5, 1], // Send reminders 5 days and 1 day before expiry
   
   // Super admin configuration
-  SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL || 'admin@yourcompany.com',
+  SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL ,
   
   // Razorpay theme configuration
   THEME: {

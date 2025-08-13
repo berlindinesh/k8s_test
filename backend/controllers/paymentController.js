@@ -64,10 +64,10 @@ export const createPaymentOrder = async (req, res) => {
     // For payment creation, we allow companies that are still in verification process
     // Payment is part of the registration flow, so pendingVerification is OK
     if (!company.contactEmailVerified) {
-      console.log('⚠️ Company contact email not verified yet, but allowing payment for registration');
+      console.log(' Company contact email not verified yet, but allowing payment for registration');
     }
     
-    console.log(`✅ Company verification status:`, {
+    console.log(` Company verification status:`, {
       isActive: company.isActive,
       pendingVerification: company.pendingVerification,
       contactEmailVerified: company.contactEmailVerified
@@ -94,7 +94,7 @@ export const createPaymentOrder = async (req, res) => {
       });
       
       if (admin) {
-        console.log(`✅ Found admin for company: ${admin.email}`);
+        console.log(` Found admin for company: ${admin.email}`);
       }
     }
     
@@ -122,7 +122,8 @@ export const createPaymentOrder = async (req, res) => {
     }
     
     // Generate unique order ID
-    const orderId = `order_${Date.now()}_${uuidv4().substr(0, 8)}`;
+    const orderId = `order_${Date.now()}_${uuidv4().substring(0, 8)}`;
+    console.log(`🆔 Generated unique order ID: ${orderId}`);
     
     // Prepare company data for payment options
     const companyData = {
@@ -134,15 +135,33 @@ export const createPaymentOrder = async (req, res) => {
     // Generate Razorpay order options
     const orderOptions = generatePaymentOptions(companyData, orderId);
     
-    console.log('Creating Razorpay order:', {
+    console.log('💰 Creating Razorpay order with options:', {
       orderId,
       amount: orderOptions.amount,
       currency: orderOptions.currency,
-      companyCode: company.companyCode
+      companyCode: company.companyCode,
+      fullOrderOptions: orderOptions
     });
     
     // Create order with Razorpay
-    const razorpayOrder = await razorpayInstance.orders.create(orderOptions);
+    let razorpayOrder;
+    try {
+      razorpayOrder = await razorpayInstance.orders.create(orderOptions);
+      console.log('✅ Razorpay order created successfully:', {
+        id: razorpayOrder.id,
+        amount: razorpayOrder.amount,
+        currency: razorpayOrder.currency,
+        status: razorpayOrder.status
+      });
+    } catch (razorpayError) {
+      console.error('❌ Razorpay order creation failed:', {
+        error: razorpayError.message,
+        statusCode: razorpayError.statusCode,
+        description: razorpayError.error?.description,
+        orderOptions: orderOptions
+      });
+      throw razorpayError;
+    }
     
     // Save payment record in database
     const payment = new Payment({

@@ -1021,14 +1021,14 @@ const message = `
         service : 'gmail',
         // port: process.env.EMAIL_PORT,
         auth: {
-          user: `a.dineshsundar02@gmail.com`,
-          pass: `xnbj tvjf odej ynit`
+          user: process.env.USER,
+          pass: process.env.PASS
         }
       });
       
       // Send email
       await transporter.sendMail({
-        from: `"HRMS Support" <${'a.dineshsundar02@gmail.com'}>`,
+        from: `"HRMS Support" <${process.env.USER}>`,
         to: user.email,
         subject: 'Password Reset Request',
         html: message
@@ -1278,8 +1278,8 @@ export const resetPassword = async (req, res) => {
       const transporter = nodemailer.createTransporter({
         service: 'gmail',
         auth: {
-          user: 'a.dineshsundar02@gmail.com',
-          pass: 'xnbj tvjf odej ynit'
+          user: process.env.USER,
+          pass: process.env.PASS
         }
       });
       
@@ -1303,7 +1303,7 @@ export const resetPassword = async (req, res) => {
       `;
       
       await transporter.sendMail({
-        from: `"HRMS Support" <${'a.dineshsundar02@gmail.com'}>`,
+        from: `"HRMS Support" <${process.env.USER}>`,
         to: mainUser.email,
         subject: 'Password Reset Successful - HRMS',
         html: emailContent
