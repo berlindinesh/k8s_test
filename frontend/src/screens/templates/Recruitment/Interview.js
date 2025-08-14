@@ -40,6 +40,8 @@ const Interview = () => {
   const [status, setStatus] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [dateError, setDateError] = useState("");
+  const [candidateError, setCandidateError] = useState("");
+  const [interviewerError, setInterviewerError] = useState("");
 
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -55,59 +57,32 @@ const Interview = () => {
     setDeleteId(id);
     setOpenDeleteDialog(true);
   };
+  const confirmDelete = () => {
+    if (deleteId) {
+      // const token = getAuthToken();
 
-  // // Add this function to handle the actual deletion
-  // const confirmDelete = () => {
-  //   if (deleteId) {
-  //     axios
-  //       .delete(`${process.env.REACT_APP_API_URL}/api/interviews/${deleteId}`)
-  //       .then(() => {
-  //         setData(data.filter((item) => item._id !== deleteId));
-  //         setSnackbar({
-  //           open: true,
-  //           message: "Interview deleted successfully",
-  //           severity: "success",
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error deleting interview:", error);
-  //         setSnackbar({
-  //           open: true,
-  //           message: "Error deleting interview",
-  //           severity: "error",
-  //         });
-  //       });
-  //   }
-  //   setOpenDeleteDialog(false);
-  //   setDeleteId(null);
-  // };
-
-  // Update the confirmDelete function
-const confirmDelete = () => {
-  if (deleteId) {
-    // const token = getAuthToken();
-    
-        api.delete(`/interviews/${deleteId}`, )
-      .then(() => {
-        setData(data.filter((item) => item._id !== deleteId));
-        setSnackbar({
-          open: true,
-          message: "Interview deleted successfully",
-          severity: "success",
+      api
+        .delete(`/interviews/${deleteId}`)
+        .then(() => {
+          setData(data.filter((item) => item._id !== deleteId));
+          setSnackbar({
+            open: true,
+            message: "Interview deleted successfully",
+            severity: "success",
+          });
+        })
+        .catch((error) => {
+          console.error("Error deleting interview:", error);
+          setSnackbar({
+            open: true,
+            message: error.response?.data?.error || "Error deleting interview",
+            severity: "error",
+          });
         });
-      })
-      .catch((error) => {
-        console.error("Error deleting interview:", error);
-        setSnackbar({
-          open: true,
-          message: error.response?.data?.error || "Error deleting interview",
-          severity: "error",
-        });
-      });
-  }
-  setOpenDeleteDialog(false);
-  setDeleteId(null);
-};
+    }
+    setOpenDeleteDialog(false);
+    setDeleteId(null);
+  };
 
   useEffect(() => {
     fetchInterviews();
@@ -130,25 +105,24 @@ const confirmDelete = () => {
   // };
 
   // Update the fetchInterviews function
-const fetchInterviews = () => {
-  const url = "/interviews";
-  // const token = getAuthToken();
-  
-  api
-    .get(url, )
-    .then((response) => {
-      let filteredData = response.data;
-      if (statusFilter !== "All") {
-        filteredData = response.data.filter(
-          (item) => item.status === statusFilter
-        );
-      }
-      setData(filteredData);
-    })
-    .catch((error) => console.error("Error fetching interviews:", error));
-};
-  
-  
+  const fetchInterviews = () => {
+    const url = "/interviews";
+    // const token = getAuthToken();
+
+    api
+      .get(url)
+      .then((response) => {
+        let filteredData = response.data;
+        if (statusFilter !== "All") {
+          filteredData = response.data.filter(
+            (item) => item.status === statusFilter
+          );
+        }
+        setData(filteredData);
+      })
+      .catch((error) => console.error("Error fetching interviews:", error));
+  };
+
   // Add this function to validate date (only current or future dates)
   const validateDate = (dateString) => {
     if (!dateString) return false;
@@ -258,6 +232,9 @@ const fetchInterviews = () => {
       setStatus("");
       setDateError("");
     }
+    //Reset validation errors
+    setCandidateError("");
+    setInterviewerError("");
     setOpenDialog(true);
   };
 
@@ -328,87 +305,132 @@ const fetchInterviews = () => {
   // };
 
   // Add this function if it doesn't exist
-  
+
   // Add this function to get the auth token
-const getAuthToken = () => {
-  return localStorage.getItem('token');
-};
-
-// Update the handleSave function
-const handleSave = () => {
-  // Check for date validation
-  if (!validateDate(date)) {
-    setDateError("Please select current or future date");
-    return;
-  }
-
-  const interviewData = {
-    candidate,
-    interviewer,
-    date,
-    time,
-    description,
-    status: status || "Scheduled",
+  const getAuthToken = () => {
+    return localStorage.getItem("token");
   };
 
-  // Get the authentication token
-  // const token = getAuthToken();
-  // const headers = {
-  //   'Authorization': `Bearer ${token}`
-  // };
+  // Add these validation functions before the handleSave function
+  const validateName = (value) => {
+    const alphabetRegex = /^[A-Za-z\s]+$/;
+    return alphabetRegex.test(value);
+  };
 
-  if (editMode && selectedRow) {
-    api
-      .put(
-        `/interviews/${selectedRow._id}`,
-        interviewData,
-        
-      )
-      .then((response) => {
-        setData((prevData) =>
-          prevData.map((item) =>
-            item._id === selectedRow._id ? response.data : item
-          )
-        );
-        setOpenDialog(false);
-        setSnackbar({
-          open: true,
-          message: "Interview updated successfully",
-          severity: "success",
-        });
-      })
-      .catch((error) => {
-        console.error("Error updating interview:", error);
-        setSnackbar({
-          open: true,
-          message: error.response?.data?.error || "Error updating interview",
-          severity: "error",
-        });
-      });
-  } else {
-    api
-      .post("/interviews", interviewData,)
-      .then((response) => {
-        setData([...data, response.data]);
-        setOpenDialog(false);
-        setSnackbar({
-          open: true,
-          message: "Interview added successfully",
-          severity: "success",
-        });
-      })
-      .catch((error) => {
-        console.error("Error adding interview:", error);
-        setSnackbar({
-          open: true,
-          message: error.response?.data?.error || "Error adding interview",
-          severity: "error",
-        });
-      });
-  }
-};
+  const handleCandidateChange = (e) => {
+    const value = e.target.value;
+    setCandidate(value);
+    if (!value) {
+      setCandidateError("Candidate name is required");
+    } else if (!validateName(value)) {
+      setCandidateError("Only alphabets are allowed");
+    } else {
+      setCandidateError("");
+    }
+  };
 
-  
+  const handleInterviewerChange = (e) => {
+    const value = e.target.value;
+    setInterviewer(value);
+    if (!value) {
+      setInterviewerError("Interviewer name is required");
+    } else if (!validateName(value)) {
+      setInterviewerError("Only alphabets are allowed");
+    } else {
+      setInterviewerError("");
+    }
+  };
+
+  // Update the handleSave function
+  const handleSave = () => {
+    // Check for date validation
+    if (!validateDate(date)) {
+      setDateError("Please select current or future date");
+      return;
+    }
+
+    // Validate all required fields
+    if (!candidate || !interviewer || !date || !time) {
+      setSnackbar({
+        open: true,
+        message: "Please fill all required fields",
+        severity: "error",
+      });
+      return;
+    }
+
+    // Validate names
+    if (!validateName(candidate) || !validateName(interviewer)) {
+      setSnackbar({
+        open: true,
+        message: "Please correct the validation errors",
+        severity: "error",
+      });
+      return;
+    }
+
+    // Check for date validation
+    if (!validateDate(date)) {
+      setDateError("Please select current or future date");
+      return;
+    }
+
+    const interviewData = {
+      candidate,
+      interviewer,
+      date,
+      time,
+      description,
+      status: status || "Scheduled",
+    };
+
+    if (editMode && selectedRow) {
+      api
+        .put(`/interviews/${selectedRow._id}`, interviewData)
+        .then((response) => {
+          setData((prevData) =>
+            prevData.map((item) =>
+              item._id === selectedRow._id ? response.data : item
+            )
+          );
+          setOpenDialog(false);
+          setSnackbar({
+            open: true,
+            message: "Interview updated successfully",
+            severity: "success",
+          });
+        })
+        .catch((error) => {
+          console.error("Error updating interview:", error);
+          setSnackbar({
+            open: true,
+            message: error.response?.data?.error || "Error updating interview",
+            severity: "error",
+          });
+        });
+    } else {
+      api
+        .post("/interviews", interviewData)
+        .then((response) => {
+          setData([...data, response.data]);
+          setOpenDialog(false);
+          setSnackbar({
+            open: true,
+            message: "Interview added successfully",
+            severity: "success",
+          });
+        })
+        .catch((error) => {
+          console.error("Error adding interview:", error);
+          setSnackbar({
+            open: true,
+            message: error.response?.data?.error || "Error adding interview",
+            severity: "error",
+          });
+        });
+    }
+  };
+
   const handleDialogClose = () => {
     setOpenDialog(false);
     setDateError("");
@@ -828,7 +850,10 @@ const handleSave = () => {
             <TextField
               label="Candidate"
               value={candidate}
-              onChange={(e) => setCandidate(e.target.value)}
+              onChange={handleCandidateChange}
+              error={!!candidateError}
+              helperText={candidateError}
+              required
               fullWidth
               sx={{
                 mt: 2,
@@ -848,7 +873,10 @@ const handleSave = () => {
             <TextField
               label="Interviewer"
               value={interviewer}
-              onChange={(e) => setInterviewer(e.target.value)}
+              onChange={handleInterviewerChange}
+              error={!!interviewerError}
+              helperText={interviewerError}
+              required
               fullWidth
               sx={{
                 "& .MuiOutlinedInput-root": {
