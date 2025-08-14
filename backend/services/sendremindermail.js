@@ -7,8 +7,8 @@ dotenv.config();
 const transporter = nodemailer.createTransport({
   service: 'gmail',  // Use 'gmail' service instead of custom host/port
   auth: {
-    user: process.env.USER || 'rickyharish30@gmail.com',
-    pass: process.env.PASS || 'irnb atlq oani ytlq',
+    user: process.env.USER ,
+    pass: process.env.PASS ,
   }
 });
 
@@ -72,7 +72,7 @@ export const sendReminderEmail = async (options) => {
     
     // Send email
     const mailOptions = {
-      from: `"HRMS Feedback System" <rickyharish30@gmail.com>`,
+      from: `"HRMS Support" <${process.env.USER}>`,
       to: recipients,
       subject: options.subject || 'Feedback Reminder',
       html: html

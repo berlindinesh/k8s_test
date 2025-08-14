@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 
 export const sendResetEmail = async (email, resetUrl) => {
   const mailOptions = {
-    from: process.env.USER,
+    from: `"HRMS Support" <${process.env.USER}>`,
     to: email,
     subject: 'Password Reset Request',
     html: `

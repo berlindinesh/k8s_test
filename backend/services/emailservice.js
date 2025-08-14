@@ -3,8 +3,8 @@ import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: `a.dineshsundar02@gmail.com`,
-    pass: `xnbj tvjf odej ynit`
+    user: process.env.USER,  
+    pass: process.env.PASS  
   }
 });
 
@@ -87,7 +87,7 @@ export const sendResignationEmail = async (resignationData) => {
   }
 
   const mailOptions = {
-    from: process.env.USER,  // Send from the configured email
+    from: `"HRMS Support" <${process.env.USER}>`,  // Send from the configured email
     to: isStatusUpdate ? resignationData.email : process.env.USER, // Send to user or HR based on type
     subject: subject,
     html: emailContent
@@ -100,7 +100,7 @@ export const sendInvitationEmail = async (userData, password) => {
   const fullName = `${userData.firstName} ${userData.middleName ? userData.middleName + ' ' : ''}${userData.lastName}`;
   
   const mailOptions = {
-    from: process.env.USER,  // Send from the configured email
+    from: `"HRMS Support" <${process.env.USER}>`,  // Send from the configured email
     to: userData.email,
     subject: 'Welcome to HRMS - Your Account Invitation',
     html: `

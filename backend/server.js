@@ -37,6 +37,7 @@ import notificationRoutes from './routes/notificationRoutes.js';
 
 import companyRoutes from './routes/companyRoutes.js';
 import roleRoutes from './routes/roleRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
 import { authenticate, companyFilter } from './middleware/companyAuth.js';
 import invitationRoutes from './routes/invitationRoutes.js';
 //import authTestRoutes from './routes/authTestRoutes.js';
@@ -44,6 +45,7 @@ import invitationRoutes from './routes/invitationRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 
 // import { startAllJobs } from './Jobs/index.js'; // Import the job scheduler
+import { startExpiryReminderScheduler } from './jobs/paymentExpiryScheduler.js';
 
 import { fileURLToPath } from 'url';
 import { dirname} from "path";
@@ -312,6 +314,14 @@ app.use('/api/users', userRoutes);
 app.use("/api/auth", authRouter);
 app.use("/api/companies", companyRoutes); // Company routes handle their own authentication
 
+// CRITICAL: Payment routes MUST be here (before ANY routes with authentication middleware)
+app.use('/api/payments', (req, res, next) => {
+  console.log(`🔓 PAYMENT ROUTE: ${req.method} ${req.url} - NO AUTH REQUIRED`);
+  console.log(`🔗 Origin: ${req.headers.origin || 'unknown'}`);
+  console.log(`🔑 Authorization header: ${req.headers.authorization ? 'PRESENT (IGNORING)' : 'NOT PRESENT'}`);
+  next();
+}, paymentRoutes);
+
 // Protected routes - these routes should handle their own authentication
 app.use("/api/employees", employeesRouter);
 app.use("/api/profiles", profileRouter);
@@ -363,6 +373,8 @@ app.use('/api/leave-requests', leaveRequestRoutes);
 app.use('/api/s3', s3Routes);
 // app.use('/api/documents', documentRoute);
 
+// Payment routes already registered above as public routes
+
 // User management routes
 app.use('/api/roles', roleRoutes);
 app.use('/api/invitations', invitationRoutes);
@@ -378,4 +390,11 @@ const PORT = process.env.PORT || 5002;
 server.listen(PORT, '0.0.0.0', () => {
   //console.log(`✨ Server running on port ${PORT}`.yellow.bold);
   console.log(`✨ Server running on port 0.0.0.0:${PORT}`.yellow.bold);
+  
+  // Start payment expiry reminder scheduler
+  try {
+    startExpiryReminderScheduler();
+  } catch (error) {
+    console.error('Failed to start payment expiry scheduler:', error);
+  }
 });
