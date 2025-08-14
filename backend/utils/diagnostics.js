@@ -49,7 +49,7 @@ export const printSocketDiagnostics = (allowedOrigins) => {
 };
 
 export const checkMissingEnvVars = () => {
-  const required = ['JWT_SECRET', 'MONGODB_URI'];
+  const required = ['JWT_SECRET', 'MONGO_URI'];
   const missing = required.filter(key => !process.env[key]);
   
   if (missing.length > 0) {
@@ -58,7 +58,7 @@ export const checkMissingEnvVars = () => {
     console.log('');
   }
   
-  const recommended = ['ALLOWED_ORIGINS', 'EMAIL_USER', 'EMAIL_PASS'];
+  const recommended = ['ALLOWED_ORIGINS', 'USER', 'PASS'];
   const missingRecommended = recommended.filter(key => !process.env[key]);
   
   if (missingRecommended.length > 0) {
