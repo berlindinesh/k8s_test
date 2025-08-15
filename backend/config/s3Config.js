@@ -134,8 +134,8 @@ const companyLogoS3Storage = multerS3 ? multerS3({
 const companyLogoLocalStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadsDir = path.join(process.cwd(), 'uploads/company-logos');
-    if (!require('fs').existsSync(uploadsDir)) {
-      require('fs').mkdirSync(uploadsDir, { recursive: true });
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
     }
     cb(null, uploadsDir);
   },
@@ -144,6 +144,19 @@ const companyLogoLocalStorage = multer.diskStorage({
     cb(null, 'logo-' + uniqueSuffix + path.extname(file.originalname));
   }
 });
+// const companyLogoLocalStorage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     const uploadsDir = path.join(process.cwd(), 'uploads/company-logos');
+//     if (!require('fs').existsSync(uploadsDir)) {
+//       require('fs').mkdirSync(uploadsDir, { recursive: true });
+//     }
+//     cb(null, uploadsDir);
+//   },
+//   filename: (req, file, cb) => {
+//     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+//     cb(null, 'logo-' + uniqueSuffix + path.extname(file.originalname));
+//   }
+// });
 
 // Multer Configuration for employees
 const upload = multer({

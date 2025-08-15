@@ -1,294 +1,434 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { TextField, Button, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Select, FormControl, InputLabel, Checkbox, FormControlLabel,Radio,RadioGroup } from '@mui/material';
-import { motion } from 'framer-motion';
-import { gsap } from 'gsap';
-import { useFormik } from 'formik';
+import React, { useState } from 'react';
+import { 
+  TextField, 
+  Button, 
+  MenuItem, 
+  Paper, 
+  Typography, 
+  Select, 
+  FormControl, 
+  InputLabel, 
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  FormLabel,
+  Grid,
+  Card,
+  CardContent,
+  IconButton,
+  Box,
+  FormHelperText
+} from '@mui/material';
+import { Formik, Form, Field, FieldArray } from 'formik';
 import * as Yup from 'yup';
+import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import api from "../api/axiosInstance";
+import { toast } from 'react-toastify';
 
-const FamilyDetailsForm = ({ nextStep, prevStep, handleFormDataChange, savedFamilyDetails }) => {
-  const tableRef = useRef(null);
+const FamilyDetailsForm = ({ nextStep, prevStep, handleFormDataChange, savedFamilyDetails, employeeId, savedData }) => {
+  // Helper function to convert to sentence case
+  const toSentenceCase = (str) => {
+    if (!str) return "";
+    return str
+      .split(" ")
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+  };
+
+  const defaultInitialValues = {
+    familyDetails: [
+      { 
+        name: '', 
+        relation: '', 
+        dob: '', 
+        dependent: '', 
+        employed: '', 
+        sameCompany: '', 
+        empCode: '', 
+        department: '' 
+      }
+    ]
+  };
+
+  // Handle different data structures - savedData might be array or object
+  const familyArray = Array.isArray(savedData) ? savedData : 
+                     (Array.isArray(savedFamilyDetails) ? savedFamilyDetails : 
+                     (Array.isArray(savedData?.familyDetails) ? savedData.familyDetails : 
+                     defaultInitialValues.familyDetails));
+
+  const initialValues = {
+    familyDetails: familyArray
+  };
   
-  useEffect(() => {
-    gsap.fromTo(tableRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1 });
-  }, []);
+  console.log('FamilyDetailsForm initialValues:', initialValues);
 
-  const [familyMembers, setFamilyMembers] = useState(savedFamilyDetails || [
-    { name: '', relation: '', dob: '', dependent: 'No', employed: 'unemployed', sameCompany: false, empCode: '', department: '' },
-  ]);
-
-//   // Add this function at the top of your component or before the component definition
-// const getAuthToken = () => {
-//   return localStorage.getItem('token');
-// };
-
-
-  // const formik = useFormik({
-  //   initialValues: { familyDetails: familyMembers },
-  //   validationSchema: Yup.object({
-  //     familyDetails: Yup.array().of(
-  //       Yup.object().shape({
-  //         name: Yup.string().required('Name is required'),
-  //         relation: Yup.string().required('Relation is required'),
-  //         dob: Yup.string().required('Date of birth is required'),
-  //       })        
-  //     ),
-  //   }),
-  //   enableReinitialize: true,
-  //   onSubmit: async (values) => {
-  //     try {
-  //       const employeeId = localStorage.getItem('Emp_ID');
-  //       const response = await axios.post('${process.env.REACT_APP_API_URL}/api/employees/family-details', {
-  //         employeeId,
-  //         familyDetails: values.familyDetails
-  //       });
-  
-  //       if (response.data.success) {
-  //         nextStep();
-  //       }
-  //     } catch (error) {
-  //       console.error('Error saving family details:', error);
-  //     }
-  //   },
-  // });
-  
-
-  // Update the formik configuration
-const formik = useFormik({
-  initialValues: { familyDetails: familyMembers },
-  validationSchema: Yup.object({
+  const validationSchema = Yup.object({
     familyDetails: Yup.array().of(
       Yup.object().shape({
-        name: Yup.string().required('Name is required'),
+        name: Yup.string()
+          .matches(/^[A-Za-z\s]+$/, 'Name should only contain alphabets')
+          .required('Family member name is required'),
         relation: Yup.string().required('Relation is required'),
-        dob: Yup.string().required('Date of birth is required'),
-      })        
-    ),
-  }),
-  enableReinitialize: true,
-  onSubmit: async (values) => {
-    try {
-      const employeeId = localStorage.getItem('Emp_ID');
+        dob: Yup.date()
+          .required('Date of birth is required')
+          .max(new Date(), 'Date cannot be in the future'),
+        dependent: Yup.string().required('Dependent status is required'),
+        employed: Yup.string().required('Employment status is required'),
+        sameCompany: Yup.string().required('Same company status is required'),
+        
+        // Conditional validation for employee code and department
+        empCode: Yup.string().when('sameCompany', {
+          is: 'yes',
+          then: () => Yup.string()
+            .matches(/^[A-Za-z0-9]+$/, 'Employee code should contain only letters and numbers')
+            .required('Employee code is required when working in same company'),
+          otherwise: () => Yup.string()
+        }),
+        department: Yup.string().when('sameCompany', {
+          is: 'yes',
+          then: () => Yup.string()
+            .matches(/^[A-Za-z\s]+$/, 'Department should only contain alphabets')
+            .required('Department is required when working in same company'),
+          otherwise: () => Yup.string()
+        })
+      })
+    ).min(1, 'At least one family member is required')
+  });
+
+  // Custom field component with validation
+  const CustomTextField = ({ field, form, label, type = "text", ...props }) => {
+    const handleChange = (e) => {
+      let value = e.target.value;
       
-      const response = await api.post('employees/family-details', 
-        {
-          employeeId,
-          familyDetails: values.familyDetails
-        }
-      );
+      // Handle name and department fields - only alphabets with sentence case
+      if (field.name.includes('name') || field.name.includes('department')) {
+        value = value.replace(/[^A-Za-z\s]/g, '');
+        value = toSentenceCase(value);
+      }
+      
+      // Handle employee code - alphanumeric only, uppercase
+      if (field.name.includes('empCode')) {
+        value = value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+      }
+      
+      // Update the field value
+      form.setFieldValue(field.name, value);
+    };
+
+    // Get nested error for array fields
+    const fieldPath = field.name.split('.');
+    let fieldError = form.errors;
+    let fieldValue = form.values;
+    
+    for (const path of fieldPath) {
+      fieldError = fieldError?.[path];
+      fieldValue = fieldValue?.[path];
+    }
+
+    const hasError = fieldError && (form.touched[field.name] || fieldValue);
+
+    return (
+      <TextField
+        {...field}
+        {...props}
+        label={label}
+        type={type}
+        onChange={handleChange}
+        error={hasError}
+        helperText={hasError ? fieldError : ""}
+        fullWidth
+        size="small"
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '8px',
+          }
+        }}
+      />
+    );
+  };
+
+  const handleSubmit = async (values) => {
+    try {
+      console.log('Form values being submitted:', values);
+
+      const response = await api.post('employees/family-details', {
+        employeeId: employeeId,
+        familyDetails: values.familyDetails
+      });
 
       if (response.data.success) {
+        toast.success('Family details saved successfully');
         nextStep();
       }
     } catch (error) {
       console.error('Error saving family details:', error);
-      // Add better error handling
-      console.error('Error response:', error.response?.data);
-      console.error('Error status:', error.response?.status);
+      toast.error(error.response?.data?.error || 'Failed to save family details');
     }
-  },
-});
-
-
-  
-  
-
-  const handleInputChange = (index, event) => {
-    const { name, value, type, checked } = event.target;
-    const updatedMembers = [...formik.values.familyDetails];
-    updatedMembers[index][name] = type === 'checkbox' ? checked : value;
-    formik.setFieldValue('familyDetails', updatedMembers);
-  };
-
-  const addFamilyMember = () => {
-    formik.setFieldValue('familyDetails', [...formik.values.familyDetails, { name: '', relation: '', dob: '', dependent: 'No', employed: 'unemployed', sameCompany: false, empCode: '', department: '' }]);
-  };
-
-  const removeFamilyMember = (index) => {
-    const updatedMembers = formik.values.familyDetails.filter((_, i) => i !== index);
-    formik.setFieldValue('familyDetails', updatedMembers);
-  };
-
-  const formFieldStyles = {
-    minWidth: '200px', // Set a fixed width for all form fields
-    width: '200px'
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ maxWidth: '100%', overflowX: 'auto' }} >
-      <Typography variant="h5" gutterBottom>
-        FORM-5: EMPLOYEE FAMILY INFORMATION
+    <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
+      <Typography variant="h5" gutterBottom color="primary">
+        Family Information
       </Typography>
-      <form onSubmit={formik.handleSubmit}>
-        <TableContainer component={Paper} style={{ marginTop: '20px' }} ref={tableRef}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Family Member Name</TableCell>
-                <TableCell>Relation</TableCell>
-                <TableCell>Date of Birth</TableCell>
-                <TableCell>Dependent</TableCell>
-                <TableCell>Employment Status</TableCell>
-                <TableCell>Working in Same Company</TableCell>
-                <TableCell>Employee Code</TableCell>
-                <TableCell>Department</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {formik.values.familyDetails.map((member, index) => (
-                <TableRow key={index}>
-  <TableCell style={{ padding: '8px 4px' }}>
-  <TextField
-    variant="outlined"
-    size="small"
-    name="name"
-    value={member.name}
-    onChange={(e) => {
-      const formattedName = e.target.value
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(' ');
-      handleInputChange(index, {
-        target: {
-          name: 'name',
-          value: formattedName
-        }
-      });
-    }}
-    error={Boolean(formik.errors.familyDetails?.[index]?.name)}
-    helperText={formik.errors.familyDetails?.[index]?.name}
-    sx={formFieldStyles}
-  />
-</TableCell>
 
-                  <TableCell style={{ padding: '8px 4px' }}>
-  <Select
-    variant="outlined"
-    size="small"
-    name="relation"
-    value={member.relation}
-    onChange={(e) => handleInputChange(index, e)}
-    error={Boolean(formik.errors.familyDetails?.[index]?.relation)}
-    sx={formFieldStyles}
-  >
-    <MenuItem value="father">Father</MenuItem>
-    <MenuItem value="mother">Mother</MenuItem>
-    <MenuItem value="younger_brother">Younger Brother</MenuItem>
-    <MenuItem value="younger_sister">Younger Sister</MenuItem>
-    <MenuItem value="elder_brother">Elder Brother</MenuItem>
-    <MenuItem value="elder_sister">Elder Sister</MenuItem>
-    <MenuItem value="wife">Wife</MenuItem>
-    <MenuItem value="son">Son</MenuItem>
-    <MenuItem value="daughter">Daughter</MenuItem>
-  </Select>
-</TableCell>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
+        validate={(values) => {
+          // This will trigger validation on every change for immediate error display
+          try {
+            validationSchema.validateSync(values, { abortEarly: false });
+          } catch (err) {
+            const errors = {};
+            err.inner.forEach((error) => {
+              if (error.path) {
+                errors[error.path] = error.message;
+              }
+            });
+            return errors;
+          }
+        }}
+      >
+        {({ values, errors, touched, setFieldValue, isValid }) => (
+          <Form>
+            <FieldArray name="familyDetails">
+              {({ remove, push }) => (
+                <div>
+                  {values.familyDetails.map((member, index) => (
+                    <Card key={index} sx={{ mb: 3, backgroundColor: '#f8f9fa' }}>
+                      <CardContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                          <Typography variant="h6" color="primary">
+                            Family Member {index + 1}
+                          </Typography>
+                          {values.familyDetails.length > 1 && (
+                            <IconButton 
+                              onClick={() => remove(index)}
+                              color="error"
+                              size="small"
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          )}
+                        </Box>
 
-                  <TableCell style={{ padding: '8px 4px' }}>
-                    <TextField
-                      variant="outlined"
-                      size="small"
-                      type="date"
-                      name="dob"
-                      value={member.dob}
-                      onChange={(e) => handleInputChange(index, e)}
-                      error={Boolean(formik.errors.familyDetails?.[index]?.dob)}
-                      helperText={formik.errors.familyDetails?.[index]?.dob}
-                      sx={formFieldStyles}
-                    />
-                  </TableCell>
-                  <TableCell style={{ padding: '8px 4px' }}>
-  <FormControl sx={formFieldStyles}>
-    <RadioGroup
-      row
-      name="dependent"
-      value={member.dependent}
-      onChange={(e) => handleInputChange(index, e)}
-    >
-      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-      <FormControlLabel value="No" control={<Radio />} label="No" />
-    </RadioGroup>
-  </FormControl>
-</TableCell>
+                        <Grid container spacing={2}>
+                          {/* Family Member Name */}
+                          <Grid item xs={12} sm={6}>
+                            <Field
+                              name={`familyDetails.${index}.name`}
+                              component={CustomTextField}
+                              label="Family Member Name*"
+                            />
+                          </Grid>
 
-<TableCell style={{ padding: '8px 4px' }}>
-  <Select 
-    name="employed" 
-    value={member.employed} 
-    onChange={(e) => handleInputChange(index, e)}
-    size="small"
-    sx={formFieldStyles}
-  >
-    <MenuItem value="employed">Employed</MenuItem>
-    <MenuItem value="unemployed">Unemployed</MenuItem>
-  </Select>
-</TableCell>
+                          {/* Relation */}
+                          <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth size="small">
+                              <InputLabel>Relation*</InputLabel>
+                              <Field name={`familyDetails.${index}.relation`}>
+                                {({ field, form }) => (
+                                  <Select
+                                    {...field}
+                                    label="Relation"
+                                    error={Boolean(errors.familyDetails?.[index]?.relation && (touched.familyDetails?.[index]?.relation || values.familyDetails[index].relation))}
+                                    sx={{
+                                      '& .MuiOutlinedInput-root': {
+                                        borderRadius: '8px',
+                                      }
+                                    }}
+                                  >
+                                    <MenuItem value="">Select Relation</MenuItem>
+                                    <MenuItem value="father">Father</MenuItem>
+                                    <MenuItem value="mother">Mother</MenuItem>
+                                    <MenuItem value="brother">Brother</MenuItem>
+                                    <MenuItem value="sister">Sister</MenuItem>
+                                    <MenuItem value="husband">Husband</MenuItem>    
+                                    <MenuItem value="wife">Wife</MenuItem>
+                                    <MenuItem value="son">Son</MenuItem>
+                                    <MenuItem value="daughter">Daughter</MenuItem>
+                                  </Select>
+                                )}
+                              </Field>
+                              {errors.familyDetails?.[index]?.relation && (touched.familyDetails?.[index]?.relation || values.familyDetails[index].relation) && (
+                                <FormHelperText error>{errors.familyDetails[index].relation}</FormHelperText>
+                              )}
+                            </FormControl>
+                          </Grid>
 
-<TableCell style={{ padding: '8px 4px' }}>
-  <FormControl sx={formFieldStyles}>
-    <RadioGroup
-      row
-      name="sameCompany"
-      value={member.sameCompany ? "Yes" : "No"}
-      onChange={(e) => handleInputChange(index, {
-        target: {
-          name: "sameCompany",
-          value: e.target.value === "Yes"
-        }
-      })}
-    >
-      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-      <FormControlLabel value="No" control={<Radio />} label="No" />
-    </RadioGroup>
-  </FormControl>
-</TableCell>
+                          {/* Date of Birth */}
+                          <Grid item xs={12} sm={6}>
+                            <Field
+                              name={`familyDetails.${index}.dob`}
+                              component={CustomTextField}
+                              label="Date of Birth*"
+                              type="date"
+                              InputLabelProps={{ shrink: true }}
+                            />
+                          </Grid>
 
-{member.sameCompany ? (
-  <>
-    <TableCell style={{ padding: '8px 4px' }}>
-      <TextField 
-        variant="outlined" 
-        size="small" 
-        name="empCode" 
-        value={member.empCode} 
-        onChange={(e) => handleInputChange(index, e)}
-        sx={formFieldStyles}
-      />
-    </TableCell>
-    <TableCell style={{ padding: '8px 4px' }}>
-      <TextField 
-        variant="outlined" 
-        size="small" 
-        name="department" 
-        value={member.department} 
-        onChange={(e) => handleInputChange(index, e)}
-        sx={formFieldStyles}
-      />
-    </TableCell>
-  </>
-) : (
-  <>
-    <TableCell style={{ padding: '8px 4px' }}>-</TableCell>
-    <TableCell style={{ padding: '8px 4px' }}>-</TableCell>
-  </>
-)}
+                          {/* Dependent Status */}
+                          <Grid item xs={12} sm={6}>
+                            <FormControl component="fieldset" size="small">
+                              <FormLabel component="legend">Dependent*</FormLabel>
+                              <Field name={`familyDetails.${index}.dependent`}>
+                                {({ field }) => (
+                                  <RadioGroup
+                                    {...field}
+                                    row
+                                  >
+                                    <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                                    <FormControlLabel value="no" control={<Radio />} label="No" />
+                                  </RadioGroup>
+                                )}
+                              </Field>
+                              {errors.familyDetails?.[index]?.dependent && (touched.familyDetails?.[index]?.dependent || values.familyDetails[index].dependent) && (
+                                <FormHelperText error>{errors.familyDetails[index].dependent}</FormHelperText>
+                              )}
+                            </FormControl>
+                          </Grid>
 
+                          {/* Employment Status */}
+                          <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth size="small">
+                              <InputLabel>Employment Status*</InputLabel>
+                              <Field name={`familyDetails.${index}.employed`}>
+                                {({ field }) => (
+                                  <Select
+                                    {...field}
+                                    label="Employment Status"
+                                    error={Boolean(errors.familyDetails?.[index]?.employed && (touched.familyDetails?.[index]?.employed || values.familyDetails[index].employed))}
+                                    sx={{
+                                      '& .MuiOutlinedInput-root': {
+                                        borderRadius: '8px',
+                                      }
+                                    }}
+                                  >
+                                    <MenuItem value="">Select Status</MenuItem>
+                                    <MenuItem value="employed">Employed</MenuItem>
+                                    <MenuItem value="unemployed">Unemployed</MenuItem>
+                                  </Select>
+                                )}
+                              </Field>
+                              {errors.familyDetails?.[index]?.employed && (touched.familyDetails?.[index]?.employed || values.familyDetails[index].employed) && (
+                                <FormHelperText error>{errors.familyDetails[index].employed}</FormHelperText>
+                              )}
+                            </FormControl>
+                          </Grid>
 
-                  <TableCell style={{ padding: '8px 4px' }}>
-                    <Button variant="contained" color="error" onClick={() => removeFamilyMember(index)}>Remove</Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <Button variant="contained" color="primary" onClick={addFamilyMember} style={{ marginTop: '10px' }}>Add Family Member</Button>
-        <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
-          <Button variant="outlined" onClick={prevStep}>Previous</Button>
-          <Button type="submit" variant="contained" color="primary">Next</Button>
-        </div>
-      </form>
-    </motion.div>
+                          {/* Working in Same Company */}
+                          <Grid item xs={12} sm={6}>
+                            <FormControl component="fieldset" size="small">
+                              <FormLabel component="legend">Working in Same Company*</FormLabel>
+                              <Field name={`familyDetails.${index}.sameCompany`}>
+                                {({ field, form }) => (
+                                  <RadioGroup
+                                    {...field}
+                                    row
+                                    onChange={(e) => {
+                                      form.setFieldValue(`familyDetails.${index}.sameCompany`, e.target.value);
+                                      // Clear employee code and department if "no" is selected
+                                      if (e.target.value === 'no') {
+                                        form.setFieldValue(`familyDetails.${index}.empCode`, '');
+                                        form.setFieldValue(`familyDetails.${index}.department`, '');
+                                      }
+                                    }}
+                                  >
+                                    <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                                    <FormControlLabel value="no" control={<Radio />} label="No" />
+                                  </RadioGroup>
+                                )}
+                              </Field>
+                              {errors.familyDetails?.[index]?.sameCompany && (touched.familyDetails?.[index]?.sameCompany || values.familyDetails[index].sameCompany) && (
+                                <FormHelperText error>{errors.familyDetails[index].sameCompany}</FormHelperText>
+                              )}
+                            </FormControl>
+                          </Grid>
+
+                          {/* Employee Code (only if working in same company) */}
+                          {values.familyDetails[index].sameCompany === 'yes' && (
+                            <>
+                              <Grid item xs={12} sm={6}>
+                                <Field
+                                  name={`familyDetails.${index}.empCode`}
+                                  component={CustomTextField}
+                                  label="Employee Code*"
+                                  placeholder="Enter employee code"
+                                />
+                              </Grid>
+
+                              {/* Department (only if working in same company) */}
+                              <Grid item xs={12} sm={6}>
+                                <Field
+                                  name={`familyDetails.${index}.department`}
+                                  component={CustomTextField}
+                                  label="Department*"
+                                  placeholder="Enter department name"
+                                />
+                              </Grid>
+                            </>
+                          )}
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  ))}
+                  
+                  {/* Add Family Member Button */}
+                  <Button
+                    type="button"
+                    variant="outlined"
+                    startIcon={<AddIcon />}
+                    onClick={() => push({
+                      name: '', 
+                      relation: '', 
+                      dob: '', 
+                      dependent: '', 
+                      employed: '', 
+                      sameCompany: '', 
+                      empCode: '', 
+                      department: ''
+                    })}
+                    sx={{ mb: 3 }}
+                  >
+                    Add Family Member
+                  </Button>
+                </div>
+              )}
+            </FieldArray>
+
+            {/* Submit Buttons */}
+            <Box sx={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              mt: 3,
+              flexDirection: { xs: 'column', sm: 'row' },
+              gap: 2
+            }}>
+              <Button
+                type="button"
+                variant="outlined"
+                onClick={prevStep}
+                sx={{ order: { xs: 2, sm: 1 } }}
+              >
+                Back
+              </Button>
+              <Button 
+                type="submit" 
+                variant="contained" 
+                color="primary"
+                disabled={!isValid}
+                sx={{ order: { xs: 1, sm: 2 } }}
+              >
+                Next
+              </Button>
+            </Box>
+          </Form>
+        )}
+      </Formik>
+    </Paper>
   );
 };
 

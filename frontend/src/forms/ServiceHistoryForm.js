@@ -1,312 +1,438 @@
 import React, { useState } from 'react';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Paper, Typography, FormControl, Radio, RadioGroup, FormControlLabel } from '@mui/material';
-import { motion } from 'framer-motion';
-import { Formik, Form, FieldArray } from 'formik';
+import { 
+  Button, 
+  Paper, 
+  Typography, 
+  FormControl, 
+  Radio, 
+  RadioGroup, 
+  FormControlLabel,
+  FormLabel,
+  Grid,
+  Card,
+  CardContent,
+  Box,
+  IconButton,
+  FormHelperText,
+  TextField
+} from '@mui/material';
+import { Formik, Form, Field, FieldArray } from 'formik';
 import * as Yup from 'yup';
+import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import api from "../api/axiosInstance";
+import { toast } from 'react-toastify';
 
-const validationSchema = Yup.object().shape({
-  serviceHistory: Yup.array().of(
-    Yup.object().shape({
-      organization: Yup.string().required('Required'),
-      dateOfJoining: Yup.date().required('Required'),
-      lastWorkingDay: Yup.date().required('Required'),
-      totalExperience: Yup.string(),
-      department: Yup.string().required('Required')
-    })
-  )
-});
+const ServiceHistoryForm = ({ nextStep, prevStep, savedServiceHistory, employeeId, savedData }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-const ServiceHistoryForm = ({ nextStep, prevStep, savedServiceHistory }) => {
-  const [hasPreviousExperience, setHasPreviousExperience] = useState(false);
-
-  const initialValues = {
-    serviceHistory: Array.isArray(savedServiceHistory) ? savedServiceHistory : [{
-      organization: '',
-      dateOfJoining: '',
-      lastWorkingDay: '',
-      totalExperience: '',
-      department: ''
-    }]
+  // Helper function to convert to sentence case
+  const toSentenceCase = (str) => {
+    if (!str) return "";
+    return str
+      .split(" ")
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
   };
 
-  // Add this function near the top of your file, after imports
-const getAuthToken = () => {
-  return localStorage.getItem('token');
-};
-
-
-  // const handleSubmit = async (values) => {
-  //   try {
-  //     const employeeId = localStorage.getItem('Emp_ID');
-  //     const response = await axios.post('${process.env.REACT_APP_API_URL}/api/employees/service-history', {
-  //       employeeId,
-  //       hasServiceHistory: hasPreviousExperience,
-  //       serviceHistory: hasPreviousExperience ? values.serviceHistory : []
-  //     });
-
-  //     if (response.data.success) {
-  //       nextStep();
-  //     }
-  //   } catch (error) {
-  //     console.error('Error saving service history:', error);
-  //   }
-  // };
-
-// Update the handleSubmit function
-const handleSubmit = async (values) => {
-  try {
-    const employeeId = localStorage.getItem('Emp_ID');
-    
-    // Get the authentication token
-    const token = getAuthToken();
-    const companyCode = localStorage.getItem('companyCode');
-    
-    const response = await api.post(
-      'employees/service-history', 
+  const defaultInitialValues = {
+    hasPreviousExperience: 'no',
+    serviceHistory: [
       {
-        employeeId,
-        hasServiceHistory: hasPreviousExperience,
-        serviceHistory: hasPreviousExperience ? values.serviceHistory : []
+        organization: '',
+        dateOfJoining: '',
+        lastWorkingDay: '',
+        totalExperience: '',
+        department: ''
       }
+    ]
+  };
 
-    );
+  // Handle different data structures for savedData
+  const serviceArray = Array.isArray(savedData?.serviceHistory) ? savedData.serviceHistory :
+                      (Array.isArray(savedServiceHistory?.serviceHistory) ? savedServiceHistory.serviceHistory :
+                      defaultInitialValues.serviceHistory);
 
-    if (response.data.success) {
-      nextStep();
-    }
-  } catch (error) {
-    console.error('Error saving service history:', error);
-    // Add better error handling
-    console.error('Error response:', error.response?.data);
-    console.error('Error status:', error.response?.status);
-    // You can add toast notifications here if you're using them
-  }
-};
+  const initialValues = {
+    hasPreviousExperience: savedData?.hasPreviousExperience || savedServiceHistory?.hasPreviousExperience || 'no',
+    serviceHistory: serviceArray
+  };
+  
+  console.log('ServiceHistoryForm initialValues:', initialValues);
 
-
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      style={{ padding: '20px' }}
-    >
-      <h2 style={{ marginBottom: '20px', textAlign: 'center', color: '#1976D2' }}>
-        FORM-6: EMPLOYEE SERVICE HISTORY
-      </h2>
-
-      <FormControl sx={{ marginBottom: '20px' }}>
-        <Typography variant="subtitle1">Do you have previous work experience?</Typography>
-        <RadioGroup
-          row
-          value={hasPreviousExperience ? "Yes" : "No"}
-          onChange={(e) => setHasPreviousExperience(e.target.value === "Yes")}
-        >
-          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-          <FormControlLabel value="No" control={<Radio />} label="No" />
-        </RadioGroup>
-      </FormControl>
-
-      {hasPreviousExperience ? (
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ values, errors, touched, setFieldValue }) => (
-            <Form>
-              <FieldArray name="serviceHistory">
-                {({ push, remove }) => (
-                  <TableContainer component={Paper} elevation={3}>
-                    <Table>
-                      <TableHead style={{ backgroundColor: '#f5f5f5' }}>
-                        <TableRow>
-                          <TableCell>Previous Organization</TableCell>
-                          <TableCell>Date of Joining</TableCell>
-                          <TableCell>Last Working Day</TableCell>
-                          <TableCell>Total Experience</TableCell>
-                          <TableCell>Department</TableCell>
-                          <TableCell>Actions</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {values.serviceHistory.map((_, index) => (
-                          <TableRow key={index}>
-                            <TableCell>
-                              <TextField
-                                variant="outlined"
-                                size="small"
-                                name={`serviceHistory.${index}.organization`}
-                                value={values.serviceHistory[index].organization}
-                                onChange={(e) => {
-                                  const formattedOrg = e.target.value
-                                    .split(' ')
-                                    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                                    .join(' ');
-                                  setFieldValue(`serviceHistory.${index}.organization`, formattedOrg);
-                                }}
-                                error={touched?.serviceHistory?.[index]?.organization && errors?.serviceHistory?.[index]?.organization}
-                                helperText={touched?.serviceHistory?.[index]?.organization && errors?.serviceHistory?.[index]?.organization}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                variant="outlined"
-                                size="small"
-                                type="date"
-                                name={`serviceHistory.${index}.dateOfJoining`}
-                                value={values.serviceHistory[index].dateOfJoining}
-                                onChange={(e) => {
-                                  setFieldValue(`serviceHistory.${index}.dateOfJoining`, e.target.value);
-                                  if (values.serviceHistory[index].lastWorkingDay) {
-                                    const start = new Date(e.target.value);
-                                    const end = new Date(values.serviceHistory[index].lastWorkingDay);
-                                    const diffTime = Math.abs(end - start);
-                                    const diffYears = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365));
-                                    const diffMonths = Math.floor((diffTime % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30));
-                                    setFieldValue(
-                                      `serviceHistory.${index}.totalExperience`,
-                                      `${diffYears} years ${diffMonths} months`
-                                    );
-                                  }
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                variant="outlined"
-                                size="small"
-                                type="date"
-                                name={`serviceHistory.${index}.lastWorkingDay`}
-                                value={values.serviceHistory[index].lastWorkingDay}
-                                onChange={(e) => {
-                                  setFieldValue(`serviceHistory.${index}.lastWorkingDay`, e.target.value);
-                                  if (values.serviceHistory[index].dateOfJoining) {
-                                    const start = new Date(values.serviceHistory[index].dateOfJoining);
-                                    const end = new Date(e.target.value);
-                                    const diffTime = Math.abs(end - start);
-                                    const diffYears = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365));
-                                    const diffMonths = Math.floor((diffTime % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30));
-                                    setFieldValue(
-                                      `serviceHistory.${index}.totalExperience`,
-                                      `${diffYears} years ${diffMonths} months`
-                                    );
-                                  }
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                variant="outlined"
-                                size="small"
-                                name={`serviceHistory.${index}.totalExperience`}
-                                value={values.serviceHistory[index].totalExperience}
-                                disabled
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <TextField
-                                variant="outlined"
-                                size="small"
-                                name={`serviceHistory.${index}.department`}
-                                value={values.serviceHistory[index].department}
-                                onChange={(e) => setFieldValue(`serviceHistory.${index}.department`, e.target.value)}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Button 
-                                variant="contained" 
-                                color="error" 
-                                size="small" 
-                                onClick={() => remove(index)}
-                              >
-                                Remove
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                    <Button 
-                      variant="contained" 
-                      color="primary" 
-                      onClick={() => push({
-                        organization: '',
-                        dateOfJoining: '',
-                        lastWorkingDay: '',
-                        totalExperience: '',
-                        department: ''
-                      })}
-                      style={{ margin: '20px' }}
-                    >
-                      Add Service Entry
-                    </Button>
-                  </TableContainer>
-                )}
-              </FieldArray>
-              
-              <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant="outlined" onClick={prevStep}>Previous</Button>
-                <Button variant="contained" color="primary" type="submit">Next</Button>
-              </div>
-            </Form>
-          )}
-        </Formik>
-      ) : (
-        <div>
-          <Typography variant="body1" sx={{ textAlign: 'center', padding: '20px' }}>
-            No previous work experience recorded.
-          </Typography>
-          <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
-            <Button variant="outlined" onClick={prevStep}>Previous</Button>
-            {/* <Button 
-              variant="contained" 
-              color="primary" 
-              onClick={() => handleSubmit({ serviceHistory: [] })}
-            >
-              Next
-            </Button> */}
-            <Button 
-  variant="contained" 
-  color="primary" 
-  onClick={() => {
-    // Get the authentication token
-    const token = getAuthToken();
-    const companyCode = localStorage.getItem('companyCode');
+  const validationSchema = Yup.object().shape({
+    hasPreviousExperience: Yup.string().required('Please select if you have previous work experience'),
     
-    
-    api.post(
-      'employees/service-history',
-      {
-        employeeId: localStorage.getItem('Emp_ID'),
-        hasServiceHistory: false,
-        serviceHistory: []
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'X-Company-Code': companyCode
+    // Conditional validation for service history
+    serviceHistory: Yup.array().when('hasPreviousExperience', {
+      is: 'yes',
+      then: () => Yup.array().of(
+        Yup.object().shape({
+          organization: Yup.string()
+            .matches(/^[A-Za-z0-9\s]+$/, 'Organization name should only contain alphabets and numbers')
+            .required('Organization name is required'),
+          dateOfJoining: Yup.date()
+            .required('Date of joining is required')
+            .max(new Date(), 'Date of joining cannot be in the future'),
+          lastWorkingDay: Yup.date()
+            .required('Last working day is required')
+            .min(Yup.ref('dateOfJoining'), 'Last working day must be after date of joining')
+            .max(new Date(), 'Last working day cannot be in the future'),
+          department: Yup.string()
+            .matches(/^[A-Za-z\s]+$/, 'Department should only contain alphabets')
+            .required('Department is required')
+        })
+      ).min(1, 'At least one service history record is required'),
+      otherwise: () => Yup.array()
+    })
+  });
+
+  // Custom field component with validation
+  const CustomTextField = ({ field, form, label, type = "text", ...props }) => {
+    const handleChange = (e) => {
+      let value = e.target.value;
+      
+      // Handle organization field - alphabets and numbers with sentence case
+      if (field.name.includes('organization')) {
+        value = value.replace(/[^A-Za-z0-9\s]/g, '');
+        value = toSentenceCase(value);
+      }
+      
+      // Handle department field - only alphabets with sentence case
+      if (field.name.includes('department')) {
+        value = value.replace(/[^A-Za-z\s]/g, '');
+        value = toSentenceCase(value);
+      }
+      
+      // Update the field value
+      form.setFieldValue(field.name, value);
+      
+      // Calculate total experience if both dates are available
+      if (field.name.includes('dateOfJoining') || field.name.includes('lastWorkingDay')) {
+        const fieldPath = field.name.split('.');
+        const index = fieldPath[1];
+        const currentValues = form.values.serviceHistory[index];
+        
+        let joiningDate, lastWorkingDate;
+        
+        if (field.name.includes('dateOfJoining')) {
+          joiningDate = new Date(value);
+          lastWorkingDate = new Date(currentValues.lastWorkingDay);
+        } else {
+          joiningDate = new Date(currentValues.dateOfJoining);
+          lastWorkingDate = new Date(value);
+        }
+        
+        if (joiningDate && lastWorkingDate && !isNaN(joiningDate) && !isNaN(lastWorkingDate) && lastWorkingDate > joiningDate) {
+          const diffTime = lastWorkingDate - joiningDate;
+          const diffYears = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365));
+          const diffMonths = Math.floor((diffTime % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30));
+          const diffDays = Math.floor((diffTime % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
+          
+          form.setFieldValue(
+            `serviceHistory.${index}.totalExperience`,
+            `${diffYears} years ${diffMonths} months ${diffDays} days`
+          );
         }
       }
-    )
-    .then(response => {
+    };
+
+    // Get nested error for array fields
+    const fieldPath = field.name.split('.');
+    let fieldError = form.errors;
+    let fieldValue = form.values;
+    
+    for (const path of fieldPath) {
+      fieldError = fieldError?.[path];
+      fieldValue = fieldValue?.[path];
+    }
+
+    const hasError = fieldError && (form.touched[field.name] || fieldValue);
+
+    return (
+      <Field
+        name={field.name}
+        render={({ field: fieldProps }) => (
+          <TextField
+            {...fieldProps}
+            {...props}
+            label={label}
+            type={type}
+            onChange={handleChange}
+            error={hasError}
+            helperText={hasError ? fieldError : ""}
+            fullWidth
+            size="small"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '8px',
+              }
+            }}
+          />
+        )}
+      />
+    );
+  };
+
+  const handleSubmit = async (values) => {
+    try {
+      setIsSubmitting(true);
+      console.log('Form values being submitted:', values);
+
+      const response = await api.post('employees/service-history', {
+        employeeId: employeeId,
+        hasServiceHistory: values.hasPreviousExperience === 'yes',
+        serviceHistory: values.hasPreviousExperience === 'yes' ? values.serviceHistory : []
+      });
+
       if (response.data.success) {
+        toast.success('Service history saved successfully');
         nextStep();
       }
-    })
-    .catch(error => {
+    } catch (error) {
       console.error('Error saving service history:', error);
-    });
-  }}
->
-  Next
-</Button>
-          </div>
-        </div>
-      )}
-    </motion.div>
+      toast.error(error.response?.data?.error || 'Failed to save service history');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
+      <Typography variant="h5" gutterBottom color="primary">
+        Employee Service History
+      </Typography>
+
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        validate={(values) => {
+          // This will trigger validation on every change for immediate error display
+          try {
+            validationSchema.validateSync(values, { abortEarly: false });
+          } catch (err) {
+            const errors = {};
+            err.inner.forEach((error) => {
+              if (error.path) {
+                errors[error.path] = error.message;
+              }
+            });
+            return errors;
+          }
+        }}
+      >
+        {({ values, errors, touched, setFieldValue, isValid }) => (
+          <Form>
+            <Grid container spacing={3}>
+              
+              {/* Previous Experience Question */}
+              <Grid item xs={12}>
+                <FormControl component="fieldset" error={errors.hasPreviousExperience && (touched.hasPreviousExperience || values.hasPreviousExperience)}>
+                  <FormLabel component="legend" sx={{ fontWeight: 'bold', fontSize: '16px', color: '#333' }}>
+                    Do you have previous work experience?*
+                  </FormLabel>
+                  <Field name="hasPreviousExperience">
+                    {({ field }) => (
+                      <RadioGroup
+                        {...field}
+                        row
+                        sx={{ mt: 1 }}
+                        onChange={(e) => {
+                          setFieldValue('hasPreviousExperience', e.target.value);
+                          // Reset service history when switching to "no"
+                          if (e.target.value === 'no') {
+                            setFieldValue('serviceHistory', []);
+                          } else {
+                            setFieldValue('serviceHistory', initialValues.serviceHistory);
+                          }
+                        }}
+                      >
+                        <FormControlLabel 
+                          value="yes" 
+                          control={<Radio />} 
+                          label="Yes" 
+                          sx={{ mr: 4 }}
+                        />
+                        <FormControlLabel 
+                          value="no" 
+                          control={<Radio />} 
+                          label="No" 
+                        />
+                      </RadioGroup>
+                    )}
+                  </Field>
+                  {errors.hasPreviousExperience && (touched.hasPreviousExperience || values.hasPreviousExperience) && (
+                    <FormHelperText>{errors.hasPreviousExperience}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
+
+              {/* Service History Details (only if "yes" is selected) */}
+              {values.hasPreviousExperience === 'yes' && (
+                <Grid item xs={12}>
+                  <Typography variant="h6" gutterBottom sx={{ mt: 2, mb: 3 }}>
+                    Service History Details
+                  </Typography>
+                  
+                  <FieldArray name="serviceHistory">
+                    {({ remove, push }) => (
+                      <div>
+                        {values.serviceHistory.map((service, index) => (
+                          <Card key={index} sx={{ mb: 3, backgroundColor: '#f8f9fa' }}>
+                            <CardContent>
+                              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                                <Typography variant="subtitle1" color="primary" sx={{ fontWeight: 'bold' }}>
+                                  Previous Organization {index + 1}*
+                                </Typography>
+                                {values.serviceHistory.length > 1 && (
+                                  <IconButton 
+                                    onClick={() => remove(index)}
+                                    color="error"
+                                    size="small"
+                                  >
+                                    <DeleteIcon />
+                                  </IconButton>
+                                )}
+                              </Box>
+
+                              <Grid container spacing={2}>
+                                {/* Organization Name */}
+                                <Grid item xs={12} sm={6}>
+                                  <CustomTextField
+                                    field={{ name: `serviceHistory.${index}.organization` }}
+                                    form={{ setFieldValue, values, errors, touched }}
+                                    label="Organization Name*"
+                                  />
+                                </Grid>
+
+                                {/* Department */}
+                                <Grid item xs={12} sm={6}>
+                                  <CustomTextField
+                                    field={{ name: `serviceHistory.${index}.department` }}
+                                    form={{ setFieldValue, values, errors, touched }}
+                                    label="Department*"
+                                  />
+                                </Grid>
+
+                                {/* Date of Joining */}
+                                <Grid item xs={12} sm={4}>
+                                  <CustomTextField
+                                    field={{ name: `serviceHistory.${index}.dateOfJoining` }}
+                                    form={{ setFieldValue, values, errors, touched }}
+                                    label="Date of Joining*"
+                                    type="date"
+                                    InputLabelProps={{ shrink: true }}
+                                  />
+                                </Grid>
+
+                                {/* Last Working Day */}
+                                <Grid item xs={12} sm={4}>
+                                  <CustomTextField
+                                    field={{ name: `serviceHistory.${index}.lastWorkingDay` }}
+                                    form={{ setFieldValue, values, errors, touched }}
+                                    label="Last Working Day*"
+                                    type="date"
+                                    InputLabelProps={{ shrink: true }}
+                                  />
+                                </Grid>
+
+                                {/* Total Experience (Auto-calculated) */}
+                                <Grid item xs={12} sm={4}>
+                                  <Field
+                                    name={`serviceHistory.${index}.totalExperience`}
+                                    render={({ field }) => (
+                                      <TextField
+                                        {...field}
+                                        label="Total Experience"
+                                        fullWidth
+                                        size="small"
+                                        disabled
+                                        sx={{
+                                          '& .MuiOutlinedInput-root': {
+                                            borderRadius: '8px',
+                                            backgroundColor: '#f5f5f5',
+                                          }
+                                        }}
+                                      />
+                                    )}
+                                  />
+                                </Grid>
+                              </Grid>
+                            </CardContent>
+                          </Card>
+                        ))}
+                        
+                        {/* Add Service Entry Button */}
+                        <Button
+                          type="button"
+                          variant="outlined"
+                          startIcon={<AddIcon />}
+                          onClick={() => push({
+                            organization: '',
+                            dateOfJoining: '',
+                            lastWorkingDay: '',
+                            totalExperience: '',
+                            department: ''
+                          })}
+                          sx={{ mb: 3 }}
+                        >
+                          Add Previous Organization
+                        </Button>
+                      </div>
+                    )}
+                  </FieldArray>
+                </Grid>
+              )}
+
+              {/* No Previous Experience Message */}
+              {values.hasPreviousExperience === 'no' && (
+                <Grid item xs={12}>
+                  <Card sx={{ backgroundColor: '#e8f5e8', textAlign: 'center', py: 4 }}>
+                    <CardContent>
+                      <Typography variant="h6" color="success.main" gutterBottom>
+                        No Previous Work Experience
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        You have indicated that you do not have any previous work experience.
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              )}
+
+              {/* Submit Buttons */}
+              <Grid item xs={12}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  mt: 3,
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  gap: 2
+                }}>
+                  <Button
+                    type="button"
+                    variant="outlined"
+                    onClick={prevStep}
+                    sx={{ order: { xs: 2, sm: 1 } }}
+                  >
+                    Back
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    variant="contained" 
+                    color="primary"
+                    disabled={!isValid || isSubmitting}
+                    sx={{ order: { xs: 1, sm: 2 } }}
+                  >
+                    {isSubmitting ? 'Saving...' : 'Next'}
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
+    </Paper>
   );
 };
 
