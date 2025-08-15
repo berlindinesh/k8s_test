@@ -38,7 +38,115 @@ import {
 } from "../../../services/contractServices";
 import "./ProfilePage.css";
 
-// const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5002';
+// Validation functions
+const validatePFAccount = (pfNumber) => {
+  if (!pfNumber) return { isValid: false, message: "PF Account Number is required" };
+  
+  // Remove spaces and slashes for length calculation
+  const cleanNumber = pfNumber.replace(/[\s/]/g, '');
+  
+  // Check length constraints
+  const hasSlashes = pfNumber.includes('/');
+  const hasSpaces = pfNumber.includes(' ');
+  
+  if (hasSlashes || hasSpaces) {
+    if (pfNumber.length > 26) {
+      return { isValid: false, message: "PF Account Number with slashes/spaces cannot exceed 26 characters" };
+    }
+  } else {
+    if (pfNumber.length > 22) {
+      return { isValid: false, message: "PF Account Number without slashes/spaces cannot exceed 22 characters" };
+    }
+  }
+  
+  // Check for invalid characters (only alphanumeric, spaces, forward slashes allowed)
+  if (!/^[A-Za-z0-9\s/]+$/.test(pfNumber)) {
+    return { isValid: false, message: "PF Account Number can only contain letters, numbers, spaces, and forward slashes" };
+  }
+  
+  // Extract alphabetic and numeric parts
+  const alphabetic = pfNumber.replace(/[^A-Za-z]/g, '');
+  const numeric = pfNumber.replace(/[^0-9]/g, '');
+  
+  // Check if first 5 characters are alphabets
+  if (alphabetic.length < 5) {
+    return { isValid: false, message: "PF Account Number must have at least 5 alphabetic characters" };
+  }
+  
+  // Check if has 17 digits
+  if (numeric.length !== 17) {
+    return { isValid: false, message: "PF Account Number must have exactly 17 digits" };
+  }
+  
+  // Check pattern: first 5 chars should be letters
+  const firstFiveAlphabets = pfNumber.replace(/[^A-Za-z]/g, '').substring(0, 5);
+  if (firstFiveAlphabets.length !== 5) {
+    return { isValid: false, message: "First 5 characters must be alphabets" };
+  }
+  
+  return { isValid: true, message: "Valid PF Account Number" };
+};
+
+const validateUAN = (uanNumber) => {
+  if (!uanNumber) return { isValid: false, message: "UAN Number is required" };
+  
+  // Remove any non-numeric characters for validation
+  const numericOnly = uanNumber.replace(/[^0-9]/g, '');
+  
+  if (numericOnly.length !== 12) {
+    return { isValid: false, message: "UAN Number must be exactly 12 digits" };
+  }
+  
+  return { isValid: true, message: "Valid UAN Number" };
+};
+
+const validateAccountNumber = (accountNumber) => {
+  if (!accountNumber) return { isValid: false, message: "Account Number is required" };
+  
+  // Account number should be 9-18 digits
+  const numericOnly = accountNumber.replace(/[^0-9]/g, '');
+  
+  if (numericOnly.length < 9 || numericOnly.length > 18) {
+    return { isValid: false, message: "Account Number must be between 9-18 digits" };
+  }
+  
+  return { isValid: true, message: "Valid Account Number" };
+};
+
+const validateIFSC = (ifscCode) => {
+  if (!ifscCode) return { isValid: false, message: "IFSC Code is required" };
+  
+  // IFSC format: 4 letters + 0 + 6 digits (ABCD0123456)
+  const ifscPattern = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+  
+  if (!ifscPattern.test(ifscCode.toUpperCase())) {
+    return { isValid: false, message: "IFSC Code format: ABCD0123456 (4 letters + 0 + 6 alphanumeric)" };
+  }
+  
+  return { isValid: true, message: "Valid IFSC Code" };
+};
+
+// Auto-fetch bank details from IFSC
+const fetchBankDetailsByIFSC = async (ifscCode) => {
+  try {
+    // Using a free IFSC API
+    const response = await fetch(`https://ifsc.razorpay.com/${ifscCode}`);
+    
+    if (response.ok) {
+      const bankData = await response.json();
+      return {
+        bankName: bankData.BANK || '',
+        branchName: bankData.BRANCH || '',
+        address: bankData.ADDRESS || '',
+        city: bankData.CITY || '',
+        state: bankData.STATE || ''
+      };
+    }
+  } catch (error) {
+    console.error('Error fetching bank details:', error);
+  }
+  return null;
+};
 
 const ProfilePage = () => {
   const { id } = useParams();
@@ -71,6 +179,12 @@ const ProfilePage = () => {
   });
 
   const [editWorkInfoMode, setEditWorkInfoMode] = useState(false);
+  
+  // Validation states
+  const [validationErrors, setValidationErrors] = useState({
+    work: {},
+    bank: {}
+  });
 
   // RBAC helper functions
   const canEditProfile = () => {
@@ -116,38 +230,38 @@ const ProfilePage = () => {
       
       console.log("Updating personal info for employee ID:", employeeId);
       console.log("Current personalInfo state:", personalInfo);
+      console.log("Available personal info keys:", Object.keys(personalInfo));
+      console.log("PersonalInfo values:", Object.values(personalInfo));
+      console.log("PersonalInfo.name value:", personalInfo.name);
+      console.log("PersonalInfo.email value:", personalInfo.email);
+      console.log("PersonalInfo.phone value:", personalInfo.phone);
       
-      // Prepare clean personal info data (only actual personalInfo fields from schema)
-      const cleanPersonalInfo = {};
+      // Prepare clean personal info data - map form fields to backend fields
+      const nameParts = personalInfo.name ? personalInfo.name.trim().split(' ') : [];
+      const derivedFirstName = nameParts[0] || "";
+      const derivedLastName = nameParts.slice(1).join(' ') || "";
       
-      // Only include fields that are defined in the schema and have values
-      const personalInfoFields = [
-        'prefix', 'firstName', 'lastName', 'dob', 'gender', 'maritalStatus', 
-        'bloodGroup', 'nationality', 'aadharNumber', 'panNumber', 
-        'mobileNumber', 'email', 'workemail', 'employeeImage'
-      ];
-      
-      personalInfoFields.forEach(field => {
-        let value = personalInfo[field];
-        
-        // Handle special cases
-        if (field === 'mobileNumber' && !value && personalInfo.phone) {
-          value = personalInfo.phone;
+      const updateData = {
+        personalInfo: {
+          // Handle name field - split into firstName and lastName, ensure non-empty
+          firstName: personalInfo.firstName || derivedFirstName || "Unknown",
+          lastName: personalInfo.lastName || derivedLastName || "User",
+          // Map other form fields to backend fields
+          prefix: personalInfo.prefix,
+          dob: personalInfo.dob,
+          gender: personalInfo.gender,
+          maritalStatus: personalInfo.maritalStatus,
+          bloodGroup: personalInfo.bloodGroup,
+          nationality: personalInfo.nationality,
+          aadharNumber: personalInfo.aadharNumber,
+          panNumber: personalInfo.panNumber,
+          mobileNumber: personalInfo.phone || personalInfo.mobileNumber,  // Form uses "phone"
+          email: personalInfo.email,
+          workemail: personalInfo.workemail
         }
-        
-        // Only include non-empty values
-        if (value && value !== "" && value !== null && value !== undefined) {
-          cleanPersonalInfo[field] = value;
-        }
-      });
-  
-      // Prepare the update data - only send sections that exist and are valid
-      const updateData = {};
+      };
       
-      // Always include personalInfo if we have valid fields
-      if (Object.keys(cleanPersonalInfo).length > 0) {
-        updateData.personalInfo = cleanPersonalInfo;
-      }
+      console.log("Raw updateData before cleaning:", updateData);
       
       // Only include other sections if they exist and are properly structured
       if (personalInfo.addressDetails && 
@@ -232,18 +346,73 @@ const ProfilePage = () => {
         updateData.nominationDetails = personalInfo.nominationDetails;
       }
   
-      console.log("Sending clean update data:", updateData);
+      console.log("Sending personal info update data:", updateData);
+      console.log("PersonalInfo object being sent:", updateData.personalInfo);
   
-      // Don't send request if no valid data to update
-      if (Object.keys(updateData).length === 0) {
-        toast.warning("No changes to save");
+      // Validate that we have at least some personal info to update
+      if (!updateData.personalInfo || Object.keys(updateData.personalInfo).length === 0) {
+        toast.warning("No personal information changes to save");
         setEditMode(false);
         return;
       }
+      
+      // Ensure we always have at least firstName and lastName for the update
+      const cleanedPersonalInfo = {};
+      
+      // Always include firstName and lastName (required fields)
+      cleanedPersonalInfo.firstName = updateData.personalInfo.firstName;
+      cleanedPersonalInfo.lastName = updateData.personalInfo.lastName;
+      
+      // Add other fields only if they have meaningful values
+      Object.keys(updateData.personalInfo).forEach(key => {
+        if (key === 'firstName' || key === 'lastName') return; // Already handled above
+        
+        const value = updateData.personalInfo[key];
+        console.log(`Frontend field ${key}: "${value}" (type: ${typeof value})`);
+        
+        // Include field if it has a meaningful value (not null, undefined, or empty string)
+        if (value !== null && value !== undefined && value !== "") {
+          cleanedPersonalInfo[key] = value;
+          console.log(`Frontend added field ${key} to cleaned data`);
+        } else {
+          console.log(`Frontend filtered out field ${key} (empty/null/undefined)`);
+        }
+      });
+      
+      console.log("Cleaned personal info being sent:", cleanedPersonalInfo);
+      console.log("Number of fields in cleaned data:", Object.keys(cleanedPersonalInfo).length);
+      
+      // Check if we have any data to send
+      if (Object.keys(cleanedPersonalInfo).length === 0) {
+        toast.warning("No valid personal information to update. Please fill in at least one field.");
+        setLoading(false);
+        return;
+      }
+      
+      // Validate required fields before sending
+      const requiredFields = ['firstName', 'lastName'];
+      const missingFields = requiredFields.filter(field => !cleanedPersonalInfo[field]);
+      
+      if (missingFields.length > 0) {
+        toast.error(`Missing required fields: ${missingFields.join(', ')}`);
+        setLoading(false);
+        return;
+      }
+      
+      // Validate date format if present
+      if (cleanedPersonalInfo.dob) {
+        const dobDate = new Date(cleanedPersonalInfo.dob);
+        if (isNaN(dobDate.getTime())) {
+          toast.error("Invalid date of birth format");
+          setLoading(false);
+          return;
+        }
+      }
   
+      // Use the correct personal-info update endpoint with clean data
       const response = await api.put(
         `employees/personal-info/${employeeId}`,
-        updateData,
+        cleanedPersonalInfo,
         {
           headers: {
             "Content-Type": "application/json",
@@ -276,11 +445,21 @@ const ProfilePage = () => {
       
       if (error.response) {
         console.error("Server error details:", error.response.data);
+        console.error("Full error response:", error.response);
         
-        if (error.response.status === 400 && error.response.data.errors) {
-          // Handle validation errors
-          const errorMessages = error.response.data.errors.map(err => err.message).join(', ');
-          toast.error(`Validation error: ${errorMessages}`);
+        if (error.response.status === 400) {
+          // Handle validation errors with detailed logging
+          if (error.response.data.errors && Array.isArray(error.response.data.errors)) {
+            console.error("Validation errors array:", error.response.data.errors);
+            const errorMessages = error.response.data.errors.map(err => {
+              console.log("Processing error:", err);
+              return typeof err === 'string' ? err : err.message || err.msg || JSON.stringify(err);
+            }).join(', ');
+            toast.error(`Validation failed: ${errorMessages}`);
+          } else {
+            console.error("Non-array validation error:", error.response.data);
+            toast.error(`Validation failed: ${error.response.data.message || 'Invalid data format'}`);
+          }
         } else if (error.response.status === 404) {
           toast.error("Employee not found. Please refresh the page and try again.");
         } else if (error.response.status === 401) {
@@ -852,14 +1031,77 @@ const updateWorkInfo = async () => {
   //   }
   // }, [employeeId]);
 
-  const handleInputChange = (e, section) => {
+  const handleInputChange = async (e, section) => {
     const { name, value } = e.target;
-    if (section === "personal") {
-      setPersonalInfo((prev) => ({ ...prev, [name]: value }));
+    let processedValue = value;
+    
+    // Input validation and formatting
+    if (section === "work") {
+      if (name === "uanNumber") {
+        // UAN: Only allow 12 digits
+        processedValue = value.replace(/[^0-9]/g, '').slice(0, 12);
+        const validation = validateUAN(processedValue);
+        setValidationErrors(prev => ({
+          ...prev,
+          work: { ...prev.work, uanNumber: validation.isValid ? null : validation.message }
+        }));
+      } else if (name === "pfNumber") {
+        // PF: Allow alphanumeric, spaces, forward slashes
+        processedValue = value.replace(/[^A-Za-z0-9\s/]/g, '');
+        const validation = validatePFAccount(processedValue);
+        setValidationErrors(prev => ({
+          ...prev,
+          work: { ...prev.work, pfNumber: validation.isValid ? null : validation.message }
+        }));
+      }
+      setWorkInfo((prev) => ({ ...prev, [name]: processedValue }));
     } else if (section === "bank") {
-      setBankInfo((prev) => ({ ...prev, [name]: value }));
-    } else if (section === "work") {
-      setWorkInfo((prev) => ({ ...prev, [name]: value }));
+      if (name === "accountNumber") {
+        // Account number: Only digits
+        processedValue = value.replace(/[^0-9]/g, '');
+        const validation = validateAccountNumber(processedValue);
+        setValidationErrors(prev => ({
+          ...prev,
+          bank: { ...prev.bank, accountNumber: validation.isValid ? null : validation.message }
+        }));
+      } else if (name === "ifscCode") {
+        // IFSC: Alphanumeric, uppercase
+        processedValue = value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 11);
+        const validation = validateIFSC(processedValue);
+        setValidationErrors(prev => ({
+          ...prev,
+          bank: { ...prev.bank, ifscCode: validation.isValid ? null : validation.message }
+        }));
+        
+        // Auto-fetch bank details if IFSC is valid
+        if (validation.isValid && processedValue.length === 11) {
+          try {
+            const bankDetails = await fetchBankDetailsByIFSC(processedValue);
+            if (bankDetails) {
+              setBankInfo(prev => ({
+                ...prev,
+                ifscCode: processedValue,
+                bankName: bankDetails.bankName,
+                branchName: bankDetails.branchName
+              }));
+              toast.success(`Auto-filled: ${bankDetails.bankName} - ${bankDetails.branchName}`);
+              return; // Exit early since we're setting multiple values
+            }
+          } catch (error) {
+            console.error('Error auto-fetching bank details:', error);
+          }
+        }
+      } else if (name === "bankName" || name === "branchName") {
+        // Bank and branch names: Only alphabets and spaces
+        processedValue = value.replace(/[^A-Za-z\s]/g, '');
+        processedValue = processedValue
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
+      }
+      setBankInfo((prev) => ({ ...prev, [name]: processedValue }));
+    } else if (section === "personal") {
+      setPersonalInfo((prev) => ({ ...prev, [name]: value }));
     }
   };
 
@@ -1426,7 +1668,7 @@ const updateWorkInfo = async () => {
                             </Col>
                             <Col md={6}>
                               <Form.Group className="mb-3">
-                                <Form.Label>UAN Number</Form.Label>
+                                <Form.Label>UAN Number (12 digits)</Form.Label>
                                 <Form.Control
                                   type="text"
                                   name="uanNumber"
@@ -1435,12 +1677,17 @@ const updateWorkInfo = async () => {
                                   disabled={
                                     !editWorkInfoMode || !canEditProfile()
                                   }
+                                  isInvalid={validationErrors.work?.uanNumber}
+                                  placeholder="Enter 12-digit UAN number"
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                  {validationErrors.work?.uanNumber}
+                                </Form.Control.Feedback>
                               </Form.Group>
                             </Col>
                             <Col md={6}>
                               <Form.Group className="mb-3">
-                                <Form.Label>PF Number</Form.Label>
+                                <Form.Label>PF Number (Provident Fund)</Form.Label>
                                 <Form.Control
                                   type="text"
                                   name="pfNumber"
@@ -1449,7 +1696,15 @@ const updateWorkInfo = async () => {
                                   disabled={
                                     !editWorkInfoMode || !canEditProfile()
                                   }
+                                  isInvalid={validationErrors.work?.pfNumber}
+                                  placeholder="Enter PF Account Number"
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                  {validationErrors.work?.pfNumber}
+                                </Form.Control.Feedback>
+                                <Form.Text className="text-muted">
+                                  Format: 5 letters + 17 digits (max 22-26 chars with spaces/slashes)
+                                </Form.Text>
                               </Form.Group>
                             </Col>
                           </Row>
@@ -1837,7 +2092,12 @@ const updateWorkInfo = async () => {
                                   value={bankInfo.accountNumber || ""}
                                   onChange={(e) => handleInputChange(e, "bank")}
                                   disabled={!canEditProfile()}
+                                  isInvalid={validationErrors.bank?.accountNumber}
+                                  placeholder="Enter 9-18 digit account number"
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                  {validationErrors.bank?.accountNumber}
+                                </Form.Control.Feedback>
                               </Form.Group>
                             </Col>
                             <Col md={6}>
@@ -1849,7 +2109,15 @@ const updateWorkInfo = async () => {
                                   value={bankInfo.ifscCode || ""}
                                   onChange={(e) => handleInputChange(e, "bank")}
                                   disabled={!canEditProfile()}
+                                  isInvalid={validationErrors.bank?.ifscCode}
+                                  placeholder="Enter IFSC Code (e.g., SBIN0001234)"
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                  {validationErrors.bank?.ifscCode}
+                                </Form.Control.Feedback>
+                                <Form.Text className="text-success">
+                                  {bankInfo.ifscCode && validationErrors.bank?.ifscCode === null && "✓ Valid IFSC - Bank details will auto-fill"}
+                                </Form.Text>
                               </Form.Group>
                             </Col>
                             <Col md={6}>
@@ -1861,7 +2129,11 @@ const updateWorkInfo = async () => {
                                   value={bankInfo.bankName || ""}
                                   onChange={(e) => handleInputChange(e, "bank")}
                                   disabled={!canEditProfile()}
+                                  placeholder="Bank name (auto-filled from IFSC)"
                                 />
+                                <Form.Text className="text-muted">
+                                  Auto-filled when valid IFSC code is entered
+                                </Form.Text>
                               </Form.Group>
                             </Col>
                             <Col md={6}>
@@ -1873,7 +2145,11 @@ const updateWorkInfo = async () => {
                                   value={bankInfo.branchName || ""}
                                   onChange={(e) => handleInputChange(e, "bank")}
                                   disabled={!canEditProfile()}
+                                  placeholder="Branch name (auto-filled from IFSC)"
                                 />
+                                <Form.Text className="text-muted">
+                                  Auto-filled when valid IFSC code is entered
+                                </Form.Text>
                               </Form.Group>
                             </Col>
                             <Col md={6}>

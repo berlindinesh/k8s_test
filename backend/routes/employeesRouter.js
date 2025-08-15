@@ -982,6 +982,106 @@ router.put('/bank-info/:employeeId', async (req, res) => {
 });
 
 
+// Add personal info update route
+router.put('/personal-info/:employeeId', async (req, res) => {
+  try {
+    // Get company code from authenticated user
+    const companyCode = req.companyCode;
+    
+    if (!companyCode) {
+      return res.status(401).json({ 
+        error: 'Authentication required', 
+        message: 'Company code not found in request' 
+      });
+    }
+    
+    // Get company-specific Employee model
+    const CompanyEmployee = await getModelForCompany(companyCode, 'Employee', Employee.schema);
+    
+    const { employeeId } = req.params;
+    const personalInfoData = req.body;
+    
+    console.log(`Updating personal info for employee ${employeeId}`);
+    console.log('RAW REQUEST BODY:', req.body);
+    console.log('Personal info update data received:', personalInfoData);
+    console.log('Request body keys:', Object.keys(req.body));
+    console.log('Request body values:', Object.values(req.body));
+    console.log('Number of fields in request:', Object.keys(personalInfoData || {}).length);
+    console.log('Is req.body empty?', Object.keys(req.body).length === 0);
+    
+    // Validate that we have some data to update
+    if (!personalInfoData || Object.keys(personalInfoData).length === 0) {
+      console.log('ERROR: No data received in request body');
+      return res.status(400).json({
+        success: false,
+        message: 'No valid fields to update'
+      });
+    }
+    
+    // Build update object for nested personalInfo fields
+    const updateFields = {};
+    
+    // Update only provided personal info fields - allow empty strings for clearing fields
+    Object.keys(personalInfoData).forEach(key => {
+      const value = personalInfoData[key];
+      console.log(`Backend processing field ${key}: "${value}" (type: ${typeof value})`);
+      
+      // Allow empty strings for clearing fields, only filter out null/undefined
+      if (value !== null && value !== undefined) {
+        updateFields[`personalInfo.${key}`] = value;
+        console.log(`Backend added field personalInfo.${key} = ${value}`);
+      } else {
+        console.log(`Backend filtered out field ${key} (null/undefined)`);
+      }
+    });
+    
+    console.log('Backend update fields being applied:', updateFields);
+    console.log('Number of update fields:', Object.keys(updateFields).length);
+    
+    // Check if we have any fields to update after filtering
+    if (Object.keys(updateFields).length === 0) {
+      console.log('ERROR: No valid fields after processing');
+      return res.status(400).json({
+        success: false,
+        message: 'No valid fields to update after processing'
+      });
+    }
+    
+    // Use findOneAndUpdate with specific update operators
+    const result = await CompanyEmployee.findOneAndUpdate(
+      { Emp_ID: employeeId },
+      { $set: updateFields },
+      { 
+        new: true,
+        runValidators: true,
+        context: 'query'
+      }
+    );
+    
+    if (!result) {
+      console.log(`Employee with ID ${employeeId} not found`);
+      return res.status(404).json({
+        success: false,
+        message: 'Employee not found'
+      });
+    }
+    
+    console.log(`Successfully updated personal info for employee ${employeeId}`);
+    
+    res.json({
+      success: true,
+      message: 'Personal information updated successfully',
+      data: result.personalInfo
+    });
+  } catch (error) {
+    console.error('Error updating personal information:', error);
+    res.status(500).json({
+      success: false,
+      message: `Server error: ${error.message}`
+    });
+  }
+});
+
 router.put('/work-info/:employeeId', async (req, res) => {
   try {
     // Get company code from authenticated user
