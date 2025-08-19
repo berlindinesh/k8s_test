@@ -179,37 +179,6 @@ const DisciplinaryActions = () => {
     setActionToDelete(action);
     setDeleteDialogOpen(true);
   };
-
-  // const handleConfirmDelete = async () => {
-  //   if (!actionToDelete) return;
-
-  //   try {
-  //     setLoading(true);
-  //     // const token = getAuthToken();
-  //     const response = await fetch(
-  //       `/disciplinary-actions/${actionToDelete._id}`,
-  //       {
-  //         method: "DELETE"
-  //         // ,
-  //         // headers: {
-  //         //   'Authorization': `Bearer ${token}`
-  //         // }
-  //       }
-  //     );
-
-  //     if (!response.ok) throw new Error("Failed to delete action");
-
-  //     showSnackbar("Action deleted successfully");
-  //     fetchActions();
-  //   } catch (error) {
-  //     showSnackbar("Error deleting action", "error");
-  //   } finally {
-  //     setLoading(false);
-  //     handleCloseDeleteDialog();
-  //   }
-  // };
-
-  // With this api call:
   const handleConfirmDelete = async () => {
     if (!actionToDelete) return;
 
@@ -236,101 +205,6 @@ const DisciplinaryActions = () => {
     fetchActions();
     fetchRegisteredEmployees();
   }, [searchQuery, filterStatus]);
-
-  // // In fetchActions function, add filtering logic
-  // const fetchActions = async () => {
-  //   try {
-  //     setLoading(true);
-  //     let apiUrl = `/disciplinary-actions?searchQuery=${searchQuery}&status=${filterStatus}`;
-
-  //     // If user is employee, filter by their employee ID
-  //     if (userRole?.toLowerCase() === 'employee') {
-  //       apiUrl += `&employeeId=${currentUser?.employeeId || currentUser?.Emp_ID}`;
-  //     }
-
-  //     const response = await api.get(apiUrl);
-  //     setActions(response.data);
-  //   } catch (error) {
-  //     showSnackbar("Error fetching actions", "error");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const fetchActions = async () => {
-  //   try {
-  //     setLoading(true);
-  //     let apiUrl = `/disciplinary-actions?searchQuery=${searchQuery}&status=${filterStatus}`;
-
-  //     const response = await api.get(apiUrl);
-  //     let filteredActions = response.data;
-
-  //     // If user is employee, filter client-side as backup
-  //     if (userRole?.toLowerCase() === "employee") {
-  //       const employeeId =
-  //         currentUser?.employeeId || currentUser?.Emp_ID || currentUser?.empId;
-
-  //       if (employeeId) {
-  //         filteredActions = response.data.filter(
-  //           (action) =>
-  //             action.employeeId === employeeId ||
-  //             action.empId === employeeId ||
-  //             action.Emp_ID === employeeId
-  //         );
-  //       } else if (currentUser?.email) {
-  //         // Fallback: filter by email
-  //         filteredActions = response.data.filter(
-  //           (action) => action.email === currentUser.email
-  //         );
-  //       }
-  //     }
-
-  //     setActions(filteredActions);
-  //   } catch (error) {
-  //     console.error("Error fetching actions:", error);
-  //     showSnackbar("Error fetching actions", "error");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-//   const fetchActions = async () => {
-//   try {
-//     setLoading(true);
-//     let apiUrl = `/disciplinary-actions?searchQuery=${searchQuery}&status=${filterStatus}`;
-
-//     const response = await api.get(apiUrl);
-//     let filteredActions = response.data;
-
-//     if (userRole?.toLowerCase() === "employee") {
-//       const employeeId = [currentUser?.employeeId, currentUser?.Emp_ID, currentUser?.empId].find((id) => id);
-
-//       if (employeeId) {
-//         filteredActions = response.data.filter(
-//           (action) => action.employeeId === employeeId
-//         );
-//       } else if (currentUser?.email) {
-//         // Fallback: filter by email
-//         filteredActions = response.data.filter(
-//           (action) => action.email === currentUser.email
-//         );
-//       } else {
-//         // If no employeeId or email is found, return an empty array
-//         filteredActions = [];
-//       }
-//     } else {
-//       // If user is not an employee, return all actions
-//       filteredActions = response.data;
-//     }
-
-//     setActions(filteredActions);
-//   } catch (error) {
-//     console.error("Error fetching actions:", error);
-//     showSnackbar("Error fetching actions", "error");
-//   } finally {
-//     setLoading(false);
-//   }
-// };
 
 const fetchActions = async () => {
   try {
