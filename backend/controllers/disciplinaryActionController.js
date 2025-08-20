@@ -27,55 +27,60 @@ const storage = multer.diskStorage({
 
 export const upload = multer({ storage: storage });
 
-// // Get all disciplinary actions with optional filtering
 // export const getAllActions = async (req, res) => {
 //   try {
-//     // Get company code from authenticated user
+//     console.log('getAllActions called with req:', req);
 //     const companyCode = req.companyCode;
-
+//     console.log('companyCode:', companyCode);
 //     if (!companyCode) {
 //       return res.status(401).json({
-//         error: 'Authentication required',
-//         message: 'Company code not found in request'
+//         error: "Authentication required",
+//         message: "Company code not found in request",
 //       });
 //     }
 
-//     console.log(`Fetching disciplinary actions for company: ${companyCode}`);
+//     const CompanyDisciplinaryAction = await getModelForCompany(
+//       companyCode,
+//       "DisciplinaryAction",
+//       disciplinaryActionSchema
+//     );
+//     console.log('CompanyDisciplinaryAction:', CompanyDisciplinaryAction);
 
-//     // Get company-specific DisciplinaryAction model
-//     const CompanyDisciplinaryAction = await getModelForCompany(companyCode, 'DisciplinaryAction', disciplinaryActionSchema);
-
-//     const { searchQuery, status } = req.query;
-
-//     let query = {};
-
-//     if (searchQuery) {
-//       query = {
-//         $or: [
-//           { employee: { $regex: searchQuery, $options: 'i' } },
-//           { action: { $regex: searchQuery, $options: 'i' } },
-//           { description: { $regex: searchQuery, $options: 'i' } },
-//           { employeeId: { $regex: searchQuery, $options: 'i' } },
-//           { department: { $regex: searchQuery, $options: 'i' } }
-//         ]
-//       };
+//     const query = {};
+//     console.log('req.userRole:', req.userRole);
+//     if (req.userRole === "employee") {
+//       const employeeId = String(req.currentUser.employeeId || req.currentUser.Emp_ID || req.currentUser.empId);
+//       console.log('employeeId:', employeeId);
+//       query.employeeId = employeeId;
 //     }
 
-//     if (status && status !== 'all') {
-//       query.status = status;
+//     if (req.query.searchQuery) {
+//       query.$or = [
+//         { employee: { $regex: req.query.searchQuery, $options: "i" } },
+//         { action: { $regex: req.query.searchQuery, $options: "i" } },
+//         { description: { $regex: req.query.searchQuery, $options: "i" } },
+//         { employeeId: { $regex: req.query.searchQuery, $options: "i" } },
+//         { department: { $regex: req.query.searchQuery, $options: "i" } },
+//       ];
 //     }
 
-//     const actions = await CompanyDisciplinaryAction.find(query).sort({ createdAt: -1 });
+//     if (req.query.status) {
+//       query.status = req.query.status;
+//     }
+
+//     console.log('query:', query);
+//     const actions = await CompanyDisciplinaryAction.find(query).sort({
+//       createdAt: -1,
+//     });
+//     console.log('actions:', actions);
 //     res.json(actions);
 //   } catch (error) {
-//     console.error('Error fetching disciplinary actions:', error);
-//     res.status(500).json({
-//       error: 'Error fetching disciplinary actions',
-//       message: error.message,
-//       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-//     });
+//     console.error("Error fetching disciplinary actions:", error);
+//     res.status(500).json({ error: "Error fetching disciplinary actions" });
 //   }
 // };
+
+// Update the getAllActions function with this modified version:
 
 export const getAllActions = async (req, res) => {
   try {
@@ -114,11 +119,12 @@ export const getAllActions = async (req, res) => {
       ];
     }
 
-    if (req.query.status) {
+    // Only add status to query if it's not 'all'
+    if (req.query.status && req.query.status !== 'all') {
       query.status = req.query.status;
     }
 
-    console.log('query:', query);
+    console.log('Final query:', query);
     const actions = await CompanyDisciplinaryAction.find(query).sort({
       createdAt: -1,
     });
