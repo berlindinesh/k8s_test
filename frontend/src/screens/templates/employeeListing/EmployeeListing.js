@@ -1042,7 +1042,7 @@ useEffect(() => {
                     {/* Rest of the table row remains the same */}
                     <TableCell>
                       <Typography variant="body2" noWrap sx={{ mb: 0.5 }}>
-                        {employee.email || "No email provided"}
+                        {employee.workemail || "No email provided"}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         {employee.phone || "No phone provided"}
