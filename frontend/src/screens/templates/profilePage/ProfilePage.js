@@ -185,26 +185,191 @@ const ProfilePage = () => {
     work: {},
     bank: {}
   });
+  
+  // State for user role from backend
+  const [backendUserRole, setBackendUserRole] = useState(null);
+  const [roleLoading, setRoleLoading] = useState(true);
+  
+  // State for employee-specific role access
+  const [employeeRole, setEmployeeRole] = useState(null);
+  const [employeeRoleLoading, setEmployeeRoleLoading] = useState(true);
 
-  // RBAC helper functions
+  // RBAC helper functions - prioritize backend role over local storage
   const canEditProfile = () => {
-    const role = userRole || localStorage.getItem("userRole");
+    const role = backendUserRole || userRole || localStorage.getItem("userRole");
     return ["admin", "hr"].includes(role);
   };
 
   const canViewOnly = () => {
-    const role = userRole || localStorage.getItem("userRole");
+    const role = backendUserRole || userRole || localStorage.getItem("userRole");
     return ["manager", "employee"].includes(role);
   };
 
   const getUserRole = () => {
-    return userRole || localStorage.getItem("userRole") || "employee";
+    return backendUserRole || userRole || localStorage.getItem("userRole") || "employee";
   };
 
   const showPermissionError = () => {
     toast.error(
       "You don't have permission to edit profile information. Contact HR or Admin for changes."
     );
+  };
+
+  // Fetch user role from backend
+  const fetchUserRole = async () => {
+    try {
+      setRoleLoading(true);
+      const userEmail = currentUser?.email || localStorage.getItem('userEmail');
+      
+      if (!userEmail) {
+        console.log('No user email found, using fallback role');
+        setRoleLoading(false);
+        return;
+      }
+      
+      console.log('Fetching user role for email:', userEmail);
+      const response = await api.get(`auth/user-role/${encodeURIComponent(userEmail)}`);
+      
+      if (response.data.success) {
+        const userData = response.data.data;
+        setBackendUserRole(userData.role);
+        console.log('Fetched user role from backend:', userData.role);
+        
+        // Update localStorage as backup
+        localStorage.setItem('userRole', userData.role);
+        
+        // Also store permissions if needed
+        if (userData.permissions) {
+          localStorage.setItem('userPermissions', JSON.stringify(userData.permissions));
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user role:', error);
+      // Fallback to local storage role
+      const fallbackRole = userRole || localStorage.getItem("userRole") || "employee";
+      setBackendUserRole(fallbackRole);
+      console.log('Using fallback role:', fallbackRole);
+    } finally {
+      setRoleLoading(false);
+    }
+  };
+
+  // Fetch employee-specific role access by employee ID
+  const fetchEmployeeRole = async (empId) => {
+    try {
+      setEmployeeRoleLoading(true);
+      console.log('🔍 Fetching role for employee ID:', empId);
+      
+      // First get employee profile to get the userId and email
+      const employeeResponse = await api.get(`employees/profile/${empId}`);
+      console.log('📄 Employee profile response:', employeeResponse.data);
+      
+      if (employeeResponse.data.success && employeeResponse.data.data) {
+        const employeeData = employeeResponse.data.data;
+        const employeeUserId = employeeData.userId;
+        const employeeEmail = employeeData.personalInfo?.email || employeeData.personalInfo?.workemail;
+        
+        console.log('👤 Employee userId:', employeeUserId);
+        console.log('📧 Employee email:', employeeEmail);
+        
+        // Try multiple approaches to fetch role:
+        let roleData = null;
+        
+        // 1. Try with userId if it exists
+        if (employeeUserId) {
+          try {
+            console.log('🔗 Fetching role by userId...');
+            const roleResponse = await api.get(`auth/user-role-by-id/${employeeUserId}`);
+            console.log('🎭 Role response by userId:', roleResponse.data);
+            
+            if (roleResponse.data.success && roleResponse.data.data) {
+              roleData = roleResponse.data.data;
+              console.log('✅ Successfully fetched role by userId:', roleData.role);
+            }
+          } catch (userIdError) {
+            console.log('⚠️ Failed to fetch by userId:', userIdError.response?.data || userIdError.message);
+          }
+        }
+        
+        // 2. Try with email if userId approach failed
+        if (!roleData && employeeEmail) {
+          try {
+            console.log('🔗 Fetching role by email...');
+            const roleResponse = await api.get(`auth/user-role/${encodeURIComponent(employeeEmail)}`);
+            console.log('🎭 Role response by email:', roleResponse.data);
+            
+            if (roleResponse.data.success && roleResponse.data.data) {
+              roleData = roleResponse.data.data;
+              console.log('✅ Successfully fetched role by email:', roleData.role);
+            }
+          } catch (emailError) {
+            console.log('⚠️ Failed to fetch by email:', emailError.response?.data || emailError.message);
+          }
+        }
+        
+        if (roleData) {
+          setEmployeeRole(roleData);
+        } else {
+          console.log('❌ No role data found using any method');
+          
+          // Call debug endpoint to understand the data structure
+          try {
+            console.log('🔧 Calling debug endpoint...');
+            const debugResponse = await api.get(`auth/debug-user-employee/${empId}`);
+            console.log('🐛 Debug data:', debugResponse.data);
+            
+            // Try to find a match by name if available
+            if (debugResponse.data.success && debugResponse.data.debug) {
+              const { employee, usersBySearch, allUsers } = debugResponse.data.debug;
+              
+              // Check if any of the search methods found a user
+              const foundUser = usersBySearch.byUserId || usersBySearch.byEmail || usersBySearch.byWorkEmail;
+              
+              if (foundUser) {
+                console.log('✅ Found user via debug search:', foundUser);
+                setEmployeeRole({
+                  userId: foundUser.userId,
+                  email: foundUser.email,
+                  role: foundUser.role,
+                  name: `${employee.firstName} ${employee.lastName}`
+                });
+              } else {
+                // Try to match by name similarity
+                const employeeName = `${employee.firstName} ${employee.lastName}`.toLowerCase();
+                const matchingUser = allUsers.find(user => 
+                  user.name.toLowerCase().includes(employee.firstName?.toLowerCase()) ||
+                  user.name.toLowerCase().includes(employee.lastName?.toLowerCase())
+                );
+                
+                if (matchingUser) {
+                  console.log('✅ Found user by name matching:', matchingUser);
+                  setEmployeeRole(matchingUser);
+                } else {
+                  console.log('❌ No matching user found even with debug data');
+                  setEmployeeRole(null);
+                }
+              }
+            }
+          } catch (debugError) {
+            console.log('⚠️ Debug endpoint failed:', debugError.response?.data || debugError.message);
+            setEmployeeRole(null);
+          }
+        }
+      } else {
+        console.log('❌ Failed to get employee profile');
+        console.log('Employee response:', employeeResponse.data);
+        setEmployeeRole(null);
+      }
+    } catch (error) {
+      console.error('💥 Error fetching employee role:', error);
+      if (error.response) {
+        console.error('Error response status:', error.response.status);
+        console.error('Error response data:', error.response.data);
+      }
+      setEmployeeRole(null);
+    } finally {
+      setEmployeeRoleLoading(false);
+    }
   };
 
   // Get user initials for fallback
@@ -1014,16 +1179,32 @@ const updateWorkInfo = async () => {
 
 
   useEffect(() => {
-    if (id) {
-      fetchProfileData();
-    } else {
-      // If no ID is provided, fetch the current user's profile
-      const userId = currentUser?.id || localStorage.getItem("userId");
-      if (userId) {
-        fetchProfileByUserId(userId);
+    // Fetch user role first, then profile data
+    const loadData = async () => {
+      // Fetch user role from backend
+      await fetchUserRole();
+      
+      // Then fetch profile data
+      if (id) {
+        fetchProfileData();
+      } else {
+        // If no ID is provided, fetch the current user's profile
+        const userId = currentUser?.id || localStorage.getItem("userId");
+        if (userId) {
+          fetchProfileByUserId(userId);
+        }
       }
-    }
+    };
+    
+    loadData();
   }, [id, fetchProfileData, currentUser]);
+
+  // Fetch employee role when employeeId changes
+  useEffect(() => {
+    if (employeeId) {
+      fetchEmployeeRole(employeeId);
+    }
+  }, [employeeId]);
 
   // useEffect(() => {
   //   if (employeeId) {
@@ -1366,19 +1547,51 @@ const updateWorkInfo = async () => {
                       <small className="text-muted">Role Access</small>
                     </div>
                     <div className="col-7 text-end">
-                      <small
-                        className={`fw-bold ${
-                          canEditProfile() ? "text-primary" : "text-secondary"
-                        }`}
-                      >
-                        {getUserRole().toUpperCase()}
-                      </small>
+                      {employeeRoleLoading ? (
+                        <small className="text-muted">
+                          <span className="spinner-border spinner-border-sm me-1" style={{width: '12px', height: '12px'}} />
+                          Loading...
+                        </small>
+                      ) : employeeRole ? (
+                        <small
+                          className="fw-bold text-primary"
+                          title={`Employee role: ${employeeRole.role} | User ID: ${employeeRole.userId} | Employee ID: ${employeeId}`}
+                        >
+                          {employeeRole.role.toUpperCase()}
+                          <small className="text-success ms-1">
+                            ✓
+                          </small>
+                          <br />
+                          <span className="text-muted" style={{fontSize: '10px'}}>
+                            EMP: {employeeId} | USER: {employeeRole.userId}
+                          </span>
+                        </small>
+                      ) : (
+                        <small className="text-warning">
+                          No role found
+                          <br />
+                          <span className="text-muted" style={{fontSize: '10px'}}>
+                            EMP: {employeeId}
+                          </span>
+                          <br />
+                          <button 
+                            className="btn btn-xs btn-outline-primary mt-1"
+                            style={{fontSize: '9px', padding: '2px 6px'}}
+                            onClick={() => {
+                              console.log('🔍 Manual role fetch triggered');
+                              fetchEmployeeRole(employeeId);
+                            }}
+                          >
+                            Retry
+                          </button>
+                        </small>
+                      )}
                     </div>
                   </div>
                 </ListGroup.Item>
               </ListGroup>
 
-              {/* Role-based Action Buttons */}
+              {/* Role-based Action Buttons
               {canEditProfile() && (
                 <div className="mt-3">
                   <Button
@@ -1391,7 +1604,7 @@ const updateWorkInfo = async () => {
                     {editMode ? "Cancel Edit" : "Edit Profile"}
                   </Button>
                 </div>
-              )}
+              )} */}
             </Card.Body>
           </Card>
         </Col>

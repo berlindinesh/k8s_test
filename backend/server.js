@@ -4,9 +4,14 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname} from "path";
+import { Server } from 'socket.io';
+import http from 'http';
 
-//import connectDB from './config/db.js';
+
 import { connectMainDB } from './config/db.js';
+
 import employeesRouter from './routes/employeesRouter.js'
 import authRouter from './routes/authRouter.js'
 import profileRouter from './routes/profileRouter.js'
@@ -44,14 +49,10 @@ import invitationRoutes from './routes/invitationRoutes.js';
 
 import userRoutes from './routes/userRoutes.js';
 
-// import { startAllJobs } from './Jobs/index.js'; // Import the job scheduler
+ import { startAllJobs } from './Jobs/index.js'; // Import the job scheduler
 import { startExpiryReminderScheduler } from './jobs/paymentExpiryScheduler.js';
 
-import { fileURLToPath } from 'url';
-import { dirname} from "path";
 
-import { Server } from 'socket.io';
-import http from 'http';
 
 // // Sangeeta 
 import objectiveRoutes from './routes/objectiveRoutes.js';
@@ -125,31 +126,35 @@ process.on('SIGTERM', async () => {
 const server = http.createServer(app);
 
 // Middleware to parse JSON request bodies
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') ;
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [
+  'http://localhost:3000',
+  'http://localhost:5002',
+  'http://127.0.0.1:3000',
+  'http://0.0.0.0:3000',
+  'http://0.0.0.0:5002'
+] ;
 
-// Set up Socket.io with enhanced CORS and configuration
+// Socket.IO setup with enhanced CORS
 const io = new Server(server, {
   cors: {
-    origin: function (origin, callback) {
-      // Allow requests with no origin (mobile apps, postman, etc.)
-      if (!origin) return callback(null, true);
-      
-      // Allow localhost for development
-      if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // allow no-origin (Postman, mobile apps)
+
+      // Always allow local development origins
+      const lowerOrigin = origin.toLowerCase();
+      if (lowerOrigin.includes('localhost') || lowerOrigin.includes('0.0.0.0')) {
         return callback(null, true);
       }
-      
-      // Check against allowed origins
-      const normalizedOrigin = origin.toLowerCase();
+
+      // Check whitelist
       const normalizedAllowed = allowedOrigins.map(o => o.toLowerCase());
-      
-      if (normalizedAllowed.includes(normalizedOrigin)) {
+      if (normalizedAllowed.includes(lowerOrigin)) {
         return callback(null, true);
       }
-      
-      // For debugging - log blocked origins
+
+      // Not allowed (for debugging, still calling callback(null,true) to allow)
       console.log(`Socket.IO CORS blocked: ${origin}`);
-      return callback(null, true); // Allow for now, remove in production
+      return callback(null, true);
     },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
@@ -160,43 +165,36 @@ const io = new Server(server, {
   pingInterval: 25000
 });
 
-// Socket.io connection handling with enhanced error handling
+// Handle Socket.IO events
 io.on('connection', (socket) => {
   console.log('📡 Socket.IO: User connected', socket.id);
   
-  // Handle user joining a room - support both object and direct userId
+  // Join a user-specific room
   socket.on('join', (data) => {
-    let userId;
-    
-    // Handle both { userId: 'xxx' } and direct 'xxx' formats
+    let userId = null;
     if (typeof data === 'object' && data.userId) {
       userId = data.userId;
     } else if (typeof data === 'string') {
       userId = data;
     }
-    
     if (userId) {
       socket.join(userId);
       console.log(`📡 Socket.IO: User ${userId} joined room ${userId}`);
-      
-      // Send confirmation back to client
       socket.emit('joined', { userId, message: 'Successfully joined notification room' });
     } else {
       console.error('📡 Socket.IO: Invalid join data:', data);
       socket.emit('error', { message: 'Invalid user data for joining room' });
     }
   });
-  
-  // Handle errors
+
   socket.on('error', (error) => {
     console.error('📡 Socket.IO: Socket error:', error);
   });
-  
+
   socket.on('disconnect', (reason) => {
     console.log('📡 Socket.IO: User disconnected:', socket.id, 'Reason:', reason);
   });
-  
-  // Heartbeat to keep connection alive
+
   socket.on('ping', () => {
     socket.emit('pong');
   });
@@ -205,39 +203,26 @@ io.on('connection', (socket) => {
 // Print Socket.IO diagnostics
 printSocketDiagnostics(allowedOrigins);
 
-
-
-
-// console.log('Notification routes registered');
-
-
-
+// CORS settings for Express routes
 const corsOptions = {
-  origin: function (origin, callback) {
-    // Always allow requests without origin (mobile apps, Postman, etc.)
-    if (!origin) return callback(null, true);
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // allow no-origin
 
-    // Handle ALB forwarded headers
-    const normalizedOrigin = origin.toLowerCase();
+    const lowerOrigin = origin.toLowerCase();
     const normalizedAllowed = allowedOrigins.map(o => o.toLowerCase());
 
-    // Allow localhost for development
-    if (normalizedOrigin.includes('localhost') || normalizedOrigin.includes('127.0.0.1')) {
+    // Always allow localhost
+    if (lowerOrigin.includes('localhost') || lowerOrigin.includes('0.0.0.0')) {
       return callback(null, true);
     }
 
-    if (normalizedAllowed.includes(normalizedOrigin)) {
+    if (normalizedAllowed.includes(lowerOrigin)) {
       return callback(null, true);
     } else {
       console.error(`Blocked by CORS: ${origin}`);
       return callback(new Error("Not allowed by CORS"));
     }
   },
-
-
-
-
-
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true,
   allowedHeaders: [
@@ -248,34 +233,30 @@ const corsOptions = {
     'X-Company-Code'
   ]
 };
-
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
-
- 
-
-// Error handling middleware
+// Error handling middleware (catches internal errors)
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ message: 'Internal Server Error' });
+  console.error(err.stack);
+  res.status(500).json({ message: 'Internal Server Error' });
 });
 
+// Parse JSON request bodies
 app.use(express.json());
 
-// CRITICAL: Serve static files BEFORE any authentication middleware to prevent 401 errors
+// Static files middleware (must come before protected routes)
 app.use('/uploads', (req, res, next) => {
-  // Always allow cross-origin for static files (prevents CORB)
+  // Allow cross-origin GET/OPTIONS
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   res.header('Cross-Origin-Resource-Policy', 'cross-origin');
   res.header('Cross-Origin-Embedder-Policy', 'unsafe-none');
-  
-  // Handle preflight requests
+
+  // Handle preflight for static files
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.sendStatus(200);
   }
   
   // Set proper content types and cache headers for images
@@ -389,7 +370,7 @@ const PORT = process.env.PORT || 5002;
 
 server.listen(PORT, '0.0.0.0', () => {
   //console.log(`✨ Server running on port ${PORT}`.yellow.bold);
-  console.log(`✨ Server running on port 0.0.0.0:${PORT}`.yellow.bold);
+  console.log(`✨ Server running on port 0.0.0.0:${PORT}`);
   
   // Start payment expiry reminder scheduler
   try {

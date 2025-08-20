@@ -314,7 +314,16 @@ useEffect(() => {
         profileImage: employee.personalInfo?.employeeImage
   ? getAssetUrl(employee.personalInfo.employeeImage)
   : null,
-
+      status:
+        (employee.joiningDetails?.employmentStatus ??
+        employee.accountStatus ??
+        employee.status ??
+        "Active") // fallback default
+        .toString()
+        .trim()
+        .toLowerCase() === "inactive"
+        ? "Inactive"
+        : "Active",
       }));
 
       console.log("Processed employee data:", employeeData);
