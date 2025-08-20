@@ -260,100 +260,61 @@ const ProfilePage = () => {
       setEmployeeRoleLoading(true);
       console.log('🔍 Fetching role for employee ID:', empId);
       
-      // First get employee profile to get the userId and email
+      // Get employee profile to extract workemail and userId
       const employeeResponse = await api.get(`employees/profile/${empId}`);
       console.log('📄 Employee profile response:', employeeResponse.data);
       
       if (employeeResponse.data.success && employeeResponse.data.data) {
         const employeeData = employeeResponse.data.data;
-        const employeeUserId = employeeData.userId;
-        const employeeEmail = employeeData.personalInfo?.email || employeeData.personalInfo?.workemail;
+        const workEmail = employeeData.personalInfo?.workemail;
+        const userId = employeeData.userId;
         
-        console.log('👤 Employee userId:', employeeUserId);
-        console.log('📧 Employee email:', employeeEmail);
+        console.log('📧 Employee work email:', workEmail);
+        console.log('👤 Employee userId:', userId);
         
-        // Try multiple approaches to fetch role:
-        let roleData = null;
+        // Debug: Verify workemail with User.email field matching
+        console.log('🔧 Debugging workemail to User.email matching...');
         
-        // 1. Try with userId if it exists
-        if (employeeUserId) {
+        if (workEmail) {
+          // Match Employee.workemail with User.email field
           try {
-            console.log('🔗 Fetching role by userId...');
-            const roleResponse = await api.get(`auth/user-role-by-id/${employeeUserId}`);
-            console.log('🎭 Role response by userId:', roleResponse.data);
+            const roleResponse = await api.get(`auth/user-role/${encodeURIComponent(workEmail)}`);
             
             if (roleResponse.data.success && roleResponse.data.data) {
-              roleData = roleResponse.data.data;
-              console.log('✅ Successfully fetched role by userId:', roleData.role);
+              setEmployeeRole(roleResponse.data.data);
+              console.log('✅ Role found by workemail match:', roleResponse.data.data.role);
+              console.log('🔗 Employee workemail:', workEmail, '-> User email:', roleResponse.data.data.email);
+            } else {
+              console.log('❌ No User found with email matching workemail:', workEmail);
+              setEmployeeRole(null);
             }
-          } catch (userIdError) {
-            console.log('⚠️ Failed to fetch by userId:', userIdError.response?.data || userIdError.message);
-          }
-        }
-        
-        // 2. Try with email if userId approach failed
-        if (!roleData && employeeEmail) {
-          try {
-            console.log('🔗 Fetching role by email...');
-            const roleResponse = await api.get(`auth/user-role/${encodeURIComponent(employeeEmail)}`);
-            console.log('🎭 Role response by email:', roleResponse.data);
+          } catch (error) {
+            console.log('❌ Error matching workemail to User.email:', error.response?.data || error.message);
             
-            if (roleResponse.data.success && roleResponse.data.data) {
-              roleData = roleResponse.data.data;
-              console.log('✅ Successfully fetched role by email:', roleData.role);
-            }
-          } catch (emailError) {
-            console.log('⚠️ Failed to fetch by email:', emailError.response?.data || emailError.message);
-          }
-        }
-        
-        if (roleData) {
-          setEmployeeRole(roleData);
-        } else {
-          console.log('❌ No role data found using any method');
-          
-          // Call debug endpoint to understand the data structure
-          try {
-            console.log('🔧 Calling debug endpoint...');
-            const debugResponse = await api.get(`auth/debug-user-employee/${empId}`);
-            console.log('🐛 Debug data:', debugResponse.data);
-            
-            // Try to find a match by name if available
-            if (debugResponse.data.success && debugResponse.data.debug) {
-              const { employee, usersBySearch, allUsers } = debugResponse.data.debug;
-              
-              // Check if any of the search methods found a user
-              const foundUser = usersBySearch.byUserId || usersBySearch.byEmail || usersBySearch.byWorkEmail;
-              
-              if (foundUser) {
-                console.log('✅ Found user via debug search:', foundUser);
-                setEmployeeRole({
-                  userId: foundUser.userId,
-                  email: foundUser.email,
-                  role: foundUser.role,
-                  name: `${employee.firstName} ${employee.lastName}`
-                });
-              } else {
-                // Try to match by name similarity
-                const employeeName = `${employee.firstName} ${employee.lastName}`.toLowerCase();
-                const matchingUser = allUsers.find(user => 
-                  user.name.toLowerCase().includes(employee.firstName?.toLowerCase()) ||
-                  user.name.toLowerCase().includes(employee.lastName?.toLowerCase())
-                );
+            // Fallback: Try userId if workemail match failed
+            if (userId) {
+              try {
+                console.log('🔄 Fallback: Trying userId match...');
+                const userRoleResponse = await api.get(`auth/user-role-by-id/${userId}`);
                 
-                if (matchingUser) {
-                  console.log('✅ Found user by name matching:', matchingUser);
-                  setEmployeeRole(matchingUser);
+                if (userRoleResponse.data.success && userRoleResponse.data.data) {
+                  setEmployeeRole(userRoleResponse.data.data);
+                  console.log('✅ Role found by userId match:', userRoleResponse.data.data.role);
                 } else {
-                  console.log('❌ No matching user found even with debug data');
+                  console.log('❌ No User found with matching userId:', userId);
                   setEmployeeRole(null);
                 }
+              } catch (userIdError) {
+                console.log('❌ Error matching userId:', userIdError.response?.data || userIdError.message);
+                setEmployeeRole(null);
               }
+            } else {
+              setEmployeeRole(null);
             }
-          } catch (debugError) {
-            console.log('⚠️ Debug endpoint failed:', debugError.response?.data || debugError.message);
-            setEmployeeRole(null);
           }
+        } else {
+          console.log('❌ No workemail found in employee profile');
+          setEmployeeRole(null);
         }
       } else {
         console.log('❌ Failed to get employee profile');
