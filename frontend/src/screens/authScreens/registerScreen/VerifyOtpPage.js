@@ -181,6 +181,38 @@ const VerifyOtpPage = () => {
       inputRefs.current[index + 1].focus();
     }
   };
+
+  // Handle paste event for OTP inputs
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text');
+    
+    // Only process if pasted data is exactly 6 digits
+    if (!/^\d{6}$/.test(pastedData)) {
+      return;
+    }
+    
+    // Split the 6-digit code into individual digits
+    const digits = pastedData.split('');
+    const newOtp = [...otp];
+    
+    // Fill the OTP inputs with the pasted digits
+    digits.forEach((digit, index) => {
+      if (index < 6) {
+        newOtp[index] = digit;
+      }
+    });
+    
+    setOtp(newOtp);
+    
+    // Clear any existing errors
+    if (error) dispatch(clearError());
+    
+    // Focus on the last input
+    if (inputRefs.current[5]) {
+      inputRefs.current[5].focus();
+    }
+  };
   
   // Handle key press in OTP input
   const handleKeyDown = (index, e) => {
@@ -300,6 +332,7 @@ const VerifyOtpPage = () => {
                   value={digit}
                   onChange={(e) => handleOtpChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
+                  onPaste={handlePaste}
                   inputProps={{
                     maxLength: 1,
                     inputMode: 'numeric',

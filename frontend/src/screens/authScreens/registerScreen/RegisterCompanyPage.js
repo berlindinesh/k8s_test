@@ -1195,6 +1195,70 @@ const handleContactKeyDown = (index, e) => {
   }
 };
 
+// Handle paste event for Admin OTP inputs
+const handleAdminOtpPaste = (e) => {
+  e.preventDefault();
+  const pastedData = e.clipboardData.getData('text');
+  
+  // Only process if pasted data is exactly 6 digits
+  if (!/^\d{6}$/.test(pastedData)) {
+    return;
+  }
+  
+  // Split the 6-digit code into individual digits
+  const digits = pastedData.split('');
+  const newOtp = [...adminOtp];
+  
+  // Fill the OTP inputs with the pasted digits
+  digits.forEach((digit, index) => {
+    if (index < 6) {
+      newOtp[index] = digit;
+    }
+  });
+  
+  setAdminOtp(newOtp);
+  
+  // Clear any existing errors
+  if (error) setError('');
+  
+  // Focus on the last input
+  if (adminInputRefs.current[5]) {
+    adminInputRefs.current[5].focus();
+  }
+};
+
+// Handle paste event for Contact OTP inputs
+const handleContactOtpPaste = (e) => {
+  e.preventDefault();
+  const pastedData = e.clipboardData.getData('text');
+  
+  // Only process if pasted data is exactly 6 digits
+  if (!/^\d{6}$/.test(pastedData)) {
+    return;
+  }
+  
+  // Split the 6-digit code into individual digits
+  const digits = pastedData.split('');
+  const newOtp = [...contactOtp];
+  
+  // Fill the OTP inputs with the pasted digits
+  digits.forEach((digit, index) => {
+    if (index < 6) {
+      newOtp[index] = digit;
+    }
+  });
+  
+  setContactOtp(newOtp);
+  
+  // Clear any existing errors
+  if (error) setError('');
+  
+  // Focus on the last input
+  if (contactInputRefs.current[5]) {
+    contactInputRefs.current[5].focus();
+  }
+};
+
 // Handle OTP verification
 const handleVerifyOtp = async () => {
   const adminOtpValue = adminOtp.join('');
@@ -2145,6 +2209,7 @@ const handlePaymentClose = () => {
                                   value={digit}
                                   onChange={(e) => handleAdminOtpChange(index, e.target.value)}
                                   onKeyDown={(e) => handleAdminKeyDown(index, e)}
+                                  onPaste={handleAdminOtpPaste}
                                   inputProps={{
                                     maxLength: 1,
                                     inputMode: 'numeric',
@@ -2211,6 +2276,7 @@ const handlePaymentClose = () => {
                                     value={digit}
                                     onChange={(e) => handleContactOtpChange(index, e.target.value)}
                                     onKeyDown={(e) => handleContactKeyDown(index, e)}
+                                    onPaste={handleContactOtpPaste}
                                     inputProps={{
                                       maxLength: 1,
                                       inputMode: 'numeric',
