@@ -13,7 +13,7 @@ const connections = {};
 // Connect to main database
 const connectMainDB = async () => {
     try {
-        //const conn = await mongoose.connect(URL);
+        
         const conn = await mongoose.connect(URL, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -131,7 +131,7 @@ const getCompanyConnection = async (companyCode) => {
         console.log(`Creating new connection to ${dbName} for company ${companyCode}`);
         console.log(`Connection string: ${connectionString}`);
         
-        //const connection = await mongoose.createConnection(connectionString);
+        
 
         const connection = mongoose.createConnection(connectionString, {
             useNewUrlParser: true,
