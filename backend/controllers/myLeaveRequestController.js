@@ -2,17 +2,40 @@ import MyLeaveRequest, { myLeaveRequestSchema } from '../models/MyLeaveRequest.j
 import LeaveBalance, { leaveBalanceSchema } from '../models/LeaveBalance.js';
 import getModelForCompany from '../models/genericModelFactory.js';
 
-// Helper function to calculate number of days between dates (excluding weekends)
+// // Helper function to calculate number of days between dates (excluding weekends)
+// const calculateBusinessDays = (startDate, endDate, isHalfDay) => {
+//   if (isHalfDay) return 0.5;
+  
+//   const start = new Date(startDate);
+//   const end = new Date(endDate);
+  
+//   let count = 0;
+//   const currentDate = new Date(start);
+  
+//   while (currentDate <= end) {
+//     const dayOfWeek = currentDate.getDay();
+//     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+//       // Not a weekend
+//       count++;
+//     }
+//     currentDate.setDate(currentDate.getDate() + 1);
+//   }
+  
+//   return count;
+// };
+
+// Fix for calculateBusinessDays function
 const calculateBusinessDays = (startDate, endDate, isHalfDay) => {
   if (isHalfDay) return 0.5;
   
   const start = new Date(startDate);
   const end = new Date(endDate);
+  end.setHours(23, 59, 59, 999); // Set end date to end of day
   
   let count = 0;
   const currentDate = new Date(start);
   
-  while (currentDate <= end) {
+  while (currentDate.getTime() <= end.getTime()) {  // Compare timestamps instead
     const dayOfWeek = currentDate.getDay();
     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
       // Not a weekend
@@ -142,84 +165,6 @@ export const getAllLeaveRequests = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-// export const createLeaveRequest = async (req, res) => {
-//   try {
-//     // Get company code from authenticated user
-//     const companyCode = req.companyCode;
-    
-//     if (!companyCode) {
-//       return res.status(401).json({ 
-//         error: 'Authentication required', 
-//         message: 'Company code not found in request' 
-//       });
-//     }
-    
-//     console.log(`Creating leave request for company: ${companyCode}`);
-    
-//     // Get company-specific models
-//     const CompanyLeaveRequest = await getModelForCompany(companyCode, 'MyLeaveRequest', myLeaveRequestSchema);
-//     const CompanyLeaveBalance = await getModelForCompany(companyCode, 'LeaveBalance', leaveBalanceSchema);
-    
-//     const { employeeCode, leaveType, startDate, endDate, halfDay } = req.body;
-    
-//     // Calculate number of days
-//     const numberOfDays = calculateBusinessDays(startDate, endDate, halfDay);
-    
-//     // Check if employee has sufficient leave balance
-//     let leaveBalance = await CompanyLeaveBalance.findOne({ employeeCode });
-    
-//     if (!leaveBalance) {
-//       // Create new balance if not exists
-//       leaveBalance = new CompanyLeaveBalance({ 
-//         employeeCode,
-//         annual: { total: 15, used: 0, pending: 0 },
-//         sick: { total: 12, used: 0, pending: 0 },
-//         personal: { total: 5, used: 0, pending: 0 },
-//         maternity: { total: 90, used: 0, pending: 0 },
-//         paternity: { total: 15, used: 0, pending: 0 },
-//         casual: { total: 12, used: 0, pending: 0 },
-//         earned: { total: 15, used: 0, pending: 0 },
-//         lastAccrualDate: new Date()
-//       });
-//       await leaveBalance.save();
-//     } else {
-//       // Process any pending accruals
-//       await processMonthlyAccrual(employeeCode, companyCode);
-      
-//       // Refresh leave balance after accrual
-//       leaveBalance = await CompanyLeaveBalance.findOne({ employeeCode });
-//     }
-    
-//     // Check if employee has enough balance
-//     const availableBalance = leaveBalance[leaveType].total - leaveBalance[leaveType].used - leaveBalance[leaveType].pending;
-    
-//     if (numberOfDays > availableBalance) {
-//       return res.status(400).json({ 
-//         message: `Insufficient ${leaveType} leave balance. Available: ${availableBalance} days, Requested: ${numberOfDays} days` 
-//       });
-//     }
-    
-//     // Create leave request with calculated days
-//     const leaveData = {
-//       ...req.body,
-//       status: 'pending',
-//       numberOfDays
-//     };
-    
-//     const newLeaveRequest = new CompanyLeaveRequest(leaveData);
-//     const savedLeaveRequest = await newLeaveRequest.save();
-    
-//     // Update pending balance
-//     leaveBalance[leaveType].pending += numberOfDays;
-//     await leaveBalance.save();
-    
-//     res.status(201).json(savedLeaveRequest);
-//   } catch (error) {
-//     console.error("Error in createLeaveRequest:", error);
-//     res.status(400).json({ message: error.message });
-//   }
-// };
 
 export const createLeaveRequest = async (req, res) => {
   try {
@@ -383,123 +328,6 @@ export const deleteLeaveRequest = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-// // Update the approveLeaveRequest function
-// export const approveLeaveRequest = async (req, res) => {
-//   try {
-//     // Get company code from authenticated user
-//     const companyCode = req.companyCode;
-    
-//     if (!companyCode) {
-//       return res.status(401).json({ 
-//         error: 'Authentication required', 
-//         message: 'Company code not found in request' 
-//       });
-//     }
-    
-//     console.log(`Approving leave request for company: ${companyCode}`);
-    
-//     // Get company-specific models
-//     const CompanyLeaveRequest = await getModelForCompany(companyCode, 'MyLeaveRequest', myLeaveRequestSchema);
-//     const CompanyLeaveBalance = await getModelForCompany(companyCode, 'LeaveBalance', leaveBalanceSchema);
-    
-//     const leaveRequest = await CompanyLeaveRequest.findById(req.params.id);
-    
-//     if (!leaveRequest) {
-//       return res.status(404).json({ message: 'Leave request not found' });
-//     }
-    
-//     // Only approve if it's pending
-//     if (leaveRequest.status !== 'pending') {
-//       return res.status(400).json({ message: 'This request is not in pending status' });
-//     }
-    
-//     // Update leave balance
-//     const leaveBalance = await CompanyLeaveBalance.findOne({ employeeCode: leaveRequest.employeeCode });
-    
-//     if (leaveBalance) {
-//       // Move from pending to used
-//       leaveBalance[leaveRequest.leaveType].pending -= leaveRequest.numberOfDays;
-//       leaveBalance[leaveRequest.leaveType].used += leaveRequest.numberOfDays;
-//       await leaveBalance.save();
-//     }
-    
-//     // Update leave request status
-//     const updatedLeaveRequest = await CompanyLeaveRequest.findByIdAndUpdate(
-//       req.params.id,
-//       { status: 'approved' },
-//       { new: true }
-//     );
-    
-//     res.status(200).json(updatedLeaveRequest);
-//   } catch (error) {
-//     console.error("Error in approveLeaveRequest:", error);
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
-// // Update the rejectLeaveRequest function
-// export const rejectLeaveRequest = async (req, res) => {
-//   try {
-//     // Get company code from authenticated user
-//     const companyCode = req.companyCode;
-    
-//     if (!companyCode) {
-//       return res.status(401).json({ 
-//         error: 'Authentication required', 
-//         message: 'Company code not found in request' 
-//       });
-//     }
-    
-//     console.log(`Rejecting leave request for company: ${companyCode}`);
-    
-//         // Get company-specific models
-//     const CompanyLeaveRequest = await getModelForCompany(companyCode, 'MyLeaveRequest', myLeaveRequestSchema);
-//     const CompanyLeaveBalance = await getModelForCompany(companyCode, 'LeaveBalance', leaveBalanceSchema);
-    
-//     const { rejectionReason } = req.body;
-    
-//     if (!rejectionReason) {
-//       return res.status(400).json({ message: 'Rejection reason is required' });
-//     }
-    
-//     const leaveRequest = await CompanyLeaveRequest.findById(req.params.id);
-    
-//     if (!leaveRequest) {
-//       return res.status(404).json({ message: 'Leave request not found' });
-//     }
-    
-//     // Only reject if it's pending
-//     if (leaveRequest.status !== 'pending') {
-//       return res.status(400).json({ message: 'This request is not in pending status' });
-//     }
-    
-//     // Update leave balance
-//     const leaveBalance = await CompanyLeaveBalance.findOne({ employeeCode: leaveRequest.employeeCode });
-    
-//     if (leaveBalance) {
-//       // Remove from pending
-//       leaveBalance[leaveRequest.leaveType].pending -= leaveRequest.numberOfDays;
-//       await leaveBalance.save();
-//     }
-    
-//     const updatedLeaveRequest = await CompanyLeaveRequest.findByIdAndUpdate(
-//       req.params.id,
-//       { 
-//         status: 'rejected',
-//         rejectionReason 
-//       },
-//       { new: true }
-//     );
-    
-//     res.status(200).json(updatedLeaveRequest);
-//   } catch (error) {
-//     console.error("Error in rejectLeaveRequest:", error);
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
-// Update the approveLeaveRequest function
 export const approveLeaveRequest = async (req, res) => {
   try {
     // Get company code from authenticated user
