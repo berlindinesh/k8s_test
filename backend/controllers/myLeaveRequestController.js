@@ -2,28 +2,6 @@ import MyLeaveRequest, { myLeaveRequestSchema } from '../models/MyLeaveRequest.j
 import LeaveBalance, { leaveBalanceSchema } from '../models/LeaveBalance.js';
 import getModelForCompany from '../models/genericModelFactory.js';
 
-// // Helper function to calculate number of days between dates (excluding weekends)
-// const calculateBusinessDays = (startDate, endDate, isHalfDay) => {
-//   if (isHalfDay) return 0.5;
-  
-//   const start = new Date(startDate);
-//   const end = new Date(endDate);
-  
-//   let count = 0;
-//   const currentDate = new Date(start);
-  
-//   while (currentDate <= end) {
-//     const dayOfWeek = currentDate.getDay();
-//     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-//       // Not a weekend
-//       count++;
-//     }
-//     currentDate.setDate(currentDate.getDate() + 1);
-//   }
-  
-//   return count;
-// };
-
 // Fix for calculateBusinessDays function
 const calculateBusinessDays = (startDate, endDate, isHalfDay) => {
   if (isHalfDay) return 0.5;
