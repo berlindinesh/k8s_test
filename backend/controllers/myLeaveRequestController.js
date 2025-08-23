@@ -1,19 +1,21 @@
-import MyLeaveRequest, { myLeaveRequestSchema } from '../models/MyLeaveRequest.js';
-import LeaveBalance, { leaveBalanceSchema } from '../models/LeaveBalance.js';
+// ✅ Fixed imports: only keep schemas, remove unused models
+import { myLeaveRequestSchema } from '../models/MyLeaveRequest.js';
+import { leaveBalanceSchema } from '../models/LeaveBalance.js';
 import getModelForCompany from '../models/genericModelFactory.js';
+import mongoose from 'mongoose'; // required for Notification model usage
 
 // Fix for calculateBusinessDays function
 const calculateBusinessDays = (startDate, endDate, isHalfDay) => {
   if (isHalfDay) return 0.5;
-  
+
   const start = new Date(startDate);
   const end = new Date(endDate);
   end.setHours(23, 59, 59, 999); // Set end date to end of day
-  
+
   let count = 0;
   const currentDate = new Date(start);
-  
-  while (currentDate.getTime() <= end.getTime()) {  // Compare timestamps instead
+
+  while (currentDate.getTime() <= end.getTime()) {
     const dayOfWeek = currentDate.getDay();
     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
       // Not a weekend
@@ -21,48 +23,41 @@ const calculateBusinessDays = (startDate, endDate, isHalfDay) => {
     }
     currentDate.setDate(currentDate.getDate() + 1);
   }
-  
+
   return count;
 };
 
 // Process monthly accruals for earned leave
 const processMonthlyAccrual = async (employeeCode, companyCode) => {
   try {
-    // Get company-specific LeaveBalance model
     const CompanyLeaveBalance = await getModelForCompany(companyCode, 'LeaveBalance', leaveBalanceSchema);
-    
+
     const leaveBalance = await CompanyLeaveBalance.findOne({ employeeCode });
-    
+
     if (!leaveBalance) {
       console.log(`No leave balance found for employee ${employeeCode}, skipping accrual`);
       return;
     }
-    
+
     const now = new Date();
     const lastAccrual = new Date(leaveBalance.lastAccrualDate);
-    
-    // Calculate months difference
-    const monthsDiff = (now.getFullYear() - lastAccrual.getFullYear()) * 12 + 
-                       (now.getMonth() - lastAccrual.getMonth());
-    
-    console.log(`Months since last accrual: ${monthsDiff} for employee ${employeeCode}`);
-    
-    // If we've passed at least one month since last accrual
+
+    const monthsDiff =
+      (now.getFullYear() - lastAccrual.getFullYear()) * 12 +
+      (now.getMonth() - lastAccrual.getMonth());
+
     if (monthsDiff >= 1) {
       console.log(`Processing accrual of ${monthsDiff} months for employee ${employeeCode}`);
-      
-      // Add 1 earned leave per month
+
       leaveBalance.earned.total += monthsDiff;
-      
-      // Add 1 casual leave per month up to the maximum of 12
+
       const casualToAdd = Math.min(monthsDiff, 12 - leaveBalance.casual.total);
       if (casualToAdd > 0) {
         leaveBalance.casual.total += casualToAdd;
       }
-      
-      // Update last accrual date
+
       leaveBalance.lastAccrualDate = now;
-      
+
       await leaveBalance.save();
       console.log(`Accrual processed successfully for employee ${employeeCode}`);
     }
@@ -71,8 +66,8 @@ const processMonthlyAccrual = async (employeeCode, companyCode) => {
   }
 };
 
-export const getLeaveBalance = async (req, res) => {
-  try {
+
+export const getLeaveBalance = async (req, res) => { try {
     // Get company code from authenticated user
     const companyCode = req.companyCode;
     
@@ -117,11 +112,9 @@ export const getLeaveBalance = async (req, res) => {
   } catch (error) {
     console.error("Error in getLeaveBalance:", error);
     res.status(500).json({ message: error.message });
-  }
+  } 
 };
-
-export const getAllLeaveRequests = async (req, res) => {
-  try {
+export const getAllLeaveRequests = async (req, res) => { try {
     // Get company code from authenticated user
     const companyCode = req.companyCode;
     
@@ -141,11 +134,9 @@ export const getAllLeaveRequests = async (req, res) => {
     res.status(200).json(leaveRequests);
   } catch (error) {
     res.status(500).json({ message: error.message });
-  }
+  } 
 };
-
-export const createLeaveRequest = async (req, res) => {
-  try {
+export const createLeaveRequest = async (req, res) => { try {
     // Get company code from authenticated user
     const companyCode = req.companyCode;
     
@@ -220,12 +211,9 @@ export const createLeaveRequest = async (req, res) => {
   } catch (error) {
     console.error("Error in createLeaveRequest:", error);
     res.status(400).json({ message: error.message });
-  }
+  } 
 };
-
-
-export const updateLeaveComment = async (req, res) => {
-  try {
+export const updateLeaveComment = async (req, res) => { try {
     // Get company code from authenticated user
     const companyCode = req.companyCode;
     
@@ -257,11 +245,9 @@ export const updateLeaveComment = async (req, res) => {
     res.status(200).json(updatedLeaveRequest);
   } catch (error) {
     res.status(400).json({ message: error.message });
-  }
+  } 
 };
-
-export const deleteLeaveRequest = async (req, res) => {
-  try {
+export const deleteLeaveRequest = async (req, res) => { try {
     // Get company code from authenticated user
     const companyCode = req.companyCode;
     
@@ -304,10 +290,9 @@ export const deleteLeaveRequest = async (req, res) => {
     res.status(200).json({ message: 'Leave request deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
-  }
+  } 
 };
-export const approveLeaveRequest = async (req, res) => {
-  try {
+export const approveLeaveRequest = async (req, res) => { try {
     // Get company code from authenticated user
     const companyCode = req.companyCode;
     
@@ -382,12 +367,9 @@ export const approveLeaveRequest = async (req, res) => {
   } catch (error) {
     console.error("Error in approveLeaveRequest:", error);
     res.status(500).json({ message: error.message });
-  }
+  } 
 };
-
-// Update the rejectLeaveRequest function
-export const rejectLeaveRequest = async (req, res) => {
-  try {
+export const rejectLeaveRequest = async (req, res) => { try {
     // Get company code from authenticated user
     const companyCode = req.companyCode;
     
@@ -469,13 +451,9 @@ export const rejectLeaveRequest = async (req, res) => {
   } catch (error) {
     console.error("Error in rejectLeaveRequest:", error);
     res.status(500).json({ message: error.message });
-  }
+  } 
 };
-
-
-// Get leave requests for a specific employee
-export const getEmployeeLeaveRequests = async (req, res) => {
-  try {
+export const getEmployeeLeaveRequests = async (req, res) => { try {
     // Get company code from authenticated user
     const companyCode = req.companyCode;
     
@@ -496,12 +474,9 @@ export const getEmployeeLeaveRequests = async (req, res) => {
     res.status(200).json(leaveRequests);
   } catch (error) {
     res.status(500).json({ message: error.message });
-  }
+  } 
 };
-
-// Get leave statistics for dashboard
-export const getLeaveStatistics = async (req, res) => {
-  try {
+export const getLeaveStatistics = async (req, res) => { try {
     // Get company code from authenticated user
     const companyCode = req.companyCode;
     
@@ -597,12 +572,9 @@ export const getLeaveStatistics = async (req, res) => {
   } catch (error) {
     console.error("Error in getLeaveStatistics:", error);
     res.status(500).json({ message: error.message });
-  }
+  } 
 };
-
-// Reset annual leaves at the beginning of the year
-export const resetAnnualLeaves = async (req, res) => {
-  try {
+export const resetAnnualLeaves = async (req, res) => { try {
     // Get company code from authenticated user
     const companyCode = req.companyCode;
     
@@ -647,12 +619,9 @@ export const resetAnnualLeaves = async (req, res) => {
   } catch (error) {
     console.error("Error in resetAnnualLeaves:", error);
     res.status(500).json({ message: error.message });
-  }
+  } 
 };
-
-// Update earned leave balance for all employees
-export const updateEarnedLeaveBalance = async (req, res) => {
-  try {
+export const updateEarnedLeaveBalance = async (req, res) => { try {
     // Get company code from authenticated user
     const companyCode = req.companyCode;
     
@@ -677,12 +646,9 @@ export const updateEarnedLeaveBalance = async (req, res) => {
   } catch (error) {
     console.error("Error updating earned leave balance:", error);
     res.status(500).json({ message: "Error updating earned leave balance" });
-  }
+  } 
 };
-
-// Recalculate leave balance for a specific employee
-export const recalculateLeaveBalance = async (req, res) => {
-  try {
+export const recalculateLeaveBalance = async (req, res) => { try {
     // Get company code from authenticated user
     const companyCode = req.companyCode;
     
@@ -736,12 +702,9 @@ export const recalculateLeaveBalance = async (req, res) => {
   } catch (error) {
     console.error("Error recalculating leave balance:", error);
     res.status(500).json({ message: "Error recalculating leave balance" });
-  }
+  } 
 };
-
-// Bulk approve leave requests
-export const bulkApproveLeaveRequests = async (req, res) => {
-  try {
+export const bulkApproveLeaveRequests = async (req, res) => { try {
     // Get company code from authenticated user
     const companyCode = req.companyCode;
     
@@ -816,12 +779,9 @@ export const bulkApproveLeaveRequests = async (req, res) => {
   } catch (error) {
     console.error("Error in bulkApproveLeaveRequests:", error);
     res.status(500).json({ message: error.message });
-  }
+  } 
 };
-
-// Bulk reject leave requests
-export const bulkRejectLeaveRequests = async (req, res) => {
-  try {
+export const bulkRejectLeaveRequests = async (req, res) => { try {
     // Get company code from authenticated user
     const companyCode = req.companyCode;
     
@@ -902,6 +862,5 @@ export const bulkRejectLeaveRequests = async (req, res) => {
   } catch (error) {
     console.error("Error in bulkRejectLeaveRequests:", error);
     res.status(500).json({ message: error.message });
-  }
+  } 
 };
-
