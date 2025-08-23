@@ -12,18 +12,16 @@ import {
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux';
+import {  useDispatch } from 'react-redux';
 import { logoutUser } from '../redux/authSlice';
 import {
   FaBars,
   FaBell,
   FaCog,
-  FaBuilding,
   FaUserCircle,
   FaSignOutAlt,
   FaSignInAlt,
-  FaHome,
-  FaVolumeUp,
+  FaHome,  
 } from "react-icons/fa";
 import { timesheetService } from "../services/timesheetService";
 import "./Header.css";
@@ -41,9 +39,7 @@ const Header = () => {
 
 
   // Then declare all your state variables
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [showCompanies, setShowCompanies] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);  
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [showNotificationSidebar, setShowNotificationSidebar] = useState(false);
@@ -148,22 +144,6 @@ useEffect(() => {
   }, []);
 
  // Get profile image URL
-
-
-  // const getProfileImageUrl = () => {
-  //   if (profileData?.personalInfo?.employeeImage) {
-  //     const imagePath = profileData.personalInfo.employeeImage;
-  //     if (imagePath.startsWith("http")) {
-  //       return imagePath;
-  //     } else {
-  //       return `${process.env.REACT_APP_API_URL}${imagePath}`;
-  //     }
-  //   }
-  //   return null;
-  // };
-
-  // Add this function to toggle the notification sidebar
-
 const getProfileImageUrl = () => {
   if (profileData?.personalInfo?.employeeImage) {
     return getAssetUrl(profileData.personalInfo.employeeImage);
@@ -212,30 +192,8 @@ const getProfileImageUrl = () => {
     }
   }, [isLoggedIn]);
 
-  // const initializeTimesheet = async () => {
-  //   try {
-  //     const response = await timesheetService.getTodayTimesheet(employeeId);
-  //     const timesheet = response.data.timesheet;
-
-  //     if (timesheet && timesheet.status === "active") {
-  //       const checkInTime = new Date(timesheet.checkInTime);
-  //       startTimerWithTime(checkInTime);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error initializing timesheet:", error);
-  //     showToastMessage("Failed to load timesheet status");
-  //   }
-  // };
-
 const initializeTimesheet = async () => {
   try {
-    // const token = getAuthToken();
-    // const companyCode = localStorage.getItem("companyCode");
-    // if (!token) {
-    //   return; // Don't proceed if not authenticated
-    // }
-    
-    // Update the timesheetService call to include authentication
     const response = await timesheetService.getTodayTimesheet(employeeId, token);
     const timesheet = response.data.timesheet;
 
@@ -273,49 +231,6 @@ const initializeTimesheet = async () => {
     }
   };
 
-// const handleTimerClick = async () => {
-//   if (isLoading) return;
-
-
-//   setIsLoading(true);
-//   try {
-//     if (isTimerRunning) {
-//       // Calculate duration in seconds
-//       const checkInTime = new Date(startTime);
-//       const checkOutTime = new Date();
-//       const durationInSeconds = Math.floor(
-//         (checkOutTime - checkInTime) / 1000
-//       );
-
-//       // Log out with duration
-//       await timesheetService.checkOut(employeeId, durationInSeconds, token);
-//       cleanupTimesheet();
-//       setIsTimerRunning(false);
-//       setTimer(0);
-//       setStartTime(null);
-//       localStorage.removeItem("checkInTime");
-//       showToastMessage("Successfully logged out");
-//     } else {
-//       // Get employee name from profile data
-//       const employeeName = getUserDisplayName();
-
-//       // Log in with employee name
-//       const response = await timesheetService.checkIn(
-//         employeeId,
-//         employeeName,
-//         token
-//       );
-//       const checkInTime = new Date(response.data.checkInTime);
-//       startTimerWithTime(checkInTime);
-//       showToastMessage("Successfully logged in");
-//     }
-//   } catch (error) {
-//     console.error("Timesheet operation failed:", error);
-//     showToastMessage("Operation failed. Please try again.");
-//   } finally {
-//     setIsLoading(false);
-//   }
-// };
 
 const handleTimerClick = async () => {
   if (isLoading) return;
