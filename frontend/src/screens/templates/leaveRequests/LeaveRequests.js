@@ -106,43 +106,6 @@ const LeaveRequests = () => {
     fetchLeaveRequests();
   }, []);
 
-//   // Add this useEffect for socket connection
-// useEffect(() => {
-//   const userId = localStorage.getItem("userId");
-//   if (!userId) return;
-
-//   // Get the base URL from your API configuration
-//   const baseURL = ${process.env.REACT_APP_API_URL} || 'http://localhost:5002';
-//   const socket = io(baseURL, {
-//     reconnection: true,
-//     reconnectionAttempts: 5,
-//     reconnectionDelay: 1000,
-//     query: { userId }
-//   });
-
-//   // Listen for new notifications
-//   socket.on('new-notification', (notification) => {
-//     console.log('Received real-time notification:', notification);
-    
-//     // If this is a leave notification, show a snackbar and refresh data
-//     if (notification.type === 'leave') {
-//       showSnackbar(notification.message, notification.status === 'approved' ? 'success' : 'info');
-      
-//       // Refresh leave data
-//       fetchLeaveRequests();
-//     }
-//   });
-
-//   // Join a room specific to this user
-//   socket.emit('join', userId);
-
-//   // Cleanup on component unmount
-//   return () => {
-//     socket.disconnect();
-//   };
-// }, []);
-
-// Add this useEffect for socket connection
 useEffect(() => {
   const userId = localStorage.getItem("userId");
   if (!userId) return;
@@ -194,7 +157,6 @@ const socket = io(baseURL, {
 const fetchLeaveRequests = async () => {
     try {
       setLoading(true);
-      // const token = getAuthToken();
       
       const response = await api.get(API_URL
         
@@ -225,66 +187,7 @@ const fetchLeaveRequests = async () => {
       setLoading(false);
     }
   };
- 
-// const handleApproveRequest = async (id) => {
-//   try {
-//     setLoading(true);
-    
-//     // Get the leave request before updating it
-//     const leaveToApprove = leaveData.find(leave => leave._id === id);
-    
-//     if (!leaveToApprove) {
-//       showSnackbar("Leave request not found", "error");
-//       setLoading(false);
-//       return;
-//     }
-    
-//     console.log("Found leave request to approve:", leaveToApprove);
-    
-//     // Store the employeeCode before making the API call
-//     const employeeCodeToNotify = leaveToApprove.employeeCode;
-    
-//     const response = await api.put(
-//       `${API_URL}/${id}/approve`,
-//       {}
-//     );
 
-//     console.log("Leave request approved, response:", response.data);
-
-//     // Update the local state with the updated leave request
-//     setLeaveData(
-//       leaveData.map((leave) => (leave._id === id ? response.data : leave))
-//     );
-
-//     // Send notification to the employee who submitted the leave request
-//     if (employeeCodeToNotify) {
-//       console.log("Sending approval notification to employee:", employeeCodeToNotify);
-      
-//       try {
-//         await addLeaveRequestNotification(
-//           leaveToApprove.employeeName || "Employee",
-//           "approved",
-//           employeeCodeToNotify
-//         );
-        
-//         console.log(`Sent approved notification to employee ${employeeCodeToNotify}`);
-//       } catch (notificationError) {
-//         console.error("Failed to send notification, but leave was approved:", notificationError);
-//       }
-//     } else {
-//       console.error("Cannot send notification: Missing employee code in leave data", leaveToApprove);
-//     }
-
-//     showSnackbar("Leave request approved successfully");
-//   } catch (error) {
-//     console.error("Error approving leave request:", error);
-//     showSnackbar("Error approving leave request", "error");
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-
-// Update the handleApproveRequest function
 const handleApproveRequest = async (id) => {
   try {
     setLoading(true);
@@ -355,74 +258,6 @@ const handleApproveRequest = async (id) => {
     setIsRejectDialogOpen(true);
   };
 
-// const handleRejectRequest = async () => {
-//   if (!rejectionReason.trim()) {
-//     showSnackbar("Rejection reason is required", "error");
-//     return;
-//   }
-
-//   try {
-//     setLoading(true);
-    
-//     // Get the leave request before updating it
-//     const leaveToReject = leaveData.find(leave => leave._id === selectedLeaveId);
-    
-//     if (!leaveToReject) {
-//       showSnackbar("Leave request not found", "error");
-//       setLoading(false);
-//       setIsRejectDialogOpen(false);
-//       return;
-//     }
-    
-//     console.log("Found leave request to reject:", leaveToReject);
-    
-//     // Store the employeeCode before making the API call
-//     const employeeCodeToNotify = leaveToReject.employeeCode;
-    
-//     const response = await api.put(
-//       `${API_URL}/${selectedLeaveId}/reject`,
-//       { rejectionReason }
-//     );
-
-//     console.log("Leave request rejected, response:", response.data);
-
-//     // Update the local state with the updated leave request
-//     setLeaveData(
-//       leaveData.map((leave) =>
-//         leave._id === selectedLeaveId ? response.data : leave
-//       )
-//     );
-
-//     // Send notification to the employee who submitted the leave request
-//     if (employeeCodeToNotify) {
-//       console.log("Sending rejection notification to employee:", employeeCodeToNotify);
-      
-//       try {
-//         await addLeaveRequestNotification(
-//           leaveToReject.employeeName || "Employee",
-//           "rejected",
-//           employeeCodeToNotify
-//         );
-        
-//         console.log(`Sent rejected notification to employee ${employeeCodeToNotify}`);
-//       } catch (notificationError) {
-//         console.error("Failed to send notification, but leave was rejected:", notificationError);
-//       }
-//     } else {
-//       console.error("Cannot send notification: Missing employee code in leave data", leaveToReject);
-//     }
-
-//     setIsRejectDialogOpen(false);
-//     showSnackbar("Leave request rejected successfully");
-//   } catch (error) {
-//     console.error("Error rejecting leave request:", error);
-//     showSnackbar("Error rejecting leave request", "error");
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-
-// Update the handleRejectRequest function
 const handleRejectRequest = async () => {
   if (!rejectionReason.trim()) {
     showSnackbar("Rejection reason is required", "error");
@@ -513,7 +348,6 @@ const handleRejectRequest = async () => {
  const handleSaveComment = async () => {
     try {
       setLoading(true);
-      // const token = getAuthToken();
       
       // Add a comment endpoint to your backend if needed
       const response = await api.put(
@@ -546,7 +380,6 @@ const handleRejectRequest = async () => {
 const handleDeleteRequest = async (id) => {
     try {
       setLoading(true);
-      // const token = getAuthToken();
       
       // Instead of deleting, update the status to "cancelled" or similar
       await api.put(
@@ -915,28 +748,6 @@ const handleConfirmDelete = async () => {
           startAdornment: <Search sx={{ color: "action.active", mr: 1 }} />,
         }}
       />
-
-      {/* <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          gap: { xs: 1, sm: 1 },
-          width: { xs: "100%", sm: "100%" },
-        }}
-      >
-        <Button
-          variant="outlined"
-          onClick={(event) => setFilterAnchorEl(event.currentTarget)}
-          startIcon={<FilterList />}
-          sx={{
-            height: { xs: "auto", sm: 40 },
-            whiteSpace: "nowrap",
-            width: { xs: "100%", sm: "auto" },
-          }}
-        >
-          Filters
-        </Button>
-      </Box> */}
     </Box>
   </StyledPaper>
 
@@ -1372,8 +1183,7 @@ const handleConfirmDelete = async () => {
         fullWidth
       >
         <DialogTitle 
-        sx={{
-           //bgcolor: "#fef2f2", color: "#dc2626" 
+        sx={{ 
            background: "linear-gradient(45deg,rgb(220, 38, 38),rgb(209, 175, 175))",
            color: "white",
       fontSize: "1.5rem",
@@ -1627,115 +1437,6 @@ const handleConfirmDelete = async () => {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* Filter Popover */}
-      {/* <Popover
-        open={Boolean(filterAnchorEl)}
-        anchorEl={filterAnchorEl}
-        onClose={() => setFilterAnchorEl(null)}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        className="filter-popover"
-      >
-        <Box sx={{ p: 2, width: 300 }}>
-          <Typography variant="subtitle1" sx={{ mb: 2 }}>
-            Filter Leave Requests
-          </Typography>
-          <Stack spacing={2}>
-            <TextField
-              select
-              label="Leave Type"
-              fullWidth
-              size="small"
-              value={filters.type}
-              onChange={(e) => setFilters({ ...filters, type: e.target.value })}
-            >
-              <MenuItem value="">All Types</MenuItem>
-              {LEAVE_TYPES.map((type) => (
-                <MenuItem key={type.value} value={type.value}>
-                  {type.label}
-                </MenuItem>
-              ))}
-            </TextField>
-
-            <TextField
-              select
-              label="Status"
-              fullWidth
-              size="small"
-              value={filters.status}
-              onChange={(e) =>
-                setFilters({ ...filters, status: e.target.value })
-              }
-            >
-              <MenuItem value="">All Statuses</MenuItem>
-              <MenuItem value="pending">Pending</MenuItem>
-              <MenuItem value="approved">Approved</MenuItem>
-              <MenuItem value="rejected">Rejected</MenuItem>
-              <MenuItem value="cancelled">Cancelled</MenuItem>
-            </TextField>
-
-            <TextField
-              label="From Date"
-              type="date"
-              fullWidth
-              size="small"
-              InputLabelProps={{ shrink: true }}
-              value={filters.dateRange.start}
-              onChange={(e) =>
-                setFilters({
-                  ...filters,
-                  dateRange: { ...filters.dateRange, start: e.target.value },
-                })
-              }
-            />
-
-            <TextField
-              label="To Date"
-              type="date"
-              fullWidth
-              size="small"
-              InputLabelProps={{ shrink: true }}
-              value={filters.dateRange.end}
-              onChange={(e) =>
-                setFilters({
-                  ...filters,
-                  dateRange: { ...filters.dateRange, end: e.target.value },
-                })
-              }
-            />
-
-            <Box
-              sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}
-            >
-              <Button
-                variant="outlined"
-                onClick={() =>
-                  setFilters({
-                    type: "",
-                    status: "",
-                    dateRange: { start: "", end: "" },
-                  })
-                }
-              >
-                Clear Filters
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => setFilterAnchorEl(null)}
-              >
-                Apply Filters
-              </Button>
-            </Box>
-          </Stack>
-        </Box>
-      </Popover> */}
 
       {/* Snackbar for notifications */}
       <Snackbar

@@ -93,23 +93,6 @@ const RecruitmentPipeline = () => {
     setDeleteDialogOpen(true);
   };
 
-  // This function will perform the actual deletion after confirmation
-  // const handleDeleteCandidate = async () => {
-  //   if (!candidateToDelete) return;
-
-  //   const selectedTabLabel = tabLabels[tabIndex];
-  //   try {
-  //     await axios.delete(
-  //       `${process.env.REACT_APP_API_URL}/api/recruitment/${candidateToDelete._id}`
-  //     );
-  //     fetchCandidates(selectedTabLabel);
-  //     setDeleteDialogOpen(false);
-  //     setCandidateToDelete(null);
-  //   } catch (error) {
-  //     console.error("Error deleting candidate:", error);
-  //   }
-  // };
-
   // Add this function to close the delete dialog
   const handleCloseDeleteDialog = () => {
     setDeleteDialogOpen(false);
@@ -159,31 +142,6 @@ const RecruitmentPipeline = () => {
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
   };
-
-  // const fetchCandidates = async (recruitment) => {
-  //   try {
-  //     const response = await axios.get(
-  //       `${process.env.REACT_APP_API_URL}/api/recruitment/${recruitment}`
-  //     );
-  //     setCandidates(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching candidates:", error);
-  //   }
-  // };
-
-  // const fetchRegisteredEmployees = async () => {
-  //   try {
-  //     setLoadingEmployees(true);
-  //     const response = await axios.get(
-  //       "${process.env.REACT_APP_API_URL}/api/employees/registered"
-  //     );
-  //     setRegisteredEmployees(response.data);
-  //     setLoadingEmployees(false);
-  //   } catch (error) {
-  //     console.error("Error fetching registered employees:", error);
-  //     setLoadingEmployees(false);
-  //   }
-  // };
 
   const handleEmployeeSelect = (event, employee) => {
     setSelectedEmployee(employee);
@@ -281,35 +239,6 @@ const RecruitmentPipeline = () => {
     }
   };
 
-  // const handleAddOrEditCandidate = async () => {
-  //   if (
-  //     !validateName(newCandidate.name) ||
-  //     !validateEmail(newCandidate.email) ||
-  //     !validateDepartment(newCandidate.department)
-  //   ) {
-  //     return;
-  //   }
-
-  //   const selectedTabLabel = tabLabels[tabIndex];
-  //   try {
-  //     if (editingCandidate) {
-  //       await axios.put(
-  //         `${process.env.REACT_APP_API_URL}/api/recruitment/${editingCandidate._id}`,
-  //         newCandidate
-  //       );
-  //     } else {
-  //       await axios.post("${process.env.REACT_APP_API_URL}/api/recruitment", {
-  //         ...newCandidate,
-  //         recruitment: selectedTabLabel,
-  //       });
-  //     }
-  //     fetchCandidates(selectedTabLabel);
-  //     setIsDialogOpen(false);
-  //   } catch (error) {
-  //     console.error("Error adding/editing candidate:", error);
-  //   }
-  // };
-
   const handleSearchChange = (event) => setSearchTerm(event.target.value);
 
   const filteredCandidates = candidates.filter((candidate) =>
@@ -321,16 +250,7 @@ const RecruitmentPipeline = () => {
   // Update the fetchCandidates function
   const fetchCandidates = async (recruitment) => {
     try {
-      //no need
-      // const token = getAuthToken();
-      const response = await api.get(
-        `/recruitment/${recruitment}`
-        // {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
-      );
+      const response = await api.get(`/recruitment/${recruitment}`);
       setCandidates(response.data);
     } catch (error) {
       console.error("Error fetching candidates:", error);
@@ -348,32 +268,15 @@ const RecruitmentPipeline = () => {
     }
 
     const selectedTabLabel = tabLabels[tabIndex];
-    // const token = getAuthToken();
 
     try {
       if (editingCandidate) {
-        await api.put(
-          `/recruitment/${editingCandidate._id}`,
-          newCandidate
-          // {
-          //   headers: {
-          //     'Authorization': `Bearer ${token}`
-          //   }
-          // }
-        );
+        await api.put(`/recruitment/${editingCandidate._id}`, newCandidate);
       } else {
-        await api.post(
-          "/recruitment",
-          {
-            ...newCandidate,
-            recruitment: selectedTabLabel,
-          }
-          // {
-          //   headers: {
-          //     'Authorization': `Bearer ${token}`
-          //   }
-          // }
-        );
+        await api.post("/recruitment", {
+          ...newCandidate,
+          recruitment: selectedTabLabel,
+        });
       }
       fetchCandidates(selectedTabLabel);
       setIsDialogOpen(false);
@@ -387,17 +290,9 @@ const RecruitmentPipeline = () => {
     if (!candidateToDelete) return;
 
     const selectedTabLabel = tabLabels[tabIndex];
-    // const token = getAuthToken();
 
     try {
-      await api.delete(
-        `/recruitment/${candidateToDelete._id}`
-        // {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
-      );
+      await api.delete(`/recruitment/${candidateToDelete._id}`);
       fetchCandidates(selectedTabLabel);
       setDeleteDialogOpen(false);
       setCandidateToDelete(null);
@@ -410,15 +305,7 @@ const RecruitmentPipeline = () => {
   const fetchRegisteredEmployees = async () => {
     try {
       setLoadingEmployees(true);
-      // const token = getAuthToken();
-      const response = await api.get(
-        "/employees/registered"
-        // {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
-      );
+      const response = await api.get("/employees/registered");
       setRegisteredEmployees(response.data);
       setLoadingEmployees(false);
     } catch (error) {
@@ -1109,13 +996,6 @@ const RecruitmentPipeline = () => {
             helperText={validationErrors.email}
             sx={{ mb: 2 }}
           />
-          {/* <TextField
-            fullWidth
-            label="Department"
-            value={newCandidate.department}
-            onChange={(e) => handleInputChange("department", e.target.value)}
-            sx={{ mb: 2 }}
-          /> */}
           <TextField
             fullWidth
             label="Department"

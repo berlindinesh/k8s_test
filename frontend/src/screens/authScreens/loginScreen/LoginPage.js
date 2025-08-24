@@ -177,92 +177,6 @@ const LoginPage = () => {
     setShowPassword(prev => !prev);
   }, []);
 
-  // const validateForm = useCallback(() => {
-  //   // Basic form validation
-  //   if (!formData.companyCode.trim()) {
-  //     dispatch(setAuthError('Company code is required'));
-  //     return false;
-  //   }
-  //   if (!formData.email.trim()) {
-  //     dispatch(setAuthError('Email is required'));
-  //     return false;
-  //   }
-  //   if (!formData.password) {
-  //     dispatch(setAuthError('Password is required'));
-  //     return false;
-  //   }
-  //   // Basic email validation
-  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   if (!emailRegex.test(formData.email)) {
-  //     dispatch(setAuthError('Please enter a valid email address'));
-  //     return false;
-  //   }
-  //   return true;
-  // }, [formData, dispatch]);
-
-//   // Handle form submission
-//   const handleSubmit = useCallback(async (e) => {
-//     // Prevent default form submission behavior
-//     if (e) {
-//       e.preventDefault();
-//       e.stopPropagation();
-//     }
-    
-//     // Prevent double submission
-//     if (isSubmitting || loading) return;
-    
-//     // Validate form inputs
-//     if (!validateForm()) {
-//       return;
-//     }
-    
-//     // Save current form state to session storage in case of page reload
-//     try {
-//       sessionStorage.setItem('pendingLogin', JSON.stringify(formData));
-//     } catch (error) {
-//       console.error('Error saving form data to session storage:', error);
-//     }
-    
-//     // Set submission state
-//     setIsSubmitting(true);
-    
-//     try {
-//       console.log('Submitting login form with:', {
-//         email: formData.email,
-//         companyCode: formData.companyCode,
-//         passwordProvided: !!formData.password
-//       });
-      
-//       // Attempt login using Redux action
-//       const resultAction = await dispatch(loginUser(formData));
-      
-//       console.log('Login response in component:', {
-//         success: loginUser.fulfilled.match(resultAction),
-//         payload: resultAction.payload
-//       });
-      
-//       // Clear pending login on success
-//     if (loginUser.fulfilled.match(resultAction)) {
-//       sessionStorage.removeItem('pendingLogin');
-      
-//       // Navigate to dashboard on success - SIMPLIFIED NAVIGATION
-//       console.log('Login successful, navigating to dashboard');
-//       navigate('/Dashboards');
-//     }
-//   } catch (error) {
-//     console.log('Login failed, but error is handled in the reducer');
-//   } finally {
-//     if (isMounted.current) {
-//       setIsSubmitting(false);
-//     }
-//   }
-// }, [formData, isSubmitting, loading, validateForm, dispatch, navigate]);
- 
-
-// Update the handleSubmit function
-
-
-// Update the validateForm function
 const validateForm = useCallback(() => {
   // Basic form validation
   if (!formData.companyCode.trim()) {
@@ -369,18 +283,6 @@ const handleSubmit = useCallback(async (e) => {
   }
 }, [formData, isSubmitting, loading, validateForm, dispatch, navigate]);
 
-// // Handle verification request
-//   const handleRequestVerification = useCallback(() => {
-//     if (!verificationEmail) return;
-    
-//     // Save the current login attempt for after verification
-//     sessionStorage.setItem('pendingLogin', JSON.stringify(formData));
-    
-//     // Redirect to verification page with email
-//     navigate(`/verify-otp?email=${encodeURIComponent(verificationEmail)}`);
-//   }, [verificationEmail, formData, navigate]);
-
-// Update the handleRequestVerification function
 const handleRequestVerification = useCallback(() => {
   if (!verificationEmail) {
     const email = formData.email.trim().toLowerCase();

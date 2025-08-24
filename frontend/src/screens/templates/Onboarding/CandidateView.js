@@ -136,11 +136,6 @@ const CandidatesView = () => {
     candidateName: "",
   });
 
-  // // Add this function to get the auth token
-  // const getAuthToken = () => {
-  //   return localStorage.getItem('token');
-  // };
-
   // Modify the handleDelete function to show confirmation first
   const handleDelete = (id, name) => {
     setDeleteConfirmDialog({
@@ -186,39 +181,13 @@ const CandidatesView = () => {
     return error;
   };
 
-  // const confirmDelete = async () => {
-  //   try {
-  //     setLoading(true);
-  //     await axios.delete(`${API_URL}/${deleteConfirmDialog.candidateId}`);
-  //     setCandidates((prev) =>
-  //       prev.filter((c) => c._id !== deleteConfirmDialog.candidateId)
-  //     );
-  //     showSnackbar("Candidate deleted successfully", "warning");
-  //   } catch (error) {
-  //     showSnackbar("Error deleting candidate", "error");
-  //   } finally {
-  //     // Close the confirmation dialog
-  //     setDeleteConfirmDialog({
-  //       open: false,
-  //       candidateId: null,
-  //       candidateName: "",
-  //     });
-  //     setLoading(false);
-  //   }
-  // };
-
   // Update the confirmDelete function (this is your existing function for delete)
   const confirmDelete = async () => {
     try {
       setLoading(true);
-      // const token = getAuthToken();
       await api.delete(
         `${API_URL}/${deleteConfirmDialog.candidateId}`
-        //   {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
+
       );
       setCandidates((prev) =>
         prev.filter((c) => c._id !== deleteConfirmDialog.candidateId)
@@ -254,30 +223,12 @@ const CandidatesView = () => {
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]); // This will trigger whenever searchTerm changes
 
-  // const fetchCandidates = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await axios.get(API_URL);
-  //     setCandidates(response.data);
-  //   } catch (error) {
-  //     showSnackbar("Error fetching candidates", "error");
-  //   }
-  //   setLoading(false);
-  // };
-
-  // Update the fetchCandidates function
-
   const fetchCandidates = async () => {
     setLoading(true);
     try {
-      // const token = getAuthToken();
       const response = await api.get(
         API_URL
-        //    {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
+
       );
       setCandidates(response.data);
     } catch (error) {
@@ -291,11 +242,7 @@ const CandidatesView = () => {
     setFilters(newFilters);
 
     try {
-      // const token = getAuthToken();
       const response = await api.get(`${API_URL}/filter`, {
-        // headers: {
-        //   'Authorization': `Bearer ${token}`
-        // },
         params: {
           department:
             newFilters.department !== "All" ? newFilters.department : "",
@@ -309,36 +256,10 @@ const CandidatesView = () => {
       showSnackbar("Error filtering candidates", "error");
     }
   };
-
-  // const handleSearch = async () => {
-  //   try {
-  //     // const token = getAuthToken();
-  //     const response = await api.get(`${API_URL}/filter`,
-  //        {
-  //       // headers: {
-  //       //   'Authorization': `Bearer ${token}`
-  //       // },
-  //       params: {
-  //         department: filters.department !== "All" ? filters.department : "",
-  //         status: filters.status !== "All" ? filters.status : "",
-  //         search: searchTerm,
-  //       },
-  //     });
-  //     setCandidates(response.data);
-  //   } catch (error) {
-  //     console.error("Error searching candidates:", error);
-  //     showSnackbar("Error searching candidates", "error");
-  //   }
-  // };
-
-  // Update the handleSearch function to handle empty search terms properly
+  
   const handleSearch = async () => {
     try {
-      // const token = getAuthToken();
       const response = await api.get(`${API_URL}/filter`, {
-        // headers: {
-        //   'Authorization': `Bearer ${token}`
-        // },
         params: {
           department: filters.department !== "All" ? filters.department : "",
           status: filters.status !== "All" ? filters.status : "",
@@ -351,14 +272,6 @@ const CandidatesView = () => {
       showSnackbar("Error searching candidates", "error");
     }
   };
-
-  // const handleFormChange = (event) => {
-  //   const { name, value } = event.target;
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [name]: value,
-  //   }));
-  // };
 
   // Update the handleFormChange function to include validation
   const handleFormChange = (event) => {
@@ -378,53 +291,6 @@ const CandidatesView = () => {
     }));
   };
 
-  //   // Update the handleSubmit function (this is your existing function for both add and edit)
-  // const handleSubmit = async () => {
-  //   try {
-  //     // const token = getAuthToken();
-  //     const candidateData = {
-  //       ...formData,
-  //       probationEnds: new Date(formData.joiningDate).setMonth(
-  //         new Date(formData.joiningDate).getMonth() + 3
-  //       ),
-  //       recruitment: formData.recruitment || "Direct",
-  //     };
-
-  //     if (editMode) {
-  //       const response = await api.put(
-  //         `${API_URL}/${selectedCandidate._id}`,
-  //         candidateData,
-  //         // {
-  //         //   headers: {
-  //         //     'Authorization': `Bearer ${token}`
-  //         //   }
-  //         // }
-  //       );
-  //       setCandidates((prev) =>
-  //         prev.map((c) => (c._id === selectedCandidate._id ? response.data : c))
-  //       );
-  //       showSnackbar("Candidate updated successfully");
-  //     } else {
-  //       const response = await api.post(API_URL, candidateData,
-  //       //   {
-  //       //   headers: {
-  //       //     'Authorization': `Bearer ${token}`
-  //       //   }
-  //       // }
-  //     );
-  //       setCandidates((prev) => [...prev, response.data]);
-  //       showSnackbar("New candidate added successfully");
-  //     }
-  //     handleDialogClose();
-  //   } catch (error) {
-  //     showSnackbar(
-  //       error.response?.data?.message || "Operation failed",
-  //       "error"
-  //     );
-  //   }
-  // };
-
-  // Update the handleSubmit function to check for errors before submission
   const handleSubmit = async () => {
     // Validate all fields first
     const nameError = validateField("name", formData.name);
@@ -549,23 +415,6 @@ const CandidatesView = () => {
             justifyContent: "space-between",
           }}
         >
-          {/* <SearchTextField
-            placeholder="Search candidates..."
-            value={searchTerm}
-            onChange={(e) => handleSearch(e.target.value)}
-            size="small"
-            sx={{
-              width: { xs: "100%", sm: "300px" },
-              marginRight: { xs: 0, sm: "auto" },
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon color="primary" />
-                </InputAdornment>
-              ),
-            }}
-          /> */}
           <SearchTextField
             placeholder="Search candidates..."
             value={searchTerm}

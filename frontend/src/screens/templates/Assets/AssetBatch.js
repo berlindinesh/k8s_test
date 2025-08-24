@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
 import api from "../../../api/axiosInstance";
-// import EditIcon from "@mui/icons-material/Edit";
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import AddCircleIcon from "@mui/icons-material/AddCircle";
-// import SearchIcon from "@mui/icons-material/Search";
 import {
   Alert,
   Fade,

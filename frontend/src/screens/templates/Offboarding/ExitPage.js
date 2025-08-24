@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import axios from "axios";
 import api from "../../../api/axiosInstance";
 import { styled } from "@mui/material";
 import {
@@ -322,12 +321,6 @@ const ExitPage = () => {
         .put(
           `/offboarding/${employee._id}`,
           updatedEmployee
-          // ,
-          // {
-          //   headers: {
-          //     'Authorization': `Bearer ${token}`
-          //   }
-          // }
         )
         .then(() => {
           setSnackbar({
@@ -368,19 +361,11 @@ const ExitPage = () => {
       officiallyOffboarded: true,
       offboardingCompletedDate: new Date(),
     };
-
-    // const token = getAuthToken();
-
     api
       .put(
         `/offboarding/${employeeId}`,
         updatedEmployee
-        // ,
-        // {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
+        
       )
       .then(() => {
         setSnackbar({
@@ -444,8 +429,7 @@ const ExitPage = () => {
     api
       .post(`/offboarding/${selectedEmployee._id}/document`, formData, {
         headers: {
-          // Don't set Content-Type manually, let the browser set it with boundary
-          // 'Content-Type': 'multipart/form-data', // Remove this line
+          
         },
       })
       .then((response) => {
@@ -543,15 +527,8 @@ const handleDownloadDocument = (path) => {
 
   const fetchEmployees = async () => {
     try {
-      // const token = getAuthToken();
       const response = await api.get(
         "/employees/list"
-        // ,
-        // {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
       );
       setEmployees(response.data.data || []);
     } catch (error) {
@@ -583,14 +560,8 @@ const handleDownloadDocument = (path) => {
 
   const fetchOffboardings = async () => {
     try {
-      // const token = getAuthToken();
       const response = await api.get(
         "/offboarding"
-        //   , {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
       );
       const offboardings = response.data;
       const updatedStages = offboardingStages.map((stage) => ({
@@ -622,28 +593,15 @@ const handleDownloadDocument = (path) => {
   const handleCreate = async () => {
     try {
       setLoading(true);
-      // const token = getAuthToken();
-
       if (editMode) {
         await api.put(
           `/offboarding/${editData._id}`,
           editData
-          // ,
-          // {
-          //   headers: {
-          //     'Authorization': `Bearer ${token}`
-          //   }
-          // }
         );
       } else {
         await api.post(
           "/offboarding",
           newData
-          //   , {
-          //   headers: {
-          //     'Authorization': `Bearer ${token}`
-          //   }
-          // }
         );
       }
 
@@ -704,14 +662,8 @@ const handleDownloadDocument = (path) => {
 
   const handleDelete = async (id) => {
     try {
-      // const token = getAuthToken();
       await api.delete(
         `/offboarding/${id}`
-        //   , {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
       );
       await fetchOffboardings();
       setSnackbar({
@@ -823,7 +775,6 @@ const handleDownloadDocument = (path) => {
         sx={{
           p: { xs: 2, sm: 3, md: 4 },
           backgroundColor: "#f5f5f5",
-          //minHeight: "100vh",
         }}
       >
         <Box>
@@ -3384,12 +3335,6 @@ const handleDownloadDocument = (path) => {
                   </Typography>
                 </Box>
               )}
-              {/* <input
-                type="file"
-                id="file-upload"
-                style={{ display: "none" }}
-                onChange={(e) => setSelectedFile(e.target.files[0])}
-              /> */}
               <input
                 type="file"
                 name="document"

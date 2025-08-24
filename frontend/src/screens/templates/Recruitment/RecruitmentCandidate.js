@@ -392,26 +392,8 @@ const RecruitmentCandidate = () => {
     fetchCandidates();
     fetchRegisteredEmployees();
   }, []);
- 
-  // // Add these validation functions before the useEffect hooks
-  // const validateName = (name) => {
-  //   const nameRegex = /^[a-zA-Z\s]{2,30}$/;
-  //   return nameRegex.test(name);
-  // };
- 
-  // const validateEmail = (email) => {
-  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   return emailRegex.test(email);
-  // };
- 
-  // const validatePosition = (position) => {
-  //   const positionRegex = /^[a-zA-Z\s]{0,30}$/;
-  //   return position === "" || positionRegex.test(position);
-  // };
-
-
-   // Add these validation functions before the useEffect hooks
-  const validateName = (name) => {
+  
+   const validateName = (name) => {
     const nameRegex = /^[a-zA-Z\s]{2,30}$/;
     return nameRegex.test(name);
   };
@@ -425,35 +407,12 @@ const RecruitmentCandidate = () => {
     const positionRegex = /^[a-zA-Z\s]{0,30}$/;
     return position === "" || positionRegex.test(position);
   };
-
-  // Add this function to get the auth token
-  // const getAuthToken = () => {
-  //   return localStorage.getItem('token');
-  // };
-
-
- 
-  // const fetchCandidates = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       "${process.env.REACT_APP_API_URL}/api/applicantProfiles"
-  //     );
-  //     setCandidates(response.data);
-  //   } catch (error) {
-  //     showSnackbar("Error fetching candidates", "error");
-  //   }
-  // };
  
   const fetchCandidates = async () => {
     try {
-      // const token = getAuthToken();
       const response = await api.get(
         "/applicantProfiles",
-        // {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
+
       );
       setCandidates(response.data);
     } catch (error) {
@@ -461,34 +420,13 @@ const RecruitmentCandidate = () => {
     }
   };
 
-
-
-  // const fetchRegisteredEmployees = async () => {
-  //   try {
-  //     setLoadingEmployees(true);
-  //     const response = await axios.get(
-  //       "${process.env.REACT_APP_API_URL}/api/employees/registered"
-  //     );
-  //     setRegisteredEmployees(response.data);
-  //     setLoadingEmployees(false);
-  //   } catch (error) {
-  //     console.error("Error fetching registered employees:", error);
-  //     showSnackbar("Error fetching employees", "error");
-  //     setLoadingEmployees(false);
-  //   }
-  // };
-
   const fetchRegisteredEmployees = async () => {
     try {
       setLoadingEmployees(true);
       
       const response = await api.get(
         "/employees/registered",
-        // {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
+
       );
       setRegisteredEmployees(response.data);
       setLoadingEmployees(false);
@@ -499,39 +437,6 @@ const RecruitmentCandidate = () => {
     }
   };
 
-
-
-  //  const handleEmployeeSelect = (event, employee) => {
-  //   setSelectedEmployee(employee);
-  //   if (employee) {
-  //     const name = `${employee.personalInfo?.firstName || ""} ${
-  //       employee.personalInfo?.lastName || ""
-  //     }`.trim();
-  //     const email = employee.personalInfo?.email || "";
-  //     const position = employee.joiningDetails?.initialDesignation || "";
- 
-  //     // Update the candidate form with employee data
-  //     setNewCandidate({
-  //       ...newCandidate,
-  //       name,
-  //       email,
-  //       position,
-  //       employeeId: employee.Emp_ID || "",
-  //     });
- 
-  //     // Validate the fields
-  //     setValidationErrors({
-  //       name: validateName(name)
-  //         ? ""
-  //         : "Name should contain only letters and be 2-30 characters long",
-  //       email: validateEmail(email) ? "" : "Please enter a valid email address",
-  //       position: validatePosition(position)
-  //         ? ""
-  //         : "Position should contain only letters and spaces",
-  //     });
-  //   }
-  // };
- 
    const handleEmployeeSelect = (event, employee) => {
     setSelectedEmployee(employee);
     if (employee) {
@@ -562,58 +467,6 @@ const RecruitmentCandidate = () => {
       });
     }
   };
-
-
-
-
-// const handleCreateSubmit = async () => {
-//     if (
-//       !validateName(newCandidate.name) ||
-//       !validateEmail(newCandidate.email) ||
-//       !validatePosition(newCandidate.position)
-//     ) {
-//       showSnackbar("Please fix the validation errors", "error");
-//       return;
-//     }
- 
-//     // Check for duplicate email
-//     const duplicateEmail = candidates.find(
-//       (candidate) =>
-//         candidate.email.toLowerCase() === newCandidate.email.toLowerCase()
-//     );
- 
-//     if (duplicateEmail) {
-//       showSnackbar("A candidate with this email already exists", "error");
-//       return;
-//     }
- 
-//     // Check for duplicate name (optional, depending on your requirements)
-//     const duplicateName = candidates.find(
-//       (candidate) =>
-//         candidate.name.toLowerCase() === newCandidate.name.toLowerCase()
-//     );
- 
-//     if (duplicateName) {
-//       showSnackbar("A candidate with this name already exists", "error");
-//       return;
-//     }
- 
-//     try {
-//       const response = await axios.post(
-//         "${process.env.REACT_APP_API_URL}/api/applicantProfiles",
-//         newCandidate
-//       );
-//       setCandidates([...candidates, response.data]);
-//       setCreateDialogOpen(false);
-//       resetNewCandidate();
-//       showSnackbar("Candidate created successfully");
-//     } catch (error) {
-//       showSnackbar("Error creating candidate", "error");
-//     }
-//   };
- 
-
-
 
 const handleCreateSubmit = async () => {
     if (
@@ -648,15 +501,9 @@ const handleCreateSubmit = async () => {
     }
  
     try {
-      // const token = getAuthToken();
       const response = await api.post(
         "/applicantProfiles",
         newCandidate,
-        // {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
       );
       setCandidates([...candidates, response.data]);
       setCreateDialogOpen(false);
@@ -667,27 +514,10 @@ const handleCreateSubmit = async () => {
     }
   };
 
-
-  // const handleDeleteCandidate = async (id) => {
-  //   try {
-  //     await axios.delete(`${process.env.REACT_APP_API_URL}/api/applicantProfiles/${id}`);
-  //     setCandidates(candidates.filter((c) => c._id !== id));
-  //     setDeleteDialogOpen(false);
-  //     showSnackbar("Candidate deleted successfully");
-  //   } catch (error) {
-  //     showSnackbar("Error deleting candidate", "error");
-  //   }
-  // };
- 
 const handleDeleteCandidate = async (id) => {
     try {
-      // const token = getAuthToken();
       await api.delete(`/applicantProfiles/${id}`, 
-      //   {
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`
-      //   }
-      // }
+
     );
       setCandidates(candidates.filter((c) => c._id !== id));
       setDeleteDialogOpen(false);
@@ -752,36 +582,6 @@ const handleDeleteCandidate = async (id) => {
       });
     }
   };
- 
-
-
-
-  
-  // const handleStatusChange = (event) => {
-  //   const status = event.target.value;
-  //   setNewCandidate({
-  //     ...newCandidate,
-  //     status: status,
-  //     color: statusColors[status],
-  //   });
- 
-  //   // If changing to a status that doesn't support employee selection, clear the selected employee
-  //   if (status !== "Hired") {
-  //     setSelectedEmployee(null);
-  //     setNewCandidate((prev) => ({
-  //       ...prev,
-  //       status: status,
-  //       color: statusColors[status],
-  //       employeeId: "",
-  //     }));
-  //   }
-  // };
- 
-  // const showSnackbar = (message, severity = "success") => {
-  //   setSnackbar({ open: true, message, severity });
-  // };
- 
-
 
    const handleStatusChange = (event) => {
     const status = event.target.value;
@@ -806,39 +606,6 @@ const handleDeleteCandidate = async (id) => {
   const showSnackbar = (message, severity = "success") => {
     setSnackbar({ open: true, message, severity });
   };
-
-
-  // const resetNewCandidate = () => {
-  //   setNewCandidate({
-  //     name: "",
-  //     email: "",
-  //     position: "",
-  //     status: "Not-Hired",
-  //     color: statusColors["Not-Hired"],
-  //     employeeId: "",
-  //   });
-  //   setSelectedEmployee(null);
-  // };
- 
-  // const filteredCandidates = candidates.filter(
-  //   (candidate) =>
-  //     candidate.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-  //     (filter ? candidate.status === filter : true)
-  // );
- 
-  // const groupedCandidates = groupBy
-  //   ? filteredCandidates.reduce((groups, candidate) => {
-  //       const position = candidate.position || "Unspecified Position";
-  //       if (!groups[position]) groups[position] = [];
-  //       groups[position].push(candidate);
-  //       return groups;
-  //     }, {})
-  //   : { All: filteredCandidates };
- 
-  // // Check if employee selection should be enabled
-  // const isEmployeeSelectionEnabled = () => {
-  //   return newCandidate.status === "Hired";
-  // };
 
   const resetNewCandidate = () => {
     setNewCandidate({
@@ -1222,33 +989,6 @@ const handleDeleteCandidate = async (id) => {
             <Box
               sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
             >
-              {/* <TextField
-                label="Name"
-                fullWidth
-                value={newCandidate.name}
-                onChange={(e) =>
-                  setNewCandidate({ ...newCandidate, name: e.target.value })
-                }
-                sx={styles.formField}
-              />
-              <TextField
-                label="Email"
-                fullWidth
-                value={newCandidate.email}
-                onChange={(e) =>
-                  setNewCandidate({ ...newCandidate, email: e.target.value })
-                }
-                sx={styles.formField}
-              />
-              <TextField
-                label="Position"
-                fullWidth
-                value={newCandidate.position}
-                onChange={(e) =>
-                  setNewCandidate({ ...newCandidate, position: e.target.value })
-                }
-                sx={styles.formField}
-              /> */}
               <TextField
                 label="Name"
                 fullWidth
@@ -1348,14 +1088,6 @@ const handleDeleteCandidate = async (id) => {
             >
               Cancel
             </Button>
-            {/* <Button
-              onClick={handleCreateSubmit}
-              variant="contained"
-              sx={styles.submitButton}
-              disabled={!newCandidate.name || !newCandidate.email}
-            >
-              Create
-            </Button> */}
             <Button
               onClick={handleCreateSubmit}
               variant="contained"

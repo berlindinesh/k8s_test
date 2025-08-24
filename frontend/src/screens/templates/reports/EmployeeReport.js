@@ -50,12 +50,12 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"];
 const getInitials = (name) => {
   if (!name) return "?";
   return name
-    .split(' ')
-    .map(part => part[0])
-    .join('')
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
     .toUpperCase()
     .substring(0, 2);
-}
+};
 const EmployeeReport = () => {
   const [loading, setLoading] = useState(true);
   const [reportData, setReportData] = useState({
@@ -84,114 +84,90 @@ const EmployeeReport = () => {
   const { RangePicker } = DatePicker;
   const { Option } = Select;
 
-
-//   // Add this function at the top of your component
-// const getAuthToken = () => {
-//   return localStorage.getItem('token');
-// };
-
-
   const fetchReportData = async (period = "6m") => {
-  setLoading(true);
-  try {
-    // // Get authentication token
-    // const token = getAuthToken();
-    // if (!token) {
-    //   message.error("Authentication required. Please log in again.");
-    //   return;
-    // }
+    setLoading(true);
+    try {
+      const today = new Date();
 
-    const today = new Date();
+      let startDate = new Date();
+      switch (period) {
+        case "1m":
+          startDate.setMonth(today.getMonth() - 1);
+          break;
+        case "3m":
+          startDate.setMonth(today.getMonth() - 3);
+          break;
+        case "6m":
+          startDate.setMonth(today.getMonth() - 6);
+          break;
+        case "1y":
+          startDate.setFullYear(today.getFullYear() - 1);
+          break;
+        default:
+          startDate.setMonth(today.getMonth() - 6);
+      }
 
-    let startDate = new Date();
-    switch (period) {
-      case "1m":
-        startDate.setMonth(today.getMonth() - 1);
-        break;
-      case "3m":
-        startDate.setMonth(today.getMonth() - 3);
-        break;
-      case "6m":
-        startDate.setMonth(today.getMonth() - 6);
-        break;
-      case "1y":
-        startDate.setFullYear(today.getFullYear() - 1);
-        break;
-      default:
-        startDate.setMonth(today.getMonth() - 6);
-    }
+      // Fetch employee data with authentication
+      const employeeResponse = await api.get(
+        `/employees/report?period=${period}&startDate=${startDate.toISOString()}`
+      );
 
-    // Fetch employee data with authentication
-    const employeeResponse = await api.get(
-      `/employees/report?period=${period}&startDate=${startDate.toISOString()}`,
-      // {
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`
-      //   }
-      // }
-    );
+      // Fetch offboarding data with authentication
+      const offboardingResponse = await api.get("/offboarding");
 
-    // Fetch offboarding data with authentication
-    const offboardingResponse = await api.get(
-      "/offboarding",
-      // {
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`
-      //   }
-      // }
-    );
+      // Process offboarding data
+      const offboardingData = offboardingResponse.data || [];
 
-    // Process offboarding data
-    const offboardingData = offboardingResponse.data || [];
-    
-    // Calculate offboarding statistics
-    const offboardingStats = processOffboardingData(offboardingData, startDate);
+      // Calculate offboarding statistics
+      const offboardingStats = processOffboardingData(
+        offboardingData,
+        startDate
+      );
 
-    if (employeeResponse.data.success) {
-      setReportData({
-        ...employeeResponse.data.data,
-        offboardingData: offboardingData,
-        offboardingReasons: offboardingStats.reasonsData,
-        offboardingByDepartment: offboardingStats.departmentData,
-        stats: {
-          ...employeeResponse.data.data.stats,
-          totalOffboarded: offboardingStats.totalOffboarded,
-          recentOffboardings: offboardingStats.recentOffboardings,
-        }
-      });
-    } else {
-      message.error("Failed to load report data");
-      
+      if (employeeResponse.data.success) {
+        setReportData({
+          ...employeeResponse.data.data,
+          offboardingData: offboardingData,
+          offboardingReasons: offboardingStats.reasonsData,
+          offboardingByDepartment: offboardingStats.departmentData,
+          stats: {
+            ...employeeResponse.data.data.stats,
+            totalOffboarded: offboardingStats.totalOffboarded,
+            recentOffboardings: offboardingStats.recentOffboardings,
+          },
+        });
+      } else {
+        message.error("Failed to load report data");
+
+        // Set demo data with offboarding information
+        setDemoData(startDate);
+      }
+    } catch (error) {
+      console.error("Error fetching report data:", error);
+      message.error("Error loading report data");
+
       // Set demo data with offboarding information
-      setDemoData(startDate);
+      setDemoData(new Date());
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Error fetching report data:", error);
-    message.error("Error loading report data");
-
-    // Set demo data with offboarding information
-    setDemoData(new Date());
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   // Process offboarding data to get statistics
   const processOffboardingData = (offboardingData, startDate) => {
     // For the current implementation, we'll consider all offboarding records
     // In a real implementation, you might want to filter by a status field
     const totalOffboarded = offboardingData.length;
-    
+
     // Count recent offboardings (within the selected time period)
-    const recentOffboardings = offboardingData.filter(emp => {
+    const recentOffboardings = offboardingData.filter((emp) => {
       const endDate = emp.endDate ? new Date(emp.endDate) : null;
       return endDate && endDate >= startDate;
     }).length;
 
     // Group by reason for leaving
     const reasonsMap = {};
-    offboardingData.forEach(emp => {
+    offboardingData.forEach((emp) => {
       if (emp.reason) {
         reasonsMap[emp.reason] = (reasonsMap[emp.reason] || 0) + 1;
       } else {
@@ -200,32 +176,34 @@ const EmployeeReport = () => {
     });
 
     // Convert to array format for charts
-    const reasonsData = Object.keys(reasonsMap).map(reason => ({
+    const reasonsData = Object.keys(reasonsMap).map((reason) => ({
       name: reason,
-      value: reasonsMap[reason]
+      value: reasonsMap[reason],
     }));
 
     // Group by department
     const departmentMap = {};
-    offboardingData.forEach(emp => {
+    offboardingData.forEach((emp) => {
       if (emp.department) {
-        departmentMap[emp.department] = (departmentMap[emp.department] || 0) + 1;
+        departmentMap[emp.department] =
+          (departmentMap[emp.department] || 0) + 1;
       } else {
-        departmentMap["Not Specified"] = (departmentMap["Not Specified"] || 0) + 1;
+        departmentMap["Not Specified"] =
+          (departmentMap["Not Specified"] || 0) + 1;
       }
     });
 
     // Convert to array format for charts
-    const departmentData = Object.keys(departmentMap).map(dept => ({
+    const departmentData = Object.keys(departmentMap).map((dept) => ({
       name: dept,
-      value: departmentMap[dept]
+      value: departmentMap[dept],
     }));
 
     return {
       totalOffboarded,
       recentOffboardings,
       reasonsData,
-      departmentData
+      departmentData,
     };
   };
 
@@ -280,7 +258,10 @@ const EmployeeReport = () => {
     ];
 
     // Process demo offboarding data
-    const offboardingStats = processOffboardingData(demoOffboardingData, startDate);
+    const offboardingStats = processOffboardingData(
+      demoOffboardingData,
+      startDate
+    );
 
     setReportData({
       stats: {
@@ -349,40 +330,15 @@ const EmployeeReport = () => {
     });
   };
 
-  // useEffect(() => {
-  //   fetchReportData(timePeriod);
-  // }, [timePeriod]);
-
   useEffect(() => {
-  // // Check if user is authenticated
-  // const token = getAuthToken();
-  // if (!token) {
-  //   message.error("Authentication required. Please log in again.");
-  //   // You might want to redirect to login page here
-  //   return;
-  // }
-  
-  fetchReportData(timePeriod);
-}, [timePeriod]);
+    fetchReportData(timePeriod);
+  }, [timePeriod]);
 
-const handleRefresh = () => {
-  // const token = getAuthToken();
-  // if (!token) {
-  //   message.error("Authentication required. Please log in again.");
-  //   return;
-  // }
-  
-  fetchReportData(timePeriod);
-  message.success("Report data refreshed");
-};
+  const handleRefresh = () => {
+    fetchReportData(timePeriod);
+    message.success("Report data refreshed");
+  };
 
-
-
-  // const handleRefresh = () => {
-  //   fetchReportData(timePeriod);
-  //   message.success("Report data refreshed");
-  // };
-  
   // Export data to Excel
   const handleExport = () => {
     try {
@@ -422,8 +378,14 @@ const handleRefresh = () => {
         Stage: emp.stage,
       }));
 
-      const offboardingWorksheet = XLSX.utils.json_to_sheet(offboardingWorksheetData);
-      XLSX.utils.book_append_sheet(workbook, offboardingWorksheet, "Offboarded Employees");
+      const offboardingWorksheet = XLSX.utils.json_to_sheet(
+        offboardingWorksheetData
+      );
+      XLSX.utils.book_append_sheet(
+        workbook,
+        offboardingWorksheet,
+        "Offboarded Employees"
+      );
 
       // 3. Department Distribution worksheet
       const departmentWorksheetData = reportData.departmentData.map((dept) => ({
@@ -441,13 +403,19 @@ const handleRefresh = () => {
       );
 
       // 4. Offboarding Reasons worksheet
-      const reasonsWorksheetData = reportData.offboardingReasons.map((reason) => ({
-        "Reason for Leaving": reason.name,
-        "Number of Employees": reason.value,
-      }));
+      const reasonsWorksheetData = reportData.offboardingReasons.map(
+        (reason) => ({
+          "Reason for Leaving": reason.name,
+          "Number of Employees": reason.value,
+        })
+      );
 
       const reasonsWorksheet = XLSX.utils.json_to_sheet(reasonsWorksheetData);
-      XLSX.utils.book_append_sheet(workbook, reasonsWorksheet, "Offboarding Reasons");
+      XLSX.utils.book_append_sheet(
+        workbook,
+        reasonsWorksheet,
+        "Offboarding Reasons"
+      );
 
       // 5. Monthly Trends worksheet
       const trendWorksheetData = reportData.trendData.map((trend) => ({
@@ -496,7 +464,10 @@ const handleRefresh = () => {
       });
 
       // Save the file
-      FileSaver.saveAs(data, `Employee_Report_${new Date().toISOString().split("T")[0]}.xlsx`);
+      FileSaver.saveAs(
+        data,
+        `Employee_Report_${new Date().toISOString().split("T")[0]}.xlsx`
+      );
       message.success("Report exported successfully");
     } catch (error) {
       console.error("Export error:", error);
@@ -564,20 +535,19 @@ const handleRefresh = () => {
   // Get all unique departments from employee and offboarding data
   const getAllDepartments = () => {
     const departments = new Set();
-    
+
     // Add departments from employee data
-    reportData.employeeData.forEach(emp => {
+    reportData.employeeData.forEach((emp) => {
       if (emp.department) departments.add(emp.department);
     });
-    
+
     // Add departments from offboarding data
-    (reportData.offboardingData || []).forEach(emp => {
+    (reportData.offboardingData || []).forEach((emp) => {
       if (emp.department) departments.add(emp.department);
     });
-    
+
     return Array.from(departments).sort();
   };
-
 
   // Columns for employee table
   const employeeColumns = [
@@ -600,25 +570,25 @@ const handleRefresh = () => {
               className="er-employee-avatar"
               onError={(e) => {
                 // If image fails to load, replace with initials
-                e.target.style.display = 'none';
-                e.target.nextElementSibling.style.display = 'flex';
+                e.target.style.display = "none";
+                e.target.nextElementSibling.style.display = "flex";
               }}
             />
           ) : null}
-          <div 
+          <div
             className="er-employee-initials"
             style={{
-              display: record.avatar ? 'none' : 'flex',
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
+              display: record.avatar ? "none" : "flex",
+              width: "32px",
+              height: "32px",
+              borderRadius: "50%",
               backgroundColor: `hsl(${text.length * 30}, 70%, 50%)`,
-              color: '#fff',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 'bold',
-              marginRight: '8px',
-              fontSize: '14px'
+              color: "#fff",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: "bold",
+              marginRight: "8px",
+              fontSize: "14px",
             }}
           >
             {getInitials(text)}
@@ -679,7 +649,7 @@ const handleRefresh = () => {
       title: "Employee ID",
       dataIndex: "employeeId",
       key: "employeeId",
-      sorter: (a, b) => (a.employeeId || '').localeCompare(b.employeeId || ''),
+      sorter: (a, b) => (a.employeeId || "").localeCompare(b.employeeId || ""),
     },
     {
       title: "Name",
@@ -694,25 +664,25 @@ const handleRefresh = () => {
               className="er-employee-avatar"
               onError={(e) => {
                 // If image fails to load, replace with initials
-                e.target.style.display = 'none';
-                e.target.nextElementSibling.style.display = 'flex';
+                e.target.style.display = "none";
+                e.target.nextElementSibling.style.display = "flex";
               }}
             />
           ) : null}
-          <div 
+          <div
             className="er-employee-initials"
             style={{
-              display: record.avatar ? 'none' : 'flex',
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
+              display: record.avatar ? "none" : "flex",
+              width: "32px",
+              height: "32px",
+              borderRadius: "50%",
               backgroundColor: `hsl(${text.length * 30}, 70%, 50%)`,
-              color: '#fff',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 'bold',
-              marginRight: '8px',
-              fontSize: '14px'
+              color: "#fff",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: "bold",
+              marginRight: "8px",
+              fontSize: "14px",
             }}
           >
             {getInitials(text)}
@@ -726,24 +696,28 @@ const handleRefresh = () => {
       title: "Department",
       dataIndex: "department",
       key: "department",
-      sorter: (a, b) => (a.department || '').localeCompare(b.department || ''),
+      sorter: (a, b) => (a.department || "").localeCompare(b.department || ""),
     },
     {
       title: "Position",
       dataIndex: "position",
       key: "position",
-      sorter: (a, b) => (a.position || '').localeCompare(b.position || ''),
+      sorter: (a, b) => (a.position || "").localeCompare(b.position || ""),
     },
     {
       title: "Reason",
       dataIndex: "reason",
       key: "reason",
       render: (reason) => (
-        <span className={`er-reason-tag er-reason-${reason?.toLowerCase().replace(/\s+/g, '-') || 'other'}`}>
+        <span
+          className={`er-reason-tag er-reason-${
+            reason?.toLowerCase().replace(/\s+/g, "-") || "other"
+          }`}
+        >
           {reason || "Not Specified"}
         </span>
       ),
-      sorter: (a, b) => (a.reason || '').localeCompare(b.reason || ''),
+      sorter: (a, b) => (a.reason || "").localeCompare(b.reason || ""),
     },
     {
       title: "Start Date",
@@ -930,7 +904,9 @@ const handleRefresh = () => {
                           />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(value) => [`${value} employees`, ""]} />
+                      <Tooltip
+                        formatter={(value) => [`${value} employees`, ""]}
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
@@ -938,7 +914,7 @@ const handleRefresh = () => {
             </Col>
           </Row>
 
-          <Row gutter={[16, 16]} style={{ marginTop: '16px' }}>
+          <Row gutter={[16, 16]} style={{ marginTop: "16px" }}>
             <Col xs={24} lg={12} className="er-chart-col">
               <Card
                 title="Offboarding Reasons"
@@ -946,7 +922,8 @@ const handleRefresh = () => {
                 loading={loading}
               >
                 <div className="er-offboarding-chart-container">
-                  {reportData.offboardingReasons && reportData.offboardingReasons.length > 0 ? (
+                  {reportData.offboardingReasons &&
+                  reportData.offboardingReasons.length > 0 ? (
                     <ResponsiveContainer width="100%" height={300}>
                       <BarChart
                         data={reportData.offboardingReasons}
@@ -982,7 +959,8 @@ const handleRefresh = () => {
                 loading={loading}
               >
                 <div className="er-offboarding-chart-container">
-                  {reportData.offboardingByDepartment && reportData.offboardingByDepartment.length > 0 ? (
+                  {reportData.offboardingByDepartment &&
+                  reportData.offboardingByDepartment.length > 0 ? (
                     <ResponsiveContainer width="100%" height={300}>
                       <PieChart>
                         <Pie
@@ -997,14 +975,18 @@ const handleRefresh = () => {
                           fill="#8884d8"
                           dataKey="value"
                         >
-                          {reportData.offboardingByDepartment.map((entry, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={COLORS[index % COLORS.length]}
-                            />
-                          ))}
+                          {reportData.offboardingByDepartment.map(
+                            (entry, index) => (
+                              <Cell
+                                key={`cell-${index}`}
+                                fill={COLORS[index % COLORS.length]}
+                              />
+                            )
+                          )}
                         </Pie>
-                        <Tooltip formatter={(value) => [`${value} employees`, ""]} />
+                        <Tooltip
+                          formatter={(value) => [`${value} employees`, ""]}
+                        />
                       </PieChart>
                     </ResponsiveContainer>
                   ) : (
@@ -1018,9 +1000,6 @@ const handleRefresh = () => {
             </Col>
           </Row>
         </TabPane>
-
-
-        
 
         <TabPane tab="Employee Data" key="2">
           <Card className="er-table-card">
@@ -1065,7 +1044,9 @@ const handleRefresh = () => {
                     onChange={setEndDate}
                     style={{ width: 140 }}
                     format="YYYY-MM-DD"
-                    disabledDate={(current) => startDate && current && current < startDate}
+                    disabledDate={(current) =>
+                      startDate && current && current < startDate
+                    }
                   />
                 </div>
                 <Button
@@ -1092,80 +1073,77 @@ const handleRefresh = () => {
           </Card>
         </TabPane>
 
-       <TabPane tab="Offboarding Data" key="3">
-  <Card className="er-table-card">
-    <div className="er-table-filters">
-      <Space wrap>
-        <Select
-          mode="multiple"
-          allowClear
-          placeholder="Filter by Department"
-          style={{ minWidth: 200 }}
-          value={filterDepartment}
-          onChange={setFilterDepartment}
-        >
-          {getAllDepartments().map((dept) => (
-            <Option key={dept} value={dept}>
-              {dept}
-            </Option>
-          ))}
-        </Select>
-        
-        <div className="er-date-filters">
-          <DatePicker
-            placeholder="Start Date"
-            value={startDate}
-            onChange={setStartDate}
-            style={{ width: 140 }}
-            format="YYYY-MM-DD"
-          />
-          <DatePicker
-            placeholder="End Date"
-            value={endDate}
-            onChange={setEndDate}
-            style={{ width: 140 }}
-            format="YYYY-MM-DD"
-            disabledDate={(current) => startDate && current && current < startDate}
-          />
-        </div>
+        <TabPane tab="Offboarding Data" key="3">
+          <Card className="er-table-card">
+            <div className="er-table-filters">
+              <Space wrap>
+                <Select
+                  mode="multiple"
+                  allowClear
+                  placeholder="Filter by Department"
+                  style={{ minWidth: 200 }}
+                  value={filterDepartment}
+                  onChange={setFilterDepartment}
+                >
+                  {getAllDepartments().map((dept) => (
+                    <Option key={dept} value={dept}>
+                      {dept}
+                    </Option>
+                  ))}
+                </Select>
 
-        <Button
-          icon={<FilterOutlined />}
-          onClick={() => {
-            setFilterDepartment([]);
-            setStartDate(null);
-            setEndDate(null);
-          }}
-        >
-          Clear Filters
-        </Button>
-      </Space>
-    </div>
-    {reportData.offboardingData && reportData.offboardingData.length > 0 ? (
-      <Table
-        columns={offboardingColumns}
-        dataSource={getFilteredOffboardingData()}
-        rowKey="_id"
-        loading={loading}
-        pagination={{ pageSize: 10 }}
-      />
-    ) : (
-      <div className="er-empty-state">
-        <InboxOutlined className="er-empty-icon" />
-        <p>No offboarding data available</p>
-      </div>
-    )}
-  </Card>
-</TabPane>
+                <div className="er-date-filters">
+                  <DatePicker
+                    placeholder="Start Date"
+                    value={startDate}
+                    onChange={setStartDate}
+                    style={{ width: 140 }}
+                    format="YYYY-MM-DD"
+                  />
+                  <DatePicker
+                    placeholder="End Date"
+                    value={endDate}
+                    onChange={setEndDate}
+                    style={{ width: 140 }}
+                    format="YYYY-MM-DD"
+                    disabledDate={(current) =>
+                      startDate && current && current < startDate
+                    }
+                  />
+                </div>
 
+                <Button
+                  icon={<FilterOutlined />}
+                  onClick={() => {
+                    setFilterDepartment([]);
+                    setStartDate(null);
+                    setEndDate(null);
+                  }}
+                >
+                  Clear Filters
+                </Button>
+              </Space>
+            </div>
+            {reportData.offboardingData &&
+            reportData.offboardingData.length > 0 ? (
+              <Table
+                columns={offboardingColumns}
+                dataSource={getFilteredOffboardingData()}
+                rowKey="_id"
+                loading={loading}
+                pagination={{ pageSize: 10 }}
+              />
+            ) : (
+              <div className="er-empty-state">
+                <InboxOutlined className="er-empty-icon" />
+                <p>No offboarding data available</p>
+              </div>
+            )}
+          </Card>
+        </TabPane>
       </Tabs>
-
     </div>
   );
 };
 
 export default EmployeeReport;
-
-
-                    
-

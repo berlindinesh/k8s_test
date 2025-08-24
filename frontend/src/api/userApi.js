@@ -33,20 +33,3 @@ const userApi = {
 };
 
 export default userApi;
-
-// import api from './axiosInstance';
-
-// // API service for user-related operations
-// const userApi = {
-//   // Change password
-//   changePassword: async (passwordData) => {
-//     try {
-//       const response = await api.post('/companies/change-password', passwordData);
-//       return response.data;
-//     } catch (error) {
-//       throw error.response?.data || { message: 'Error changing password' };
-//     }
-//   }
-// };
-
-// export default userApi;

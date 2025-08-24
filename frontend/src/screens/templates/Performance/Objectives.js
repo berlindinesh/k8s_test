@@ -426,17 +426,9 @@ const Objectives = () => {
         archived: false,
         userId: currentUserId, // Add the userId to associate with the creator
       };
-
-      // const token = getAuthToken();
       const response = await api.post(
         API_URL,
         objectiveData
-        //   , {
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //     "Authorization": `Bearer ${token}`
-        //   },
-        // }
       );
 
       setObjectives([...objectives, response.data]);
@@ -473,17 +465,9 @@ const Objectives = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      // const token = getAuthToken();
       const response = await api.put(
         `${API_URL}/${currentObjective._id}`,
         currentObjective
-        // ,
-        // {
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //     "Authorization": `Bearer ${token}`
-        //   }
-        // }
       );
       setObjectives(
         objectives.map((obj) =>
@@ -561,14 +545,8 @@ const Objectives = () => {
         params.userId = currentUserId;
         params.objectiveType = "self"; // Only get self objectives
       }
-
-      // const token = getAuthToken();
       const response = await api.get(url, {
         params,
-        // ,
-        // headers: {
-        //   'Authorization': `Bearer ${token}`
-        // }
       });
       console.log(
         `Received ${response.data.length} objectives for tab:`,
@@ -624,12 +602,6 @@ const Objectives = () => {
   const handleRefresh = () => {
     loadObjectives();
   };
-
-  // // Calculate progress for an objective (mock function)
-  // const calculateProgress = (objective) => {
-  //   // In a real application, this would be based on completed key results
-  //   return Math.floor(Math.random() * 100);
-  // };
 
   // Replace the mock calculateProgress function with this real implementation
   const calculateProgress = (objective) => {
@@ -829,36 +801,6 @@ const Objectives = () => {
   return (
     <div className="objectives">
       {/* Breadcrumbs */}
-      {/* <Box sx={{ mb: 2, display: { xs: "none", sm: "block" } }}>
-        <Breadcrumbs aria-label="breadcrumb">
-          <Link
-            underline="hover"
-            color="inherit"
-            href="#"
-            sx={{ display: "flex", alignItems: "center" }}
-          >
-            <Home sx={{ mr: 0.5 }} fontSize="inherit" />
-            Home
-          </Link>
-          <Link
-            underline="hover"
-            color="inherit"
-            href="#"
-            sx={{ display: "flex", alignItems: "center" }}
-          >
-            <Dashboard sx={{ mr: 0.5 }} fontSize="inherit" />
-            Performance
-          </Link>
-          <Typography
-            color="text.primary"
-            sx={{ display: "flex", alignItems: "center" }}
-          >
-            <Assessment sx={{ mr: 0.5 }} fontSize="inherit" />
-            Objectives
-          </Typography>
-        </Breadcrumbs>
-      </Box> */}
-
       {/* Mobile Header */}
       <Box
         sx={{
@@ -2051,22 +1993,6 @@ const Objectives = () => {
                           }}
                         />
                       </Grid>
-                      {/* <Grid item xs={12} sm={4}>
-                        <TextField
-                          name="targetValue"
-                          label="Target Value"
-                          value={keyResultInput.targetValue}
-                          onChange={handleKeyResultInputChange}
-                          fullWidth
-                          sx={{
-                            "& .MuiOutlinedInput-root": {
-                              backgroundColor: "white",
-                              borderRadius: "8px",
-                            },
-                          }}
-                        />
-                      </Grid> */}
-
                       <Grid item xs={12} sm={4}>
   <TextField
     name="targetValue"
@@ -2087,39 +2013,6 @@ const Objectives = () => {
     }}
   />
 </Grid>
-                      {/* <Grid item xs={12} sm={4}>
-                        <TextField
-                          name="unit"
-                          label="Unit"
-                          value={keyResultInput.unit}
-                          onChange={handleKeyResultInputChange}
-                          fullWidth
-                          sx={{
-                            "& .MuiOutlinedInput-root": {
-                              backgroundColor: "white",
-                              borderRadius: "8px",
-                            },
-                          }}
-                        />
-                      </Grid> */}
-{/* 
-                      <Grid item xs={12} sm={4}>
-  <TextField
-    name="unit"
-    label="Unit"
-    value={keyResultInput.unit}
-    onChange={handleKeyResultInputChange} // Keep the regular handler
-    fullWidth
-    sx={{
-      "& .MuiOutlinedInput-root": {
-        backgroundColor: "white",
-        borderRadius: "8px",
-      },
-    }}
-  />
-</Grid> */}
-
-
 <Grid item xs={12} sm={4}>
   <TextField
     name="unit"
@@ -3667,7 +3560,6 @@ const Objectives = () => {
           </Box>
         </Popover>
       )}
-      {/* Delete Confirmation Dialog */}
       {/* Delete Confirmation Dialog */}
       <Dialog
         open={deleteDialogOpen}

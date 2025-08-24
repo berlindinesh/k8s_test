@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 // RBAC imports
 import { useSelector } from "react-redux";
-import { selectUserRole, selectUserPermissions, selectUser } from "../../../redux/authSlice";
+import {
+  selectUserRole,
+  selectUserPermissions,
+  selectUser,
+} from "../../../redux/authSlice";
 
 import api from "../../../api/axiosInstance";
 import {
@@ -76,7 +80,7 @@ const OrganizationChart = () => {
   const [positionToDelete, setPositionToDelete] = useState(null);
   const [editingNodeId, setEditingNodeId] = useState(null);
 
-   // Add these lines after existing useState declarations
+  // Add these lines after existing useState declarations
   const userRole = useSelector(selectUserRole);
   const userPermissions = useSelector(selectUserPermissions);
   const currentUser = useSelector(selectUser);
@@ -86,31 +90,29 @@ const OrganizationChart = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
 
-  // const API_URL = `${process.env.REACT_APP_API_URL}/api/organization`; 
+  // const API_URL = `${process.env.REACT_APP_API_URL}/api/organization`;
 
   useEffect(() => {
     fetchOrganizationChart();
     fetchRegisteredEmployees();
   }, []);
 
-  
   // Permission helper functions
-const canCreatePositions = () => {
-  return ['hr', 'admin'].includes(userRole?.toLowerCase());
-};
+  const canCreatePositions = () => {
+    return ["hr", "admin"].includes(userRole?.toLowerCase());
+  };
 
-const canEditPositions = () => {
-  return ['hr', 'admin'].includes(userRole?.toLowerCase());
-};
+  const canEditPositions = () => {
+    return ["hr", "admin"].includes(userRole?.toLowerCase());
+  };
 
-const canDeletePositions = () => {
-  return ['hr', 'admin'].includes(userRole?.toLowerCase());
-};
+  const canDeletePositions = () => {
+    return ["hr", "admin"].includes(userRole?.toLowerCase());
+  };
 
-const canViewChart = () => {
-  return ['hr', 'admin', 'employee'].includes(userRole?.toLowerCase());
-};
-
+  const canViewChart = () => {
+    return ["hr", "admin", "employee"].includes(userRole?.toLowerCase());
+  };
 
   const handleEmployeeSelect = (event, employee) => {
     setSelectedEmployee(employee);
@@ -155,9 +157,6 @@ const canViewChart = () => {
     setPositionToDelete(null);
   };
 
-
-  
-  
   const resetForm = () => {
     setNewPosition({
       name: "",
@@ -321,25 +320,25 @@ const canViewChart = () => {
             sx={{ mt: 2, display: "flex", justifyContent: "center", gap: 1 }}
           >
             {canEditPositions() && (
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                openEditDialog(node);
-              }}
-              sx={{
-                color: "white",
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
-                "&:hover": {
-                  backgroundColor: "rgba(255, 255, 255, 0.2)",
-                },
-                padding: isMobile ? "4px" : "8px",
-              }}
-            >
-              <EditIcon fontSize={isMobile ? "inherit" : "small"} />
-            </IconButton>
+              <IconButton
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openEditDialog(node);
+                }}
+                sx={{
+                  color: "white",
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  },
+                  padding: isMobile ? "4px" : "8px",
+                }}
+              >
+                <EditIcon fontSize={isMobile ? "inherit" : "small"} />
+              </IconButton>
             )}
-            { canDeletePositions() && level !== 0 && (
+            {canDeletePositions() && level !== 0 && (
               <IconButton
                 size="small"
                 onClick={(e) => {
@@ -455,214 +454,140 @@ const canViewChart = () => {
     setIsEditDialogOpen(true);
   };
 
-
-
-//   // Add this function to get the auth token
-// const getAuthToken = () => {
-//   return localStorage.getItem('token');
-// };
-
-
-// const fetchOrganizationChart = async () => {
-//   try {
-//     setIsLoading(true);
-//     // const token = getAuthToken();
-//     const response = await api.get(`${API_URL}/organization-chart`
-//     //   , {
-//     //   headers: {
-//     //     'Authorization': `Bearer ${token}`
-//     //   }
-//     // }
-//   );
-//     setTreeData(response.data);
-//     setIsLoading(false);
-//   } catch (error) {
-//     console.error("Error fetching organization chart:", error);
-//     setIsLoading(false);
-//     setAlert({
-//       open: true,
-//       message: "Error loading organization chart",
-//       severity: "error",
-//     });
-//   }
-// };
-
-const fetchOrganizationChart = async () => {
-  try {
-    setIsLoading(true);
-    // const response = await api.get(`${API_URL}/chart`);
-    const response = await api.get('organization/chart');
-    setTreeData(response.data);
-    setIsLoading(false);
-  } catch (error) {
-    console.error("Error fetching organization chart:", error);
-    setIsLoading(false);
-    setAlert({
-      open: true,
-      message: `Error loading organization chart: ${error.response?.data?.message || error.message}`,
-      severity: "error",
-    });
-  }
-};
-
-
-// const fetchRegisteredEmployees = async () => {
-//   try {
-//     setLoadingEmployees(true);
-//     // const token = getAuthToken();
-//     const response = await api.get(`${API_URL}/employees/registered`
-//     //   , {
-//     //   headers: {
-//     //     'Authorization': `Bearer ${token}`
-//     //   }
-//     // }
-//   );
-//     setRegisteredEmployees(response.data);
-//     setLoadingEmployees(false);
-//   } catch (error) {
-//     console.error("Error fetching registered employees:", error);
-//     setAlert({
-//       open: true,
-//       message: "Error loading employees",
-//       severity: "error",
-//     });
-//     setLoadingEmployees(false);
-//   }
-// };
-
-const fetchRegisteredEmployees = async () => {
-  try {
-    setLoadingEmployees(true);
-    // const response = await api.get(`${process.env.REACT_APP_API_URL}/api/employees/registered`);
-    const response = await api.get('employees/registered');
-
-    setRegisteredEmployees(response.data);
-    setLoadingEmployees(false);
-  } catch (error) {
-    console.error("Error fetching registered employees:", error);
-    setAlert({
-      open: true,
-      message: "Error loading employees",
-      severity: "error",
-    });
-    setLoadingEmployees(false);
-  }
-};
-
-const handleAddPosition = async () => {
-  try {
-    // Rename designation to title for API compatibility
-    const positionData = {
-      ...newPosition,
-      title: newPosition.designation,
-    };
-    delete positionData.designation;
-
-    // const response = await api.post(`${API_URL}/positions`, positionData);
-    const response = await api.post('organization/positions', positionData);
-
-
-    await fetchOrganizationChart();
-    setIsDialogOpen(false);
-    resetForm();
-    setAlert({
-      open: true,
-      message: "Position added successfully",
-      severity: "success",
-    });
-  } catch (error) {
-    console.error("Error adding position:", error);
-    setAlert({
-      open: true,
-      message: error.response?.data?.error || "Error adding position",
-      severity: "error",
-    });
-  }
-};
-
-const handleUpdatePosition = async () => {
-  try {
-    if (!editingNodeId) {
-      console.error("No position ID found for update");
+  const fetchOrganizationChart = async () => {
+    try {
+      setIsLoading(true);
+      const response = await api.get("organization/chart");
+      setTreeData(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching organization chart:", error);
+      setIsLoading(false);
       setAlert({
         open: true,
-        message: "Error: No position ID found",
+        message: `Error loading organization chart: ${
+          error.response?.data?.message || error.message
+        }`,
         severity: "error",
       });
-      return;
     }
+  };
 
-    // Rename designation to title for API compatibility
-    const positionData = {
-      ...newPosition,
-      title: newPosition.designation,
-    };
-    delete positionData.designation;
+  const fetchRegisteredEmployees = async () => {
+    try {
+      setLoadingEmployees(true);
+      const response = await api.get("employees/registered");
 
-    console.log("Updating position with ID:", editingNodeId);
-    console.log("Update data:", positionData);
+      setRegisteredEmployees(response.data);
+      setLoadingEmployees(false);
+    } catch (error) {
+      console.error("Error fetching registered employees:", error);
+      setAlert({
+        open: true,
+        message: "Error loading employees",
+        severity: "error",
+      });
+      setLoadingEmployees(false);
+    }
+  };
 
-    // const token = getAuthToken();
-    // Use the editingNodeId directly
-    // await api.put(`${API_URL}/positions/${editingNodeId}`, positionData
-    await api.put(`organization/positions/${editingNodeId}`, positionData
+  const handleAddPosition = async () => {
+    try {
+      // Rename designation to title for API compatibility
+      const positionData = {
+        ...newPosition,
+        title: newPosition.designation,
+      };
+      delete positionData.designation;
 
-    //   , {
-    //   headers: {
-    //     'Authorization': `Bearer ${token}`
-    //   }
-    // }
-  );
+      const response = await api.post("organization/positions", positionData);
 
-    await fetchOrganizationChart();
-    setIsEditDialogOpen(false);
-    resetForm();
-    setAlert({
-      open: true,
-      message: "Position updated successfully",
-      severity: "success",
-    });
-  } catch (error) {
-    console.error("Error updating position:", error);
-    setAlert({
-      open: true,
-      message:
-        "Error updating position: " +
-        (error.response?.data?.message || error.message),
-      severity: "error",
-    });
-  }
-};
+      await fetchOrganizationChart();
+      setIsDialogOpen(false);
+      resetForm();
+      setAlert({
+        open: true,
+        message: "Position added successfully",
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Error adding position:", error);
+      setAlert({
+        open: true,
+        message: error.response?.data?.error || "Error adding position",
+        severity: "error",
+      });
+    }
+  };
 
+  const handleUpdatePosition = async () => {
+    try {
+      if (!editingNodeId) {
+        console.error("No position ID found for update");
+        setAlert({
+          open: true,
+          message: "Error: No position ID found",
+          severity: "error",
+        });
+        return;
+      }
 
-const handleConfirmDelete = async () => {
-  if (!positionToDelete) return;
+      // Rename designation to title for API compatibility
+      const positionData = {
+        ...newPosition,
+        title: newPosition.designation,
+      };
+      delete positionData.designation;
 
-  try {
-    setIsLoading(true);
-    // const token = getAuthToken();
-    // await api.delete(`${API_URL}/positions/${positionToDelete._id}`
-    await api.delete(`organization/positions/${positionToDelete._id}`
-  );
-    await fetchOrganizationChart();
-    setAlert({
-      open: true,
-      message: "Position deleted successfully",
-      severity: "success",
-    });
-  } catch (error) {
-    console.error("Error deleting position:", error);
-    setAlert({
-      open: true,
-      message: error.response?.data?.message || "Error deleting position",
-      severity: "error",
-    });
-  } finally {
-    setIsLoading(false);
-    handleCloseDeleteDialog();
-  }
-};
+      console.log("Updating position with ID:", editingNodeId);
+      console.log("Update data:", positionData);
 
+      await api.put(`organization/positions/${editingNodeId}`, positionData);
+
+      await fetchOrganizationChart();
+      setIsEditDialogOpen(false);
+      resetForm();
+      setAlert({
+        open: true,
+        message: "Position updated successfully",
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Error updating position:", error);
+      setAlert({
+        open: true,
+        message:
+          "Error updating position: " +
+          (error.response?.data?.message || error.message),
+        severity: "error",
+      });
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!positionToDelete) return;
+
+    try {
+      setIsLoading(true);
+      await api.delete(`organization/positions/${positionToDelete._id}`);
+      await fetchOrganizationChart();
+      setAlert({
+        open: true,
+        message: "Position deleted successfully",
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Error deleting position:", error);
+      setAlert({
+        open: true,
+        message: error.response?.data?.message || "Error deleting position",
+        severity: "error",
+      });
+    } finally {
+      setIsLoading(false);
+      handleCloseDeleteDialog();
+    }
+  };
 
   return (
     <Box sx={{ p: isMobile ? 2 : 3, position: "relative" }}>
@@ -719,20 +644,20 @@ const handleConfirmDelete = async () => {
           }}
         >
           {canCreatePositions() && (
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<PersonAddIcon />}
-            onClick={() => setIsDialogOpen(true)}
-            fullWidth={isMobile}
-            sx={{
-              borderRadius: "8px",
-              textTransform: "none",
-              fontWeight: 600,
-            }}
-          >
-            Add Position
-          </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<PersonAddIcon />}
+              onClick={() => setIsDialogOpen(true)}
+              fullWidth={isMobile}
+              sx={{
+                borderRadius: "8px",
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+            >
+              Add Position
+            </Button>
           )}
 
           <Box
@@ -822,37 +747,36 @@ const handleConfirmDelete = async () => {
           >
             {renderTreeNode(treeData)}
           </Box>
-       ) : (
-  <Box
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      height: "50vh",
-      gap: 2,
-    }}
-  >
-    <BusinessIcon sx={{ fontSize: 60, color: "#ccc" }} />
-    <Typography variant="h6" color="text.secondary">
-      No organization chart data available
-    </Typography>
-    {canCreatePositions() ? (
-      <Button
-        variant="contained"
-        startIcon={<PersonAddIcon />}
-        onClick={() => setIsDialogOpen(true)}
-      >
-        Add First Position
-      </Button>
-    ) : (
-      <Typography variant="body2" color="text.secondary">
-        Contact your administrator to set up the organization chart
-      </Typography>
-    )}
-  </Box>
-)}
-
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "50vh",
+              gap: 2,
+            }}
+          >
+            <BusinessIcon sx={{ fontSize: 60, color: "#ccc" }} />
+            <Typography variant="h6" color="text.secondary">
+              No organization chart data available
+            </Typography>
+            {canCreatePositions() ? (
+              <Button
+                variant="contained"
+                startIcon={<PersonAddIcon />}
+                onClick={() => setIsDialogOpen(true)}
+              >
+                Add First Position
+              </Button>
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                Contact your administrator to set up the organization chart
+              </Typography>
+            )}
+          </Box>
+        )}
       </Paper>
 
       {/* Delete Confirmation Dialog */}
@@ -981,908 +905,667 @@ const handleConfirmDelete = async () => {
       </Dialog>
 
       {/* Add Position Dialog */}
-      
-{canCreatePositions() && (
-      <Dialog
-        open={isDialogOpen}
-        onClose={() => {
-          setIsDialogOpen(false);
-          resetForm();
-        }}
-        fullWidth
-        maxWidth="md"
-        fullScreen={isMobile}
-        PaperProps={{
-          sx: {
-            borderRadius: isMobile ? 0 : "20px",
-            overflow: "hidden",
-            margin: isMobile ? 0 : isTablet ? 1 : 2,
-            width: isMobile ? "100%" : isTablet ? "90%" : "80%",
-            maxWidth: isMobile ? "100%" : isTablet ? "700px" : "900px",
-          },
-        }}
-      >
-        <DialogTitle
-          sx={{
-            background: "linear-gradient(45deg, #1976d2, #64b5f6)",
-            color: "white",
-            fontSize: "1.5rem",
-            fontWeight: 600,
-            padding: "24px 32px",
+
+      {canCreatePositions() && (
+        <Dialog
+          open={isDialogOpen}
+          onClose={() => {
+            setIsDialogOpen(false);
+            resetForm();
+          }}
+          fullWidth
+          maxWidth="md"
+          fullScreen={isMobile}
+          PaperProps={{
+            sx: {
+              borderRadius: isMobile ? 0 : "20px",
+              overflow: "hidden",
+              margin: isMobile ? 0 : isTablet ? 1 : 2,
+              width: isMobile ? "100%" : isTablet ? "90%" : "80%",
+              maxWidth: isMobile ? "100%" : isTablet ? "700px" : "900px",
+            },
           }}
         >
-          Add New Position
-        </DialogTitle>
-        <DialogContent
-          sx={{
-            padding: "32px",
-            backgroundColor: "#f8fafc",
-            marginTop: "20px",
-          }}
-        >
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Autocomplete
-                options={registeredEmployees}
-                getOptionLabel={(option) =>
-                  `${option.Emp_ID} - ${option.personalInfo?.firstName || ""} ${
-                    option.personalInfo?.lastName || ""
-                  }`
-                }
-                value={selectedEmployee}
-                onChange={handleEmployeeSelect}
-                loading={loadingEmployees}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Select Employee (Optional)"
-                    variant="outlined"
-                    fullWidth
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <>
-                          {loadingEmployees ? (
-                            <CircularProgress color="inherit" size={20} />
-                          ) : null}
-                          {params.InputProps.endAdornment}
-                        </>
-                      ),
-                      sx: {
-                        backgroundColor: "white",
-                        borderRadius: "12px",
-                        "&:hover fieldset": {
-                          borderColor: "#1976d2",
-                        },
-                      },
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="Name"
-                value={newPosition.name}
-                onChange={(e) =>
-                  setNewPosition({ ...newPosition, name: e.target.value })
-                }
-                fullWidth
-                required
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "white",
-                    borderRadius: "12px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "#1976d2",
-                  },
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="Designation/Title"
-                value={newPosition.designation}
-                onChange={(e) =>
-                  setNewPosition({
-                    ...newPosition,
-                    designation: e.target.value,
-                  })
-                }
-                fullWidth
-                required
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "white",
-                    borderRadius: "12px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="Email"
-                value={newPosition.email}
-                onChange={(e) =>
-                  setNewPosition({ ...newPosition, email: e.target.value })
-                }
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "white",
-                    borderRadius: "12px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="Employee ID"
-                value={newPosition.employeeId}
-                onChange={(e) =>
-                  setNewPosition({
-                    ...newPosition,
-                    employeeId: e.target.value,
-                  })
-                }
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "white",
-                    borderRadius: "12px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormControl
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "white",
-                    borderRadius: "12px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              >
-                <InputLabel>Department</InputLabel>
-                <Select
-                  value={newPosition.department}
-                  onChange={(e) =>
-                    setNewPosition({
-                      ...newPosition,
-                      department: e.target.value,
-                    })
-                  }
-                  label="Department"
-                >
-                  <MenuItem value="">None</MenuItem>
-                  <MenuItem value="HR">HR</MenuItem>
-                  <MenuItem value="IT">IT</MenuItem>
-                  <MenuItem value="Finance">Finance</MenuItem>
-                  <MenuItem value="Marketing">Marketing</MenuItem>
-                  <MenuItem value="Operations">Operations</MenuItem>
-                  <MenuItem value="Sales">Sales</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormControl
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "white",
-                    borderRadius: "12px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              >
-                <InputLabel>Reports To</InputLabel>
-                <Select
-                  value={newPosition.parentId}
-                  onChange={(e) =>
-                    setNewPosition({
-                      ...newPosition,
-                      parentId: e.target.value,
-                    })
-                  }
-                  label="Reports To"
-                >
-                  <MenuItem value="">None (Top Level)</MenuItem>
-                  {treeData &&
-                    getAllNodes(treeData).map((node) => (
-                      <MenuItem key={node._id} value={node._id}>
-                        {node.name} - {node.title}
-                        {node.department && ` (${node.department})`}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormControl
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "white",
-                    borderRadius: "12px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              >
-                <InputLabel>Status</InputLabel>
-                <Select
-                  value={newPosition.status}
-                  onChange={(e) =>
-                    setNewPosition({
-                      ...newPosition,
-                      status: e.target.value,
-                    })
-                  }
-                  label="Status"
-                >
-                  <MenuItem value="active">Active</MenuItem>
-                  <MenuItem value="inactive">Inactive</MenuItem>
-                  <MenuItem value="vacant">Vacant</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions
-          sx={{
-            padding: { xs: "16px 24px", sm: "20px 28px", md: "24px 32px" },
-            backgroundColor: "#f8fafc",
-            borderTop: "1px solid #e0e0e0",
-            gap: { xs: 1, sm: 2 },
-            flexDirection: { xs: "column", sm: "row" },
-            justifyContent: { xs: "stretch", sm: "flex-end" },
-          }}
-        >
-          <Button
-            onClick={() => {
-              setIsDialogOpen(false);
-              resetForm();
-            }}
-            sx={{
-              border: "2px solid #1976d2",
-              color: "#1976d2",
-              "&:hover": {
-                border: "2px solid #64b5f6",
-                backgroundColor: "#e3f2fd",
-                color: "#1976d2",
-              },
-              textTransform: "none",
-              borderRadius: "8px",
-              px: { xs: 2, sm: 3 },
-              fontWeight: 600,
-              width: { xs: "100%", sm: "auto" },
-              minWidth: { sm: "120px" },
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleAddPosition}
-            variant="contained"
+          <DialogTitle
             sx={{
               background: "linear-gradient(45deg, #1976d2, #64b5f6)",
-              fontSize: { xs: "0.9rem", sm: "0.95rem" },
-              textTransform: "none",
-              padding: { xs: "8px 24px", sm: "8px 32px" },
-              borderRadius: "10px",
-              boxShadow: "0 4px 12px rgba(25, 118, 210, 0.2)",
-              "&:hover": {
-                background: "linear-gradient(45deg, #1565c0, #42a5f5)",
-              },
-              width: { xs: "100%", sm: "auto" },
-              minWidth: { sm: "160px" },
+              color: "white",
+              fontSize: "1.5rem",
+              fontWeight: 600,
+              padding: "24px 32px",
             }}
           >
-            Add Position
-          </Button>
-        </DialogActions>
-      </Dialog>
+            Add New Position
+          </DialogTitle>
+          <DialogContent
+            sx={{
+              padding: "32px",
+              backgroundColor: "#f8fafc",
+              marginTop: "20px",
+            }}
+          >
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Autocomplete
+                  options={registeredEmployees}
+                  getOptionLabel={(option) =>
+                    `${option.Emp_ID} - ${
+                      option.personalInfo?.firstName || ""
+                    } ${option.personalInfo?.lastName || ""}`
+                  }
+                  value={selectedEmployee}
+                  onChange={handleEmployeeSelect}
+                  loading={loadingEmployees}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Employee (Optional)"
+                      variant="outlined"
+                      fullWidth
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            {loadingEmployees ? (
+                              <CircularProgress color="inherit" size={20} />
+                            ) : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        ),
+                        sx: {
+                          backgroundColor: "white",
+                          borderRadius: "12px",
+                          "&:hover fieldset": {
+                            borderColor: "#1976d2",
+                          },
+                        },
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="Name"
+                  value={newPosition.name}
+                  onChange={(e) =>
+                    setNewPosition({ ...newPosition, name: e.target.value })
+                  }
+                  fullWidth
+                  required
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                    },
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: "#1976d2",
+                    },
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="Designation/Title"
+                  value={newPosition.designation}
+                  onChange={(e) =>
+                    setNewPosition({
+                      ...newPosition,
+                      designation: e.target.value,
+                    })
+                  }
+                  fullWidth
+                  required
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                    },
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="Email"
+                  value={newPosition.email}
+                  onChange={(e) =>
+                    setNewPosition({ ...newPosition, email: e.target.value })
+                  }
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                    },
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="Employee ID"
+                  value={newPosition.employeeId}
+                  onChange={(e) =>
+                    setNewPosition({
+                      ...newPosition,
+                      employeeId: e.target.value,
+                    })
+                  }
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                    },
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <FormControl
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                    },
+                  }}
+                >
+                  <InputLabel>Department</InputLabel>
+                  <Select
+                    value={newPosition.department}
+                    onChange={(e) =>
+                      setNewPosition({
+                        ...newPosition,
+                        department: e.target.value,
+                      })
+                    }
+                    label="Department"
+                  >
+                    <MenuItem value="">None</MenuItem>
+                    <MenuItem value="HR">HR</MenuItem>
+                    <MenuItem value="IT">IT</MenuItem>
+                    <MenuItem value="Finance">Finance</MenuItem>
+                    <MenuItem value="Marketing">Marketing</MenuItem>
+                    <MenuItem value="Operations">Operations</MenuItem>
+                    <MenuItem value="Sales">Sales</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <FormControl
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                    },
+                  }}
+                >
+                  <InputLabel>Reports To</InputLabel>
+                  <Select
+                    value={newPosition.parentId}
+                    onChange={(e) =>
+                      setNewPosition({
+                        ...newPosition,
+                        parentId: e.target.value,
+                      })
+                    }
+                    label="Reports To"
+                  >
+                    <MenuItem value="">None (Top Level)</MenuItem>
+                    {treeData &&
+                      getAllNodes(treeData).map((node) => (
+                        <MenuItem key={node._id} value={node._id}>
+                          {node.name} - {node.title}
+                          {node.department && ` (${node.department})`}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <FormControl
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                    },
+                  }}
+                >
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    value={newPosition.status}
+                    onChange={(e) =>
+                      setNewPosition({
+                        ...newPosition,
+                        status: e.target.value,
+                      })
+                    }
+                    label="Status"
+                  >
+                    <MenuItem value="active">Active</MenuItem>
+                    <MenuItem value="inactive">Inactive</MenuItem>
+                    <MenuItem value="vacant">Vacant</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions
+            sx={{
+              padding: { xs: "16px 24px", sm: "20px 28px", md: "24px 32px" },
+              backgroundColor: "#f8fafc",
+              borderTop: "1px solid #e0e0e0",
+              gap: { xs: 1, sm: 2 },
+              flexDirection: { xs: "column", sm: "row" },
+              justifyContent: { xs: "stretch", sm: "flex-end" },
+            }}
+          >
+            <Button
+              onClick={() => {
+                setIsDialogOpen(false);
+                resetForm();
+              }}
+              sx={{
+                border: "2px solid #1976d2",
+                color: "#1976d2",
+                "&:hover": {
+                  border: "2px solid #64b5f6",
+                  backgroundColor: "#e3f2fd",
+                  color: "#1976d2",
+                },
+                textTransform: "none",
+                borderRadius: "8px",
+                px: { xs: 2, sm: 3 },
+                fontWeight: 600,
+                width: { xs: "100%", sm: "auto" },
+                minWidth: { sm: "120px" },
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleAddPosition}
+              variant="contained"
+              sx={{
+                background: "linear-gradient(45deg, #1976d2, #64b5f6)",
+                fontSize: { xs: "0.9rem", sm: "0.95rem" },
+                textTransform: "none",
+                padding: { xs: "8px 24px", sm: "8px 32px" },
+                borderRadius: "10px",
+                boxShadow: "0 4px 12px rgba(25, 118, 210, 0.2)",
+                "&:hover": {
+                  background: "linear-gradient(45deg, #1565c0, #42a5f5)",
+                },
+                width: { xs: "100%", sm: "auto" },
+                minWidth: { sm: "160px" },
+              }}
+            >
+              Add Position
+            </Button>
+          </DialogActions>
+        </Dialog>
       )}
 
       {/* Edit Position Dialog */}
-      {/* <Dialog 
-        open={isEditDialogOpen} 
-        onClose={() => {
-          setIsEditDialogOpen(false);
-          resetForm();
-        }}
-        fullWidth
-        maxWidth="md"
-        fullScreen={isMobile}
-        PaperProps={{
-          sx: {
-            borderRadius: isMobile ? 0 : "20px",
-            overflow: "hidden",
-            margin: isMobile ? 0 : isTablet ? 1 : 2,
-            width: isMobile ? "100%" : isTablet ? "90%" : "80%",
-            maxWidth: isMobile ? "100%" : isTablet ? "700px" : "900px",
-          },
-        }}
-      >
-        <DialogTitle
-          sx={{
-            backgroundColor: "#1976d2",
-            color: "white",
-            fontSize: isMobile ? "1.25rem" : "1.5rem",
-            fontWeight: 600,
+      {canEditPositions() && (
+        <Dialog
+          open={isEditDialogOpen}
+          onClose={() => {
+            setIsEditDialogOpen(false);
+            resetForm();
+          }}
+          fullWidth
+          maxWidth="md"
+          fullScreen={isMobile}
+          PaperProps={{
+            sx: {
+              borderRadius: isMobile ? 0 : "20px",
+              overflow: "hidden",
+              margin: isMobile ? 0 : isTablet ? 1 : 2,
+              width: isMobile ? "100%" : isTablet ? "90%" : "80%",
+              maxWidth: isMobile ? "100%" : isTablet ? "700px" : "900px",
+            },
           }}
         >
-          Edit Position
-        </DialogTitle>
-        <DialogContent sx={{ pt: 3, pb: 1 }}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Autocomplete
-                options={registeredEmployees}
-                getOptionLabel={(option) =>
-                  `${option.Emp_ID} - ${option.personalInfo?.firstName || ""} ${
-                    option.personalInfo?.lastName || ""
-                  }`
-                }
-                value={selectedEmployee}
-                onChange={handleEmployeeSelect}
-                loading={loadingEmployees}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Select Employee (Optional)"
-                    variant="outlined"
-                    fullWidth
-                    margin="normal"
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <>
-                          {loadingEmployees ? (
-                            <CircularProgress color="inherit" size={20} />
-                          ) : null}
-                          {params.InputProps.endAdornment}
-                        </>
-                      ),
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="Name"
-                value={newPosition.name}
-                onChange={(e) =>
-                  setNewPosition({ ...newPosition, name: e.target.value })
-                }
-                fullWidth
-                margin="normal"
-                required
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="Designation/Title"
-                value={newPosition.designation}
-                onChange={(e) =>
-                  setNewPosition({
-                    ...newPosition,
-                    designation: e.target.value,
-                  })
-                }
-                fullWidth
-                margin="normal"
-                required
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="Email"
-                value={newPosition.email}
-                onChange={(e) =>
-                  setNewPosition({ ...newPosition, email: e.target.value })
-                }
-                fullWidth
-                margin="normal"
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="Employee ID"
-                value={newPosition.employeeId}
-                onChange={(e) =>
-                  setNewPosition({
-                    ...newPosition,
-                    employeeId: e.target.value,
-                  })
-                }
-                fullWidth
-                margin="normal"
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth margin="normal">
-                <InputLabel>Department</InputLabel>
-                <Select
-                  value={newPosition.department}
-                  onChange={(e) =>
-                    setNewPosition({
-                      ...newPosition,
-                      department: e.target.value,
-                    })
-                  }
-                  label="Department"
-                >
-                  <MenuItem value="">None</MenuItem>
-                  <MenuItem value="HR">HR</MenuItem>
-                  <MenuItem value="IT">IT</MenuItem>
-                  <MenuItem value="Finance">Finance</MenuItem>
-                  <MenuItem value="Marketing">Marketing</MenuItem>
-                  <MenuItem value="Operations">Operations</MenuItem>
-                  <MenuItem value="Sales">Sales</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth margin="normal">
-                <InputLabel>Reports To</InputLabel>
-                <Select
-                  value={newPosition.parentId}
-                  onChange={(e) =>
-                    setNewPosition({
-                      ...newPosition,
-                      parentId: e.target.value,
-                    })
-                  }
-                  label="Reports To"
-                >
-                  <MenuItem value="">None (Top Level)</MenuItem>
-                  {treeData &&
-                    getAllNodes(treeData)
-                      .filter((node) => node._id !== editingPosition?._id)
-                      .map((node) => (
-                        <MenuItem key={node._id} value={node._id}>
-                          {node.name} - {node.title}
-                          {node.department && ` (${node.department})`}
-                        </MenuItem>
-                      ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth margin="normal">
-                <InputLabel>Status</InputLabel>
-                <Select
-                  value={newPosition.status}
-                  onChange={(e) =>
-                    setNewPosition({
-                      ...newPosition,
-                      status: e.target.value,
-                    })
-                  }
-                  label="Status"
-                >
-                  <MenuItem value="active">Active</MenuItem>
-                  <MenuItem value="inactive">Inactive</MenuItem>
-                  <MenuItem value="vacant">Vacant</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions sx={{ p: 3 }}>
-          <Button
-            onClick={() => {
-              setIsEditDialogOpen(false);
-              resetForm();
-            }}
-            color="inherit"
-            sx={{ 
-              borderRadius: "8px",
-              textTransform: "none",
-              fontWeight: 600,
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleUpdatePosition}
-            variant="contained"
-            color="primary"
-            sx={{ 
-              borderRadius: "8px",
-              textTransform: "none",
-              fontWeight: 600,
-            }}
-          >
-            Update Position
-          </Button>
-        </DialogActions>
-      </Dialog> */}
-{canEditPositions() && (
-      <Dialog
-        open={isEditDialogOpen}
-        onClose={() => {
-          setIsEditDialogOpen(false);
-          resetForm();
-        }}
-        fullWidth
-        maxWidth="md"
-        fullScreen={isMobile}
-        PaperProps={{
-          sx: {
-            borderRadius: isMobile ? 0 : "20px",
-            overflow: "hidden",
-            margin: isMobile ? 0 : isTablet ? 1 : 2,
-            width: isMobile ? "100%" : isTablet ? "90%" : "80%",
-            maxWidth: isMobile ? "100%" : isTablet ? "700px" : "900px",
-          },
-        }}
-      >
-        <DialogTitle
-          sx={{
-            background: "linear-gradient(45deg, #1976d2, #64b5f6)",
-            color: "white",
-            fontSize: "1.5rem",
-            fontWeight: 600,
-            padding: "24px 32px",
-          }}
-        >
-          Edit Position
-        </DialogTitle>
-        <DialogContent
-          sx={{
-            padding: "32px",
-            backgroundColor: "#f8fafc",
-            marginTop: "20px",
-          }}
-        >
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Autocomplete
-                options={registeredEmployees}
-                getOptionLabel={(option) =>
-                  `${option.Emp_ID} - ${option.personalInfo?.firstName || ""} ${
-                    option.personalInfo?.lastName || ""
-                  }`
-                }
-                value={selectedEmployee}
-                onChange={handleEmployeeSelect}
-                loading={loadingEmployees}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Select Employee (Optional)"
-                    variant="outlined"
-                    fullWidth
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <>
-                          {loadingEmployees ? (
-                            <CircularProgress color="inherit" size={20} />
-                          ) : null}
-                          {params.InputProps.endAdornment}
-                        </>
-                      ),
-                      sx: {
-                        backgroundColor: "white",
-                        borderRadius: "12px",
-                        "&:hover fieldset": {
-                          borderColor: "#1976d2",
-                        },
-                      },
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="Name"
-                value={newPosition.name}
-                onChange={(e) =>
-                  setNewPosition({ ...newPosition, name: e.target.value })
-                }
-                fullWidth
-                required
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "white",
-                    borderRadius: "12px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "#1976d2",
-                  },
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="Designation/Title"
-                value={newPosition.designation}
-                onChange={(e) =>
-                  setNewPosition({
-                    ...newPosition,
-                    designation: e.target.value,
-                  })
-                }
-                fullWidth
-                required
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "white",
-                    borderRadius: "12px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="Email"
-                value={newPosition.email}
-                onChange={(e) =>
-                  setNewPosition({ ...newPosition, email: e.target.value })
-                }
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "white",
-                    borderRadius: "12px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="Employee ID"
-                value={newPosition.employeeId}
-                onChange={(e) =>
-                  setNewPosition({
-                    ...newPosition,
-                    employeeId: e.target.value,
-                  })
-                }
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "white",
-                    borderRadius: "12px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormControl
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "white",
-                    borderRadius: "12px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              >
-                <InputLabel>Department</InputLabel>
-                <Select
-                  value={newPosition.department}
-                  onChange={(e) =>
-                    setNewPosition({
-                      ...newPosition,
-                      department: e.target.value,
-                    })
-                  }
-                  label="Department"
-                >
-                  <MenuItem value="">None</MenuItem>
-                  <MenuItem value="HR">HR</MenuItem>
-                  <MenuItem value="IT">IT</MenuItem>
-                  <MenuItem value="Finance">Finance</MenuItem>
-                  <MenuItem value="Marketing">Marketing</MenuItem>
-                  <MenuItem value="Operations">Operations</MenuItem>
-                  <MenuItem value="Sales">Sales</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormControl
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "white",
-                    borderRadius: "12px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              >
-                <InputLabel>Reports To</InputLabel>
-                <Select
-                  value={newPosition.parentId}
-                  onChange={(e) =>
-                    setNewPosition({
-                      ...newPosition,
-                      parentId: e.target.value,
-                    })
-                  }
-                  label="Reports To"
-                >
-                  <MenuItem value="">None (Top Level)</MenuItem>
-                  {treeData &&
-                    getAllNodes(treeData)
-                      .filter((node) => node._id !== editingNodeId)
-                      .map((node) => (
-                        <MenuItem key={node._id} value={node._id}>
-                          {node.name} - {node.title}
-                          {node.department && ` (${node.department})`}
-                        </MenuItem>
-                      ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <FormControl
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "white",
-                    borderRadius: "12px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              >
-                <InputLabel>Status</InputLabel>
-                <Select
-                  value={newPosition.status}
-                  onChange={(e) =>
-                    setNewPosition({
-                      ...newPosition,
-                      status: e.target.value,
-                    })
-                  }
-                  label="Status"
-                >
-                  <MenuItem value="active">Active</MenuItem>
-                  <MenuItem value="inactive">Inactive</MenuItem>
-                  <MenuItem value="vacant">Vacant</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions
-          sx={{
-            padding: { xs: "16px 24px", sm: "20px 28px", md: "24px 32px" },
-            backgroundColor: "#f8fafc",
-            borderTop: "1px solid #e0e0e0",
-            gap: { xs: 1, sm: 2 },
-            flexDirection: { xs: "column", sm: "row" },
-            justifyContent: { xs: "stretch", sm: "flex-end" },
-          }}
-        >
-          <Button
-            onClick={() => {
-              setIsEditDialogOpen(false);
-              resetForm();
-            }}
-            sx={{
-              border: "2px solid #1976d2",
-              color: "#1976d2",
-              "&:hover": {
-                border: "2px solid #64b5f6",
-                backgroundColor: "#e3f2fd",
-                color: "#1976d2",
-              },
-              textTransform: "none",
-              borderRadius: "8px",
-              px: { xs: 2, sm: 3 },
-              fontWeight: 600,
-              width: { xs: "100%", sm: "auto" },
-              minWidth: { sm: "120px" },
-            }}
-          >
-            Cancel
-          </Button>
-          {/* <Button
-        onClick={handleUpdatePosition}
-        variant="contained"
-        sx={{
-          background: "linear-gradient(45deg, #1976d2, #64b5f6)",
-          fontSize: { xs: "0.9rem", sm: "0.95rem" },
-          textTransform: "none",
-          padding: { xs: "8px 24px", sm: "8px 32px" },
-          borderRadius: "10px",
-          boxShadow: "0 4px 12px rgba(25, 118, 210, 0.2)",
-          "&:hover": {
-            background: "linear-gradient(45deg, #1565c0, #42a5f5)",
-          },
-          width: { xs: "100%", sm: "auto" },
-          minWidth: { sm: "160px" },
-        }}
-      >
-        Update Position
-      </Button> * */}
-          <Button
-            onClick={handleUpdatePosition}
-            variant="contained"
-            disabled={!newPosition.name || !newPosition.designation} // Add validation
+          <DialogTitle
             sx={{
               background: "linear-gradient(45deg, #1976d2, #64b5f6)",
-              fontSize: { xs: "0.9rem", sm: "0.95rem" },
-              textTransform: "none",
-              padding: { xs: "8px 24px", sm: "8px 32px" },
-              borderRadius: "10px",
-              boxShadow: "0 4px 12px rgba(25, 118, 210, 0.2)",
-              "&:hover": {
-                background: "linear-gradient(45deg, #1565c0, #42a5f5)",
-              },
-              width: { xs: "100%", sm: "auto" },
-              minWidth: { sm: "160px" },
+              color: "white",
+              fontSize: "1.5rem",
+              fontWeight: 600,
+              padding: "24px 32px",
             }}
           >
-            Update Position
-          </Button>
-        </DialogActions>
-      </Dialog>
+            Edit Position
+          </DialogTitle>
+          <DialogContent
+            sx={{
+              padding: "32px",
+              backgroundColor: "#f8fafc",
+              marginTop: "20px",
+            }}
+          >
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Autocomplete
+                  options={registeredEmployees}
+                  getOptionLabel={(option) =>
+                    `${option.Emp_ID} - ${
+                      option.personalInfo?.firstName || ""
+                    } ${option.personalInfo?.lastName || ""}`
+                  }
+                  value={selectedEmployee}
+                  onChange={handleEmployeeSelect}
+                  loading={loadingEmployees}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Employee (Optional)"
+                      variant="outlined"
+                      fullWidth
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            {loadingEmployees ? (
+                              <CircularProgress color="inherit" size={20} />
+                            ) : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        ),
+                        sx: {
+                          backgroundColor: "white",
+                          borderRadius: "12px",
+                          "&:hover fieldset": {
+                            borderColor: "#1976d2",
+                          },
+                        },
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="Name"
+                  value={newPosition.name}
+                  onChange={(e) =>
+                    setNewPosition({ ...newPosition, name: e.target.value })
+                  }
+                  fullWidth
+                  required
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                    },
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: "#1976d2",
+                    },
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="Designation/Title"
+                  value={newPosition.designation}
+                  onChange={(e) =>
+                    setNewPosition({
+                      ...newPosition,
+                      designation: e.target.value,
+                    })
+                  }
+                  fullWidth
+                  required
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                    },
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="Email"
+                  value={newPosition.email}
+                  onChange={(e) =>
+                    setNewPosition({ ...newPosition, email: e.target.value })
+                  }
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                    },
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="Employee ID"
+                  value={newPosition.employeeId}
+                  onChange={(e) =>
+                    setNewPosition({
+                      ...newPosition,
+                      employeeId: e.target.value,
+                    })
+                  }
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                    },
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <FormControl
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                    },
+                  }}
+                >
+                  <InputLabel>Department</InputLabel>
+                  <Select
+                    value={newPosition.department}
+                    onChange={(e) =>
+                      setNewPosition({
+                        ...newPosition,
+                        department: e.target.value,
+                      })
+                    }
+                    label="Department"
+                  >
+                    <MenuItem value="">None</MenuItem>
+                    <MenuItem value="HR">HR</MenuItem>
+                    <MenuItem value="IT">IT</MenuItem>
+                    <MenuItem value="Finance">Finance</MenuItem>
+                    <MenuItem value="Marketing">Marketing</MenuItem>
+                    <MenuItem value="Operations">Operations</MenuItem>
+                    <MenuItem value="Sales">Sales</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <FormControl
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                    },
+                  }}
+                >
+                  <InputLabel>Reports To</InputLabel>
+                  <Select
+                    value={newPosition.parentId}
+                    onChange={(e) =>
+                      setNewPosition({
+                        ...newPosition,
+                        parentId: e.target.value,
+                      })
+                    }
+                    label="Reports To"
+                  >
+                    <MenuItem value="">None (Top Level)</MenuItem>
+                    {treeData &&
+                      getAllNodes(treeData)
+                        .filter((node) => node._id !== editingNodeId)
+                        .map((node) => (
+                          <MenuItem key={node._id} value={node._id}>
+                            {node.name} - {node.title}
+                            {node.department && ` (${node.department})`}
+                          </MenuItem>
+                        ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <FormControl
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "white",
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                    },
+                  }}
+                >
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    value={newPosition.status}
+                    onChange={(e) =>
+                      setNewPosition({
+                        ...newPosition,
+                        status: e.target.value,
+                      })
+                    }
+                    label="Status"
+                  >
+                    <MenuItem value="active">Active</MenuItem>
+                    <MenuItem value="inactive">Inactive</MenuItem>
+                    <MenuItem value="vacant">Vacant</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions
+            sx={{
+              padding: { xs: "16px 24px", sm: "20px 28px", md: "24px 32px" },
+              backgroundColor: "#f8fafc",
+              borderTop: "1px solid #e0e0e0",
+              gap: { xs: 1, sm: 2 },
+              flexDirection: { xs: "column", sm: "row" },
+              justifyContent: { xs: "stretch", sm: "flex-end" },
+            }}
+          >
+            <Button
+              onClick={() => {
+                setIsEditDialogOpen(false);
+                resetForm();
+              }}
+              sx={{
+                border: "2px solid #1976d2",
+                color: "#1976d2",
+                "&:hover": {
+                  border: "2px solid #64b5f6",
+                  backgroundColor: "#e3f2fd",
+                  color: "#1976d2",
+                },
+                textTransform: "none",
+                borderRadius: "8px",
+                px: { xs: 2, sm: 3 },
+                fontWeight: 600,
+                width: { xs: "100%", sm: "auto" },
+                minWidth: { sm: "120px" },
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleUpdatePosition}
+              variant="contained"
+              disabled={!newPosition.name || !newPosition.designation} // Add validation
+              sx={{
+                background: "linear-gradient(45deg, #1976d2, #64b5f6)",
+                fontSize: { xs: "0.9rem", sm: "0.95rem" },
+                textTransform: "none",
+                padding: { xs: "8px 24px", sm: "8px 32px" },
+                borderRadius: "10px",
+                boxShadow: "0 4px 12px rgba(25, 118, 210, 0.2)",
+                "&:hover": {
+                  background: "linear-gradient(45deg, #1565c0, #42a5f5)",
+                },
+                width: { xs: "100%", sm: "auto" },
+                minWidth: { sm: "160px" },
+              }}
+            >
+              Update Position
+            </Button>
+          </DialogActions>
+        </Dialog>
       )}
 
       {/* Node Details Dialog */}

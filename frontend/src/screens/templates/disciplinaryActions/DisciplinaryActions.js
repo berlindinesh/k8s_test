@@ -206,41 +206,32 @@ const DisciplinaryActions = () => {
     fetchRegisteredEmployees();
   }, [searchQuery, filterStatus]);
 
-const fetchActions = async () => {
-  try {
-    setLoading(true);
-    let apiUrl = `/disciplinary-actions?searchQuery=${searchQuery}&status=${filterStatus}`;
+  const fetchActions = async () => {
+    try {
+      setLoading(true);
+      let apiUrl = `/disciplinary-actions?searchQuery=${searchQuery}&status=${filterStatus}`;
 
-    // If user is employee, filter by their employee ID
-    if (userRole?.toLowerCase() === 'employee') {
-      const employeeId =
-        currentUser?.employeeId || currentUser?.Emp_ID || currentUser?.empId;
-      apiUrl += `&employeeId=${employeeId}`;
+      // If user is employee, filter by their employee ID
+      if (userRole?.toLowerCase() === "employee") {
+        const employeeId =
+          currentUser?.employeeId || currentUser?.Emp_ID || currentUser?.empId;
+        apiUrl += `&employeeId=${employeeId}`;
+      }
+
+      const response = await api.get(apiUrl);
+      setActions(response.data);
+    } catch (error) {
+      console.error("Error fetching actions:", error);
+      showSnackbar("Error fetching actions", "error");
+    } finally {
+      setLoading(false);
     }
-
-    const response = await api.get(apiUrl);
-    setActions(response.data);
-  } catch (error) {
-    console.error("Error fetching actions:", error);
-    showSnackbar("Error fetching actions", "error");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const fetchRegisteredEmployees = async () => {
     try {
       setLoadingEmployees(true);
-      // const token = getAuthToken();
-      const response = await api.get(
-        "/employees/registered"
-        // ,
-        // {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
-      );
+      const response = await api.get("/employees/registered");
       setRegisteredEmployees(response.data);
       setLoadingEmployees(false);
     } catch (error) {
@@ -676,55 +667,6 @@ const fetchActions = async () => {
                         </IconButton>
                       )}
                     </TableCell>
-
-                    {/* <TableCell align="center">
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "center",
-                          gap: 1,
-                        }}
-                      >
-                        <IconButton
-                          size="small"
-                          color="primary"
-                          onClick={() => handleEdit(action)}
-                          sx={{
-                            backgroundColor: alpha(
-                              theme.palette.primary.main,
-                              0.1
-                            ),
-                            "&:hover": {
-                              backgroundColor: alpha(
-                                theme.palette.primary.main,
-                                0.2
-                              ),
-                            },
-                          }}
-                        >
-                          <Edit fontSize="small" />
-                        </IconButton>
-                        <IconButton
-                          size="small"
-                          color="error"
-                          onClick={() => handleDeleteClick(action)}
-                          sx={{
-                            backgroundColor: alpha(
-                              theme.palette.error.main,
-                              0.1
-                            ),
-                            "&:hover": {
-                              backgroundColor: alpha(
-                                theme.palette.error.main,
-                                0.2
-                              ),
-                            },
-                          }}
-                        >
-                          <Delete fontSize="small" />
-                        </IconButton>
-                      </Box>
-                    </TableCell> */}
                     {(canEditActions() || canDeleteActions()) && (
                       <TableCell align="center">
                         <Box

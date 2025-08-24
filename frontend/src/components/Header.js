@@ -12,8 +12,8 @@ import {
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import {  useDispatch } from 'react-redux';
-import { logoutUser } from '../redux/authSlice';
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../redux/authSlice";
 import {
   FaBars,
   FaBell,
@@ -21,7 +21,7 @@ import {
   FaUserCircle,
   FaSignOutAlt,
   FaSignInAlt,
-  FaHome,  
+  FaHome,
 } from "react-icons/fa";
 import { timesheetService } from "../services/timesheetService";
 import "./Header.css";
@@ -37,9 +37,8 @@ const Header = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-
   // Then declare all your state variables
-  const [showProfileMenu, setShowProfileMenu] = useState(false);  
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [showNotificationSidebar, setShowNotificationSidebar] = useState(false);
@@ -72,58 +71,53 @@ const Header = () => {
     "https://res.cloudinary.com/dfl9rotoy/image/upload/v1741065300/logo2-removebg-preview_p6juhh.png"
   );
 
-   const [logoLoading, setLogoLoading] = useState(false);
+  const [logoLoading, setLogoLoading] = useState(false);
 
-// Add a new useEffect to fetch the company logo
+  // Add a new useEffect to fetch the company logo
   useEffect(() => {
-   const fetchCompanyLogo = async () => {
-  if (!isLoggedIn) return;
-  
-  try {
-    setLogoLoading(true);
-    const response = await api.get('/companies/logo');
-    if (response.data && response.data.logoUrl) {
-    // Use getAssetUrl to handle both S3 and local URLs properly
-      const processedLogoUrl = getAssetUrl(response.data.logoUrl);
-       setCompanyLogo(processedLogoUrl);
-     }
-  } catch (error) {
-    console.error("Error fetching company logo:", error);
-    // Keep the default logo if there's an error
-  } finally {
-    setLogoLoading(false);
-  }
-};
+    const fetchCompanyLogo = async () => {
+      if (!isLoggedIn) return;
 
-    
+      try {
+        setLogoLoading(true);
+        const response = await api.get("/companies/logo");
+        if (response.data && response.data.logoUrl) {
+          // Use getAssetUrl to handle both S3 and local URLs properly
+          const processedLogoUrl = getAssetUrl(response.data.logoUrl);
+          setCompanyLogo(processedLogoUrl);
+        }
+      } catch (error) {
+        console.error("Error fetching company logo:", error);
+        // Keep the default logo if there's an error
+      } finally {
+        setLogoLoading(false);
+      }
+    };
+
     fetchCompanyLogo();
   }, [isLoggedIn]);
 
-
-useEffect(() => {
-  const token = localStorage.getItem('token');
-  // If token exists but is expired or invalid, handle accordingly
-  if (token) {
-    // You could add token validation logic here if needed
-  }
-}, []);
-
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    // If token exists but is expired or invalid, handle accordingly
+    if (token) {
+      // You could add token validation logic here if needed
+    }
+  }, []);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-  const token = localStorage.getItem('token');
-  const userId = localStorage.getItem('userId');
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
 
-  if (!token || !userId) {
-    return; // Don't fetch if not logged in
-  }
+      if (!token || !userId) {
+        return; // Don't fetch if not logged in
+      }
 
-  try {
-    setProfileLoading(true);
-    // Use the by-user endpoint from employeesRouter.js with authentication
-    const response = await api.get(
-      `/employees/by-user/${userId}`
-    );
+      try {
+        setProfileLoading(true);
+        // Use the by-user endpoint from employeesRouter.js with authentication
+        const response = await api.get(`/employees/by-user/${userId}`);
 
         if (response.data.success) {
           setProfileData(response.data.data);
@@ -143,13 +137,13 @@ useEffect(() => {
     fetchUserProfile();
   }, []);
 
- // Get profile image URL
-const getProfileImageUrl = () => {
-  if (profileData?.personalInfo?.employeeImage) {
-    return getAssetUrl(profileData.personalInfo.employeeImage);
-  }
-  return null;
-};
+  // Get profile image URL
+  const getProfileImageUrl = () => {
+    if (profileData?.personalInfo?.employeeImage) {
+      return getAssetUrl(profileData.personalInfo.employeeImage);
+    }
+    return null;
+  };
 
   const toggleNotificationSidebar = () => {
     setShowNotificationSidebar(!showNotificationSidebar);
@@ -192,21 +186,23 @@ const getProfileImageUrl = () => {
     }
   }, [isLoggedIn]);
 
-const initializeTimesheet = async () => {
-  try {
-    const response = await timesheetService.getTodayTimesheet(employeeId, token);
-    const timesheet = response.data.timesheet;
+  const initializeTimesheet = async () => {
+    try {
+      const response = await timesheetService.getTodayTimesheet(
+        employeeId,
+        token
+      );
+      const timesheet = response.data.timesheet;
 
-    if (timesheet && timesheet.status === "active") {
-      const checkInTime = new Date(timesheet.checkInTime);
-      startTimerWithTime(checkInTime);
+      if (timesheet && timesheet.status === "active") {
+        const checkInTime = new Date(timesheet.checkInTime);
+        startTimerWithTime(checkInTime);
+      }
+    } catch (error) {
+      console.error("Error initializing timesheet:", error);
+      showToastMessage("Failed to load timesheet status");
     }
-  } catch (error) {
-    console.error("Error initializing timesheet:", error);
-    showToastMessage("Failed to load timesheet status");
-  }
-};
-
+  };
 
   const startTimerWithTime = (checkInTime) => {
     setStartTime(checkInTime);
@@ -231,83 +227,83 @@ const initializeTimesheet = async () => {
     }
   };
 
+  const handleTimerClick = async () => {
+    if (isLoading) return;
 
-const handleTimerClick = async () => {
-  if (isLoading) return;
-
-  setIsLoading(true);
-  try {
-    if (isTimerRunning) {
-      // Check-out logic remains the same
-      const checkInTime = new Date(startTime);
-      const checkOutTime = new Date();
-      const durationInSeconds = Math.floor(
-        (checkOutTime - checkInTime) / 1000
-      );
-
-      await timesheetService.checkOut(employeeId, durationInSeconds, token);
-      cleanupTimesheet();
-      setIsTimerRunning(false);
-      setTimer(0);
-      setStartTime(null);
-      localStorage.removeItem("checkInTime");
-      showToastMessage("Successfully logged out");
-    } else {
-      // Enhanced check-in logic
-      const employeeName = getUserDisplayName();
-
-      try {
-        // Try normal check-in first
-        const response = await timesheetService.checkIn(
-          employeeId,
-          employeeName,
-          token
+    setIsLoading(true);
+    try {
+      if (isTimerRunning) {
+        // Check-out logic remains the same
+        const checkInTime = new Date(startTime);
+        const checkOutTime = new Date();
+        const durationInSeconds = Math.floor(
+          (checkOutTime - checkInTime) / 1000
         );
-        
-        const checkInTime = new Date(response.data.checkInTime);
-        startTimerWithTime(checkInTime);
-        
-        // Show warning if there was an auto check-out
-        if (response.data.warning) {
-          showToastMessage(response.data.warning, "warning");
-        } else {
-          showToastMessage("Successfully logged in");
-        }
-        
-      } catch (error) {
-        if (error.response?.status === 400 && 
-            error.response?.data?.message === 'Already checked in') {
-          
-          // Show confirmation dialog for force check-in
-          const shouldForceCheckIn = window.confirm(
-            "You have an active session. This might be due to an unexpected shutdown. " +
-            "Would you like to start a new session? (This will auto-complete the previous session)"
+
+        await timesheetService.checkOut(employeeId, durationInSeconds, token);
+        cleanupTimesheet();
+        setIsTimerRunning(false);
+        setTimer(0);
+        setStartTime(null);
+        localStorage.removeItem("checkInTime");
+        showToastMessage("Successfully logged out");
+      } else {
+        // Enhanced check-in logic
+        const employeeName = getUserDisplayName();
+
+        try {
+          // Try normal check-in first
+          const response = await timesheetService.checkIn(
+            employeeId,
+            employeeName,
+            token
           );
-          
-          if (shouldForceCheckIn) {
-            const forceResponse = await timesheetService.forceCheckIn(
-              employeeId,
-              employeeName,
-              token
-            );
-            
-            const checkInTime = new Date(forceResponse.data.checkInTime);
-            startTimerWithTime(checkInTime);
-            showToastMessage(forceResponse.data.message || "New session started");
+
+          const checkInTime = new Date(response.data.checkInTime);
+          startTimerWithTime(checkInTime);
+
+          // Show warning if there was an auto check-out
+          if (response.data.warning) {
+            showToastMessage(response.data.warning, "warning");
+          } else {
+            showToastMessage("Successfully logged in");
           }
-        } else {
-          throw error; // Re-throw other errors
+        } catch (error) {
+          if (
+            error.response?.status === 400 &&
+            error.response?.data?.message === "Already checked in"
+          ) {
+            // Show confirmation dialog for force check-in
+            const shouldForceCheckIn = window.confirm(
+              "You have an active session. This might be due to an unexpected shutdown. " +
+                "Would you like to start a new session? (This will auto-complete the previous session)"
+            );
+
+            if (shouldForceCheckIn) {
+              const forceResponse = await timesheetService.forceCheckIn(
+                employeeId,
+                employeeName,
+                token
+              );
+
+              const checkInTime = new Date(forceResponse.data.checkInTime);
+              startTimerWithTime(checkInTime);
+              showToastMessage(
+                forceResponse.data.message || "New session started"
+              );
+            }
+          } else {
+            throw error; // Re-throw other errors
+          }
         }
       }
+    } catch (error) {
+      console.error("Timesheet operation failed:", error);
+      showToastMessage("Operation failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-  } catch (error) {
-    console.error("Timesheet operation failed:", error);
-    showToastMessage("Operation failed. Please try again.");
-  } finally {
-    setIsLoading(false);
-  }
-};
-
+  };
 
   const showToastMessage = (message) => {
     setToastMessage(message);
@@ -407,27 +403,17 @@ const handleTimerClick = async () => {
     };
   }, [navExpanded, showProfileMenu]);
 
-  // const handleLogout = () => {
-  //   cleanupTimesheet();
-  //   setProfileData(null); // Clear profile data
-  //   localStorage.removeItem("token");
-  //   localStorage.removeItem("employeeId");
-  //   localStorage.removeItem("userId");
-  //   localStorage.removeItem("checkInTime");
-  //   navigate("/login");
-  // };
-
   const handleLogout = async () => {
     try {
       // Clean up timesheet first
       cleanupTimesheet();
-      
+
       // Clear profile data
       setProfileData(null);
-      
+
       // Dispatch Redux logout action
       await dispatch(logoutUser());
-      
+
       // Clear all localStorage items
       localStorage.removeItem("token");
       localStorage.removeItem("employeeId");
@@ -435,43 +421,40 @@ const handleTimerClick = async () => {
       localStorage.removeItem("checkInTime");
       localStorage.removeItem("companyCode");
       localStorage.removeItem("tokenExpiry"); // Clear token expiry if you're using it
-      
+
       // Clear any other auth-related items
       localStorage.removeItem("userInfo");
       localStorage.removeItem("refreshToken");
-      
+
       // Show logout message
       showToastMessage("Successfully logged out");
-      
+
       // Navigate to login immediately
-      navigate("/login", { 
-        state: { 
-          authError: 'You have been logged out successfully.' 
+      navigate("/login", {
+        state: {
+          authError: "You have been logged out successfully.",
         },
-        replace: true 
+        replace: true,
       });
-      
     } catch (error) {
-      console.error('Logout error:', error);
-      
+      console.error("Logout error:", error);
+
       // Even if there's an error, force logout by clearing everything
       cleanupTimesheet();
       setProfileData(null);
-      
+
       // Clear localStorage regardless of error
       localStorage.clear();
-      
+
       // Navigate to login
-      navigate("/login", { 
-        state: { 
-          authError: 'Logout completed.' 
+      navigate("/login", {
+        state: {
+          authError: "Logout completed.",
         },
-        replace: true 
+        replace: true,
       });
     }
   };
-
-
 
   const getPathIndicator = () => {
     const path = location.pathname.split("/").filter(Boolean);
@@ -585,7 +568,8 @@ const handleTimerClick = async () => {
                     className="responsive-logo"
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = "https://res.cloudinary.com/dfl9rotoy/image/upload/v1741065300/logo2-removebg-preview_p6juhh.png";
+                      e.target.src =
+                        "https://res.cloudinary.com/dfl9rotoy/image/upload/v1741065300/logo2-removebg-preview_p6juhh.png";
                     }}
                   />
                 )}
@@ -601,7 +585,7 @@ const handleTimerClick = async () => {
             >
               <Nav className="ms-auto align-items-center">
                 <div className="d-flex align-items-center">
-{/* upto this */}
+                  {/* upto this */}
                   {isLoggedIn && (
                     <div className="check-in-out-box">
                       <Button
@@ -681,7 +665,7 @@ const handleTimerClick = async () => {
                       )}
                     </Nav.Link>
                   )}
-                  <div className="profile-dropdown-container">                 
+                  <div className="profile-dropdown-container">
                     {windowWidth <= 1024 ? (
                       <>
                         <div
@@ -779,20 +763,22 @@ const handleTimerClick = async () => {
                                   </div>
                                 </div>
                                 <div
-  className="dropdown-item"
-  onClick={() => {
-    console.log("Change password clicked, navigating to /auth/change-password");
-    setShowProfileMenu(false);
-    closeNavbar();
-    navigate("/auth/change-password");  // Update this path to match your router configuration
-  }}
->
-  <div
-    style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-    }}
+                                  className="dropdown-item"
+                                  onClick={() => {
+                                    console.log(
+                                      "Change password clicked, navigating to /auth/change-password"
+                                    );
+                                    setShowProfileMenu(false);
+                                    closeNavbar();
+                                    navigate("/auth/change-password"); // Update this path to match your router configuration
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "center",
+                                    }}
                                   >
                                     <FaCog
                                       style={{

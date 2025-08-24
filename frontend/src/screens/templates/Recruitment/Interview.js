@@ -88,23 +88,6 @@ const Interview = () => {
     fetchInterviews();
   }, [statusFilter]);
 
-  // const fetchInterviews = () => {
-  //   const url = "${process.env.REACT_APP_API_URL}/api/interviews";
-  //   axios
-  //     .get(url)
-  //     .then((response) => {
-  //       let filteredData = response.data;
-  //       if (statusFilter !== "All") {
-  //         filteredData = response.data.filter(
-  //           (item) => item.status === statusFilter
-  //         );
-  //       }
-  //       setData(filteredData);
-  //     })
-  //     .catch((error) => console.error("Error fetching interviews:", error));
-  // };
-
-  // Update the fetchInterviews function
   const fetchInterviews = () => {
     const url = "/interviews";
     // const token = getAuthToken();
@@ -148,64 +131,6 @@ const Interview = () => {
     }
   };
 
-  // const handleOpenDialog = (row = null) => {
-  //   if (row) {
-  //     setEditMode(true);
-  //     setSelectedRow(row);
-  //     setCandidate(row.candidate);
-  //     setInterviewer(row.interviewer);
-  //     setDate(row.date);
-  //     setTime(row.time);
-  //     setDescription(row.description);
-  //     setStatus(row.status);
-  //   } else {
-  //     setEditMode(false);
-  //     setCandidate("");
-  //     setInterviewer("");
-  //     setDate("");
-  //     setTime("");
-  //     setDescription("");
-  //     setStatus("");
-  //   }
-  //   setOpenDialog(true);
-  // };
-
-  // const handleSave = () => {
-  //   const interviewData = {
-  //     candidate,
-  //     interviewer,
-  //     date,
-  //     time,
-  //     description,
-  //     status: status || "Scheduled",
-  //   };
-  //   if (editMode && selectedRow) {
-  //     axios
-  //       .put(
-  //         `${process.env.REACT_APP_API_URL}/api/interviews/${selectedRow._id}`,
-  //         interviewData
-  //       )
-  //       .then((response) => {
-  //         setData((prevData) =>
-  //           prevData.map((item) =>
-  //             item._id === selectedRow._id ? response.data : item
-  //           )
-  //         );
-  //         setOpenDialog(false);
-  //       })
-  //       .catch((error) => console.error("Error updating interview:", error));
-  //   } else {
-  //     axios
-  //       .post("${process.env.REACT_APP_API_URL}/api/interviews", interviewData)
-  //       .then((response) => {
-  //         setData([...data, response.data]);
-  //         setOpenDialog(false);
-  //       })
-  //       .catch((error) => console.error("Error adding interview:", error));
-  //   }
-  // };
-
-  // Update the handleOpenDialog function
   const handleOpenDialog = (row = null) => {
     if (row) {
       setEditMode(true);
@@ -238,75 +163,6 @@ const Interview = () => {
     setOpenDialog(true);
   };
 
-  // const handleSave = () => {
-  //   // Check for date validation
-  //   if (!validateDate(date)) {
-  //     setDateError("Please select current or future date");
-  //     return;
-  //   }
-
-  //   const interviewData = {
-  //     candidate,
-  //     interviewer,
-  //     date,
-  //     time,
-  //     description,
-  //     status: status || "Scheduled",
-  //   };
-
-  //   if (editMode && selectedRow) {
-  //     axios
-  //       .put(
-  //         `${process.env.REACT_APP_API_URL}/api/interviews/${selectedRow._id}`,
-  //         interviewData
-  //       )
-  //       .then((response) => {
-  //         setData((prevData) =>
-  //           prevData.map((item) =>
-  //             item._id === selectedRow._id ? response.data : item
-  //           )
-  //         );
-  //         setOpenDialog(false);
-  //         setSnackbar({
-  //           open: true,
-  //           message: "Interview updated successfully",
-  //           severity: "success",
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error updating interview:", error);
-  //         setSnackbar({
-  //           open: true,
-  //           message: "Error updating interview",
-  //           severity: "error",
-  //         });
-  //       });
-  //   } else {
-  //     axios
-  //       .post("${process.env.REACT_APP_API_URL}/api/interviews", interviewData)
-  //       .then((response) => {
-  //         setData([...data, response.data]);
-  //         setOpenDialog(false);
-  //         setSnackbar({
-  //           open: true,
-  //           message: "Interview added successfully",
-  //           severity: "success",
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error adding interview:", error);
-  //         setSnackbar({
-  //           open: true,
-  //           message: "Error adding interview",
-  //           severity: "error",
-  //         });
-  //       });
-  //   }
-  // };
-
-  // Add this function if it doesn't exist
-
-  // Add this function to get the auth token
   const getAuthToken = () => {
     return localStorage.getItem("token");
   };
@@ -528,28 +384,8 @@ const Interview = () => {
                 <MenuItem value="Cancelled">Cancelled</MenuItem>
               </Select>
             </FormControl>
-
-            {/* <Button
-              variant="contained"
-              startIcon={<Add />}
-              onClick={() => handleOpenDialog()}
-              sx={{
-                height: 50,
-                background: `linear-gradient(45deg, #1976d2 30%, #1565c0 90%)`,
-                color: "white",
-                "&:hover": {
-                  background: `linear-gradient(45deg, #1565c0 30%, #1976d2 90%)`,
-                },
-                whiteSpace: "nowrap",
-                width: { xs: "100%", sm: "auto" },
-              }}
-            >
-              Add Interview
-            </Button> */}
-
             <Button
               variant="contained"
-              // startIcon={<Add />}
               onClick={() => handleOpenDialog()}
               sx={{
                 height: { xs: 40, sm: 40, md: 40 }, // Consistent height across screen sizes
@@ -800,21 +636,6 @@ const Interview = () => {
           }}
         />
       </Box>
-
-      {/* Create/Edit Dialog */}
-      {/* <Dialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        PaperProps={{
-          sx: {
-            width: { xs: "95%", sm: "600px" },
-            maxWidth: "600px",
-            borderRadius: "20px",
-            overflow: "hidden",
-            margin: { xs: "8px", sm: "32px" },
-          },
-        }}
-      > */}
       <Dialog
         open={openDialog}
         onClose={handleDialogClose}
@@ -888,24 +709,6 @@ const Interview = () => {
                 },
               }}
             />
-
-            {/* <TextField
-              label="Date"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  backgroundColor: "white",
-                  borderRadius: "12px",
-                  "&:hover fieldset": {
-                    borderColor: "#1976d2",
-                  },
-                },
-              }}
-            /> */}
             <TextField
               label="Date"
               type="date"

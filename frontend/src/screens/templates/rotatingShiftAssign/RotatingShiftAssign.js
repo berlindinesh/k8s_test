@@ -196,19 +196,11 @@ const socket = io(baseURL, {
     socket.disconnect();
   };
 }, []);
-
-
-// Add this function at the beginning of your component to get the auth token
-// const getAuthToken = () => {
-//   return localStorage.getItem('token');
-// };
-
   
 const fetchCurrentUser = async () => {
   try {
     setLoadingCurrentUser(true);
     const userId = localStorage.getItem("userId");
-    // const token = getAuthToken();
 
     if (!userId) {
       console.error("No user ID found in localStorage");
@@ -222,12 +214,7 @@ const fetchCurrentUser = async () => {
 
     const response = await api.get(
       `/employees/by-user/${userId}`
-      // ,
-      // {
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`
-      //   }
-      // }
+
     );
 
     if (response.data.success) {
@@ -268,27 +255,19 @@ const fetchCurrentUser = async () => {
 const loadRotatingShiftRequests = async () => {
   try {
     const userId = localStorage.getItem("userId");
-    // const token = getAuthToken();
 
     if (tabValue === 0) {
       // For Rotating Shift Requests tab, only show the current user's requests
       const endpoint = userId ? USER_API_URL(userId) : API_URL;
       const response = await api.get(endpoint
-      //   , {
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`
-      //   }
-      // }
+
     );
       setShiftRequests(response.data);
     } else {
       // For Review tab, show all requests that need review (admin view)
       const response = await api.get(API_URL, {
         params: { forReview: true }
-        // ,
-        // headers: {
-        //   'Authorization': `Bearer ${token}`
-        // }
+
       });
       setReviewRequests(response.data);
     }
@@ -326,55 +305,6 @@ const loadRotatingShiftRequests = async () => {
     setSelectedAllocations([]);
     setShowSelectionButtons(false);
   };
-
-
-
-// const handleBulkApprove = async () => {
-//   try {
-//     // Get all selected requests
-//     const selectedRequests = tabValue === 0
-//       ? shiftRequests.filter(req => selectedAllocations.includes(req._id))
-//       : reviewRequests.filter(req => selectedAllocations.includes(req._id));
-    
-//     await api.post(`${API_URL}/bulk-approve`, {
-//       ids: selectedAllocations,
-//       isForReview: false, // Remove from review after approval
-//     });
-    
-//     // Send notifications to all affected users
-//     for (const request of selectedRequests) {
-//       if (request.userId) {
-//         const message = `Your shift request for ${request.requestedShift} from ${new Date(request.requestedDate).toLocaleDateString()} to ${new Date(request.requestedTill).toLocaleDateString()} has been approved.`;
-        
-//         await sendRotatingShiftNotification(
-//           request.userId,
-//           message,
-//           "approved",
-//           request._id
-//         );
-//       }
-//     }
-    
-//     await loadRotatingShiftRequests();
-//     setSelectedAllocations([]);
-//     setShowSelectionButtons(false);
-//     setAnchorEl(null);
-//     setSnackbar({
-//       open: true,
-//       message: "Rotating shift requests approved successfully",
-//       severity: "success",
-//     });
-//   } catch (error) {
-//     console.error("Error bulk approving shifts:", error);
-//     setSnackbar({
-//       open: true,
-//       message:
-//         "Error approving rotating shift requests: " +
-//         (error.response?.data?.message || error.message),
-//       severity: "error",
-//     });
-//   }
-// };
 
 const handleBulkApprove = async () => {
   try {
@@ -497,52 +427,6 @@ const handleBulkReject = async () => {
     setDeleteDialogOpen(true);
     setAnchorEl(null);
   };
-
-  
-
-
-// const handleApprove = async (id, e) => {
-//   e.stopPropagation();
-//   try {
-//     // Get the request details before updating
-//     const requestToApprove = tabValue === 0 
-//       ? shiftRequests.find(req => req._id === id)
-//       : reviewRequests.find(req => req._id === id);
-    
-//     await api.put(`${API_URL}/${id}/approve`, {
-//       isForReview: false, // Remove from review after approval
-//     });
-    
-//     // Send notification to the user who made the request
-//     if (requestToApprove && requestToApprove.userId) {
-//       const message = `Your shift request for ${requestToApprove.requestedShift} from ${new Date(requestToApprove.requestedDate).toLocaleDateString()} to ${new Date(requestToApprove.requestedTill).toLocaleDateString()} has been approved.`;
-      
-//       await sendRotatingShiftNotification(
-//         requestToApprove.userId,
-//         message,
-//         "approved",
-//         id
-//       );
-//     }
-    
-//     await loadRotatingShiftRequests();
-//     setSnackbar({
-//       open: true,
-//       message: "Rotating shift request approved successfully",
-//       severity: "success",
-//     });
-//   } catch (error) {
-//     console.error("Error approving shift:", error);
-//     setSnackbar({
-//       open: true,
-//       message:
-//         "Error approving rotating shift request: " +
-//         (error.response?.data?.message || error.message),
-//       severity: "error",
-//     });
-//   }
-// };
-
 
 const handleApprove = async (id, e) => {
   e.stopPropagation();
@@ -719,11 +603,7 @@ const handleCreateShift = async () => {
     console.log("Creating rotating shift request with data:", shiftData);
 
     const response = await api.post(API_URL, shiftData
-    //   , {
-    //   headers: {
-    //     'Authorization': `Bearer ${token}`
-    //   }
-    // }
+
   );
     console.log("Rotating shift request created:", response.data);
 
@@ -781,11 +661,7 @@ const handleSaveEdit = async () => {
     };
 
     await api.put(`${API_URL}/${editingShift._id}`, updatedData
-    //   , {
-    //   headers: {
-    //     'Authorization': `Bearer ${token}`
-    //   }
-    // }
+
   );
     await loadRotatingShiftRequests();
     setEditDialogOpen(false);
@@ -829,16 +705,10 @@ const handleConfirmDelete = async () => {
   try {
     setLoading(true);
     const userId = localStorage.getItem("userId");
-    // const token = getAuthToken();
 
     if (deleteType === "shift" && itemToDelete) {
       await api.delete(`${API_URL}/${itemToDelete._id}`
-      //   , {
-      //   params: { userId }, // Pass userId as a query parameter
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`
-      //   }
-      // }
+
     );
       await loadRotatingShiftRequests();
       setSnackbar({
@@ -851,12 +721,7 @@ const handleConfirmDelete = async () => {
       await Promise.all(
         selectedAllocations.map((id) =>
           api.delete(`${API_URL}/${id}`
-          //   , {
-          //   params: { userId },
-          //   headers: {
-          //     'Authorization': `Bearer ${token}`
-          //   }
-          // }
+
         )
         )
       );

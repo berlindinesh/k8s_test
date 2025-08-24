@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-// import axios from "axios";
-
 import { styled } from "@mui/material/styles";
 import api from "../../../api/axiosInstance";
 //new imports
@@ -44,8 +42,6 @@ import { Search, Edit, Delete } from "@mui/icons-material";
 import { io } from 'socket.io-client';
 import { useNotifications } from '../../../context/NotificationContext';
 
-
-//const API_URL = "${process.env.REACT_APP_API_URL}/api/shift-request/shifts";
 const API_URL = "/shift-request/shifts";
 const USER_API_URL = (userId) =>
   `/shift-request/shifts/user/${userId}`;
@@ -2238,13 +2234,6 @@ const handleSaveEdit = async () => {
           
           export default ShiftRequest;
           
-
-
-
-
-
-
-// import React, { useState, useEffect, useContext } from "react";
 // // import axios from "axios";
 
 // import { styled } from "@mui/material/styles";

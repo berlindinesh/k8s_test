@@ -1116,28 +1116,6 @@ const updateWorkInfo = async () => {
       setLoading(false);
     }
   };
-  
-
-// const fetchContracts = async () => {
-//   try {
-//     if (!employeeId) {
-//       console.log('No employeeId available for fetching contracts');
-//       return;
-//     }
-    
-//     console.log('Fetching contracts for employee:', employeeId);
-//     const contractsData = await getContractsByEmployeeId(employeeId);
-//     setContracts(contractsData || []);
-//   } catch (error) {
-//     console.error('Error fetching contracts:', error);
-//     // Don't show error if it's just that no contracts exist
-//     if (error.response?.status !== 404) {
-//       console.error('Unexpected error fetching contracts:', error);
-//     }
-//     setContracts([]);
-//   }
-// };
-
 
   useEffect(() => {
     // Fetch user role first, then profile data
@@ -1166,12 +1144,6 @@ const updateWorkInfo = async () => {
       fetchEmployeeRole(employeeId);
     }
   }, [employeeId]);
-
-  // useEffect(() => {
-  //   if (employeeId) {
-  //     fetchContracts();
-  //   }
-  // }, [employeeId]);
 
   const handleInputChange = async (e, section) => {
     const { name, value } = e.target;
@@ -1259,94 +1231,6 @@ const updateWorkInfo = async () => {
       }));
     }
   };
-
-  // const handleContractSubmit = async (e) => {
-  //   e.preventDefault();
-  //   if (!canEditProfile()) {
-  //     showPermissionError();
-  //     return;
-  //   }
-
-  //   try {
-  //     const contractData = {
-  //       ...formData,
-  //       employeeId: employeeId,
-  //     };
-
-  //     if (selectedContract) {
-  //       await updateContract(selectedContract._id, contractData);
-  //       toast.success("Contract updated successfully");
-  //     } else {
-  //       // Create new contract logic would go here
-  //       toast.success("Contract created successfully");
-  //     }
-
-  //     setShowModal(false);
-  //     fetchContracts();
-  //     resetForm();
-  //   } catch (error) {
-  //     console.error("Error saving contract:", error);
-  //     toast.error("Error saving contract");
-  //   }
-  // };
-
-  // const handleDeleteContract = async (contractId) => {
-  //   if (!canEditProfile()) {
-  //     showPermissionError();
-  //     return;
-  //   }
-
-  //   if (window.confirm("Are you sure you want to delete this contract?")) {
-  //     try {
-  //       await deleteContract(contractId);
-  //       toast.success("Contract deleted successfully");
-  //       fetchContracts();
-  //     } catch (error) {
-  //       console.error("Error deleting contract:", error);
-  //       toast.error("Error deleting contract");
-  //     }
-  //   }
-  // };
-
-  // const resetForm = () => {
-  //   setFormData({
-  //     contractName: "",
-  //     startDate: "",
-  //     endDate: "",
-  //     wageType: "",
-  //     basicSalary: "",
-  //     filingStatus: "",
-  //     status: "",
-  //   });
-  //   setSelectedContract(null);
-  // };
-
-  // const openModal = (contract = null) => {
-  //   if (!canEditProfile()) {
-  //     showPermissionError();
-  //     return;
-  //   }
-
-  //   if (contract) {
-  //     setFormData({
-  //       contractName: contract.contractName || "",
-  //       startDate: contract.startDate
-  //         ? new Date(contract.startDate).toISOString().split("T")[0]
-  //         : "",
-  //       endDate: contract.endDate
-  //         ? new Date(contract.endDate).toISOString().split("T")[0]
-  //         : "",
-  //       wageType: contract.wageType || "",
-  //       basicSalary: contract.basicSalary || "",
-  //       filingStatus: contract.filingStatus || "",
-  //       status: contract.status || "",
-  //     });
-  //     setSelectedContract(contract);
-  //   } else {
-  //     resetForm();
-  //   }
-  //   setShowModal(true);
-  // };
 
   if (loading) {
     return (
@@ -1551,21 +1435,6 @@ const updateWorkInfo = async () => {
                   </div>
                 </ListGroup.Item>
               </ListGroup>
-
-              {/* Role-based Action Buttons
-              {canEditProfile() && (
-                <div className="mt-3">
-                  <Button
-                    variant="outline-primary"
-                    size="sm"
-                    className="me-2"
-                    onClick={() => setEditMode(!editMode)}
-                  >
-                    <i className="fas fa-edit me-1"></i>
-                    {editMode ? "Cancel Edit" : "Edit Profile"}
-                  </Button>
-                </div>
-              )} */}
             </Card.Body>
           </Card>
         </Col>
@@ -1579,46 +1448,6 @@ const updateWorkInfo = async () => {
                   <Nav.Item>
                     <Nav.Link eventKey="about">About</Nav.Link>
                   </Nav.Item>
-                  {/* <Nav.Item>
-                    <Nav.Link eventKey="workTypeAndShift">Work Type & Shift</Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="attendance">Attendance</Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="leave">Leave</Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="payroll">Payroll</Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="allowanceAndDeduction">
-                      Allowance & Deduction
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="penaltyAccount">Penalty Account</Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="assets">Assets</Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="performance">Performance</Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="documents">Documents</Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="bonusPoints">Bonus Points</Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="scheduledInterview">
-                      Scheduled Interview
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="resignation">Resignation</Nav.Link>
-                  </Nav.Item> */}
                 </Nav>
 
                 <Tab.Content>
@@ -1639,9 +1468,6 @@ const updateWorkInfo = async () => {
                         <Nav.Item>
                           <Nav.Link eventKey="bankInfo">Bank Info</Nav.Link>
                         </Nav.Item>
-                        {/* <Nav.Item>
-                          <Nav.Link eventKey="contracts">Contracts</Nav.Link>
-                        </Nav.Item> */}
                       </Nav>
 
                       <Tab.Content>
@@ -2344,101 +2170,6 @@ const updateWorkInfo = async () => {
                             </Col>
                           </Row>
                         </Tab.Pane>
-
-                        {/* Contracts Tab
-                        <Tab.Pane eventKey="contracts">
-                          <div className="d-flex justify-content-between align-items-center mb-3">
-                            <h5>Contracts</h5>
-                            {canEditProfile() && (
-                              <Button
-                                variant="primary"
-                                size="sm"
-                                onClick={() => openModal()}
-                              >
-                                <i className="fas fa-plus me-1"></i>
-                                Add Contract
-                              </Button>
-                            )}
-                          </div>
-
-                          {contracts.length > 0 ? (
-                            <Table responsive striped bordered hover>
-                              <thead>
-                                <tr>
-                                  <th>Contract Name</th>
-                                  <th>Start Date</th>
-                                  <th>End Date</th>
-                                  <th>Wage Type</th>
-                                  <th>Basic Salary</th>
-                                  <th>Status</th>
-                                  {canEditProfile() && <th>Actions</th>}
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {contracts.map((contract) => (
-                                  <tr key={contract._id}>
-                                    <td>{contract.contractName}</td>
-                                    <td>
-                                      {contract.startDate
-                                        ? new Date(
-                                            contract.startDate
-                                          ).toLocaleDateString()
-                                        : "N/A"}
-                                    </td>
-                                    <td>
-                                      {contract.endDate
-                                        ? new Date(
-                                            contract.endDate
-                                          ).toLocaleDateString()
-                                        : "N/A"}
-                                    </td>
-                                    <td>{contract.wageType}</td>
-                                    <td>{contract.basicSalary}</td>
-                                    <td>
-                                      <Badge
-                                        bg={
-                                          contract.status === "Active"
-                                            ? "success"
-                                            : contract.status === "Inactive"
-                                            ? "danger"
-                                            : "warning"
-                                        }
-                                      >
-                                        {contract.status}
-                                      </Badge>
-                                    </td>
-                                    {canEditProfile() && (
-                                      <td>
-                                        <Button
-                                          variant="outline-primary"
-                                          size="sm"
-                                          className="me-1"
-                                          onClick={() => openModal(contract)}
-                                        >
-                                          <i className="fas fa-edit"></i>
-                                        </Button>
-                                        <Button
-                                          variant="outline-danger"
-                                          size="sm"
-                                          onClick={() =>
-                                            handleDeleteContract(contract._id)
-                                          }
-                                        >
-                                          <i className="fas fa-trash"></i>
-                                        </Button>
-                                      </td>
-                                    )}
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </Table>
-                          ) : (
-                            <Alert variant="info">
-                              <i className="fas fa-info-circle me-2"></i>
-                              No contracts found for this employee.
-                            </Alert>
-                          )}
-                        </Tab.Pane>*/}
                       </Tab.Content>
                     </Tab.Container>
                   </Tab.Pane> 
@@ -2497,134 +2228,6 @@ const updateWorkInfo = async () => {
           </Card>
         </Col>
       </Row>
-
-      {/* Contract Modal
-      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {selectedContract ? "Edit Contract" : "Add New Contract"}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleContractSubmit}>
-            <Row>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Contract Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="contractName"
-                    value={formData.contractName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, contractName: e.target.value })
-                    }
-                    required
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Wage Type</Form.Label>
-                  <Form.Select
-                    name="wageType"
-                    value={formData.wageType}
-                    onChange={(e) =>
-                      setFormData({ ...formData, wageType: e.target.value })
-                    }
-                    required
-                  >
-                    <option value="">Select Wage Type</option>
-                    <option value="Monthly">Monthly</option>
-                    <option value="Hourly">Hourly</option>
-                    <option value="Daily">Daily</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Start Date</Form.Label>
-                  <Form.Control
-                    type="date"
-                    name="startDate"
-                    value={formData.startDate}
-                    onChange={(e) =>
-                      setFormData({ ...formData, startDate: e.target.value })
-                    }
-                    required
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>End Date</Form.Label>
-                  <Form.Control
-                    type="date"
-                    name="endDate"
-                    value={formData.endDate}
-                    onChange={(e) =>
-                      setFormData({ ...formData, endDate: e.target.value })
-                    }
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Basic Salary</Form.Label>
-                  <Form.Control
-                    type="number"
-                    name="basicSalary"
-                    value={formData.basicSalary}
-                    onChange={(e) =>
-                      setFormData({ ...formData, basicSalary: e.target.value })
-                    }
-                    required
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Status</Form.Label>
-                  <Form.Select
-                    name="status"
-                    value={formData.status}
-                    onChange={(e) =>
-                      setFormData({ ...formData, status: e.target.value })
-                    }
-                    required
-                  >
-                    <option value="">Select Status</option>
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                    <option value="Pending">Pending</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-              <Col md={12}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Filing Status</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="filingStatus"
-                    value={formData.filingStatus}
-                    onChange={(e) =>
-                      setFormData({ ...formData, filingStatus: e.target.value })
-                    }
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleContractSubmit}>
-            {selectedContract ? "Update Contract" : "Add Contract"}
-          </Button>
-        </Modal.Footer>
-      </Modal>*/}
     </Container> 
   );
 };

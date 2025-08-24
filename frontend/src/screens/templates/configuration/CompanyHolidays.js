@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import api from "../../../api/axiosInstance";
-
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import {
@@ -192,7 +191,6 @@ export default function CompanyHolidays() {
           sx={{
             p: { xs: 2, sm: 3, md: 4 },
             backgroundColor: "#f5f5f5",
-            // minHeight: "100vh",
           }}
         >
           <Box>

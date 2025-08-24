@@ -117,23 +117,6 @@ const MainDashboard = () => {
     fetchUserLeaveData();
   }, [timeRange]);
 
-  // // Add this helper function to get the auth token
-  // const getAuthToken = () => {
-  //   return localStorage.getItem('token');
-  // };
-
-  // // Helper function to create headers with auth token
-  // const getAuthHeaders = () => {
-  //   const token = getAuthToken();
-  //   const companyCode = localStorage.getItem('companyCode');
-  //   return {
-  //     headers: {
-  //       'Authorization': `Bearer ${token}`,
-  //       'X-Company-Code': companyCode
-  //     }
-  //   };
-  // };
-
   const fetchUserLeaveData = async () => {
     try {
       // Get the user ID from localStorage

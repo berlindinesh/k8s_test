@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-
 import {
   fetchHolidays,
   createHoliday,
@@ -39,30 +38,6 @@ import {
   Event as EventIcon,
   Close,
 } from "@mui/icons-material";
-
-// const validationSchema = Yup.object().shape({
-//   name: Yup.string()
-//     .required("Holiday name is required")
-//     .min(3, "Name must be at least 3 characters"),
-//   startDate: Yup.date()
-//     .required("Start date is required")
-//     .min(new Date(), "Start date cannot be in the past"),
-//   endDate: Yup.date()
-//     .required("End date is required")
-//     .min(Yup.ref("startDate"), "End date must be after start date")
-//     .test(
-//       "duration",
-//       "Holiday duration must not exceed 14 days",
-//       function (endDate) {
-//         const startDate = this.parent.startDate;
-//         if (!startDate || !endDate) return true;
-//         const duration =
-//           (new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24);
-//         return duration <= 14;
-//       }
-//     ),
-//   recurring: Yup.boolean(),
-// });
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -675,24 +650,6 @@ export default function Holidays() {
               {({ isSubmitting }) => (
                 <Form>
                   <Stack spacing={3} sx={{ mt: 2 }}>
-                    {/* <Field name="name">
-                      {({ field, meta }) => (
-                        <Box>
-                          <TextField
-                            {...field}
-                            fullWidth
-                            label="Holiday Name"
-                            error={meta.touched && meta.error}
-                            helperText={meta.touched && meta.error}
-                            sx={{
-                              "& .MuiOutlinedInput-root": {
-                                borderRadius: "8px",
-                              },
-                            }}
-                          />
-                        </Box>
-                      )}
-                    </Field> */}
                     <Field name="name">
                       {({ field, meta }) => (
                         <Box>

@@ -166,11 +166,6 @@ const AttendanceRecords = () => {
     }
   }, [timesheets]);
 
-//   const getAuthToken = () => {
-//   return localStorage.getItem('token');
-// };
-
-
   // Add this function to map employee IDs to names
   const getEmployeeNameById = (employeeId) => {
     if (!employeeId || !employees || employees.length === 0) {
@@ -213,317 +208,76 @@ const AttendanceRecords = () => {
     console.log("Employee found but couldn't extract name:", employee);
     return "Unknown Employee";
   };
-
-  // const fetchEmployees = async () => {
-  //   try {
-  //     const response = await axios.get(EMPLOYEES_API_URL);
-  //     console.log("Employee data fetched:", response.data);
-
-  //     // Handle different response structures
-  //     let employeeData;
-  //     if (Array.isArray(response.data)) {
-  //       employeeData = response.data;
-  //     } else if (response.data.employees) {
-  //       employeeData = response.data.employees;
-  //     } else if (response.data.data) {
-  //       employeeData = response.data.data;
-  //     } else {
-  //       employeeData = [];
-  //       console.error("Unexpected employee response format:", response.data);
-  //     }
-
-  //     setEmployees(employeeData);
-  //   } catch (error) {
-  //     console.error("Error fetching employees:", error);
-  //     setEmployees([]);
-  //   }
-  // };
-
-// const fetchEmployees = async () => {
-//   try {
-//     // const token = getAuthToken();
-//     const response = await api.get(EMPLOYEES_API_URL,
-//     //    {
-//     //   headers: {
-//     //     'Authorization': `Bearer ${token}`
-//     //   }
-//     // }
-//   );
-//     console.log("Employee data fetched:", response.data);
-
-//     // Handle different response structures
-//     let employeeData;
-//     if (Array.isArray(response.data)) {
-//       employeeData = response.data;
-//     } else if (response.data.employees) {
-//       employeeData = response.data.employees;
-//     } else if (response.data.data) {
-//       employeeData = response.data.data;
-//     } else {
-//       employeeData = [];
-//       console.error("Unexpected employee response format:", response.data);
-//     }
-
-//     setEmployees(employeeData);
-//   } catch (error) {
-//     console.error("Error fetching employees:", error);
-//     setEmployees([]);
-//   }
-// };
-
-
-  // const fetchTimesheets = async () => {
-  //   try {
-  //     setLoading(true);
-
-  //     // Build the query parameters based on filters
-  //     let queryParams = new URLSearchParams();
-
-  //     if (filterValues.employee) {
-  //       // Use the correct employee ID field based on your data structure
-  //       queryParams.append(
-  //         "employeeId",
-  //         filterValues.employee._id ||
-  //           filterValues.employee.id ||
-  //           filterValues.employee.employeeId
-  //       );
-  //     }
-
-  //     if (filterValues.status) {
-  //       queryParams.append("status", filterValues.status);
-  //     }
-
-  //     if (
-  //       filterValues.dateRange !== "all" &&
-  //       filterValues.startDate &&
-  //       filterValues.endDate
-  //     ) {
-  //       queryParams.append("startDate", filterValues.startDate.toISOString());
-  //       queryParams.append("endDate", filterValues.endDate.toISOString());
-  //     }
-
-  //     // First try to get all timesheets
-  //     let response;
-  //     try {
-  //       // Try the /all endpoint first
-  //       response = await axios.get(`${API_URL}/all?${queryParams.toString()}`);
-  //     } catch (error) {
-  //       console.log(
-  //         "Error fetching from /all endpoint, trying alternative endpoint"
-  //       );
-  //       // If /all endpoint fails, try the base endpoint
-  //       response = await axios.get(`${API_URL}?${queryParams.toString()}`);
-  //     }
-
-  //     console.log("Timesheet data fetched:", response.data);
-
-  //     // Handle different response structures
-  //     let timesheetData;
-  //     if (Array.isArray(response.data)) {
-  //       timesheetData = response.data;
-  //     } else if (response.data.timesheets) {
-  //       timesheetData = response.data.timesheets;
-  //     } else if (response.data.data) {
-  //       timesheetData = response.data.data;
-  //     } else {
-  //       timesheetData = [];
-  //       console.error("Unexpected response format:", response.data);
-  //     }
-
-  //     // Log the first timesheet to see its structure
-  //     if (timesheetData.length > 0) {
-  //       console.log("Sample timesheet:", timesheetData[0]);
-  //     }
-
-  //     // Enhance timesheet data with employee names if needed
-  //     const enhancedTimesheetData = timesheetData.map((timesheet) => {
-  //       // If the timesheet already has an employeeName, use it
-  //       if (
-  //         timesheet.employeeName &&
-  //         timesheet.employeeName !== "Unknown Employee"
-  //       ) {
-  //         return timesheet;
-  //       }
-
-  //       // Otherwise, try to find the employee name from the employees list
-  //       const employeeId = timesheet.employeeId;
-  //       const employeeName = getEmployeeNameById(employeeId);
-
-  //       return {
-  //         ...timesheet,
-  //         employeeName: employeeName,
-  //       };
-  //     });
-
-  //     setTimesheets(enhancedTimesheetData);
-  //   } catch (error) {
-  //     console.error("Error fetching timesheets:", error);
-  //     setTimesheets([]);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-
-//   const fetchTimesheets = async () => {
-//   try {
-//     setLoading(true);
-
-//     // Build the query parameters based on filters
-//     let queryParams = new URLSearchParams();
-
-//     if (filterValues.employee) {
-//       // Use the correct employee ID field based on your data structure
-//       queryParams.append('employeeId', filterValues.employee._id || filterValues.employee.id || filterValues.employee.employeeId);
-//     }
-
-//     if (filterValues.status) {
-//       queryParams.append('status', filterValues.status);
-//     }
-
-//     if (filterValues.dateRange !== 'all' && filterValues.startDate && filterValues.endDate) {
-//       queryParams.append('startDate', filterValues.startDate.toISOString());
-//       queryParams.append('endDate', filterValues.endDate.toISOString());
-//     }
-
-//     // // Get the authentication token
-//     // const token = getAuthToken();
-//     // const headers = {
-//     //   'Authorization': `Bearer ${token}`
-//     // };
-
-//     // First try to get all timesheets
-//     let response;
-//     try {
-//       // Try the /all endpoint first
-//       response = await api.get(`${API_URL}/all?${queryParams.toString()}`);
-//     } catch (error) {
-//       console.log("Error fetching from /all endpoint, trying alternative endpoint");
-//       // If /all endpoint fails, try the base endpoint
-//       response = await api.get(`${API_URL}?${queryParams.toString()}`);
-//     }
-
-//     console.log("Timesheet data fetched:", response.data);
-
-//     // Handle different response structures
-//     let timesheetData;
-//     if (Array.isArray(response.data)) {
-//       timesheetData = response.data;
-//     } else if (response.data.timesheets) {
-//       timesheetData = response.data.timesheets;
-//     } else if (response.data.data) {
-//       timesheetData = response.data.data;
-//     } else {
-//       timesheetData = [];
-//       console.error("Unexpected response format:", response.data);
-//     }
-
-//     // Log the first timesheet to see its structure
-//     if (timesheetData.length > 0) {
-//       console.log("Sample timesheet:", timesheetData[0]);
-//     }
-
-//     // Enhance timesheet data with employee names if needed
-//     const enhancedTimesheetData = timesheetData.map((timesheet) => {
-//       // If the timesheet already has an employeeName, use it
-//       if (timesheet.employeeName && timesheet.employeeName !== "Unknown Employee") {
-//         return timesheet;
-//       }
-
-//       // Otherwise, try to find the employee name from the employees list
-//       const employeeId = timesheet.employeeId;
-//       const employeeName = getEmployeeNameById(employeeId);
-
-//       return {
-//         ...timesheet,
-//         employeeName: employeeName,
-//       };
-//     });
-
-//     setTimesheets(enhancedTimesheetData);
-//   } catch (error) {
-//     console.error("Error fetching timesheets:", error);
-//     setTimesheets([]);
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-
-const fetchEmployees = async () => {
-  try {
-    // Update the endpoint to match what's used in AttendanceDashboard.js
-    const response = await api.get('/employees/registered');
-    console.log("Employee data fetched:", response.data);
-
-    // Handle different response structures
-    let employeeData;
-    if (Array.isArray(response.data)) {
-      employeeData = response.data;
-    } else if (response.data.employees) {
-      employeeData = response.data.employees;
-    } else if (response.data.data) {
-      employeeData = response.data.data;
-    } else {
-      employeeData = [];
-      console.error("Unexpected employee response format:", response.data);
-    }
-
-    setEmployees(employeeData);
-  } catch (error) {
-    console.error("Error fetching employees:", error);
-    setEmployees([]);
-  }
-};
-
-const fetchTimesheets = async () => {
-  try {
-    setLoading(true);
-
-    // Build the query parameters based on filters
-    let queryParams = new URLSearchParams();
-
-    if (filterValues.employee) {
-      // Use the correct employee ID field based on your data structure
-      queryParams.append('employeeId', filterValues.employee._id || filterValues.employee.id || filterValues.employee.employeeId);
-    }
-
-    if (filterValues.status) {
-      queryParams.append('status', filterValues.status);
-    }
-
-    // Format dates as YYYY-MM-DD to avoid issues with timezone and encoding
-    if (filterValues.dateRange !== 'all' && filterValues.startDate && filterValues.endDate) {
-      const formatDate = (date) => {
-        return date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-      };
-      queryParams.append('startDate', formatDate(filterValues.startDate));
-      queryParams.append('endDate', formatDate(filterValues.endDate));
-    }
-
-    // Try different endpoints with better error handling
-    let timesheetData = [];
+  const fetchEmployees = async () => {
     try {
-      // First try the base endpoint without /all
-      const response = await api.get(`${API_URL}?${queryParams.toString()}`);
-      console.log("Timesheet data fetched from base endpoint:", response.data);
-      
+      // Update the endpoint to match what's used in AttendanceDashboard.js
+      const response = await api.get("/employees/registered");
+      console.log("Employee data fetched:", response.data);
+
       // Handle different response structures
+      let employeeData;
       if (Array.isArray(response.data)) {
-        timesheetData = response.data;
-      } else if (response.data.timesheets) {
-        timesheetData = response.data.timesheets;
+        employeeData = response.data;
+      } else if (response.data.employees) {
+        employeeData = response.data.employees;
       } else if (response.data.data) {
-        timesheetData = response.data.data;
+        employeeData = response.data.data;
       } else {
-        console.error("Unexpected response format:", response.data);
+        employeeData = [];
+        console.error("Unexpected employee response format:", response.data);
       }
+
+      setEmployees(employeeData);
     } catch (error) {
-      console.log("Error fetching from base endpoint, trying /all endpoint");
+      console.error("Error fetching employees:", error);
+      setEmployees([]);
+    }
+  };
+
+  const fetchTimesheets = async () => {
+    try {
+      setLoading(true);
+
+      // Build the query parameters based on filters
+      let queryParams = new URLSearchParams();
+
+      if (filterValues.employee) {
+        // Use the correct employee ID field based on your data structure
+        queryParams.append(
+          "employeeId",
+          filterValues.employee._id ||
+            filterValues.employee.id ||
+            filterValues.employee.employeeId
+        );
+      }
+
+      if (filterValues.status) {
+        queryParams.append("status", filterValues.status);
+      }
+
+      // Format dates as YYYY-MM-DD to avoid issues with timezone and encoding
+      if (
+        filterValues.dateRange !== "all" &&
+        filterValues.startDate &&
+        filterValues.endDate
+      ) {
+        const formatDate = (date) => {
+          return date.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+        };
+        queryParams.append("startDate", formatDate(filterValues.startDate));
+        queryParams.append("endDate", formatDate(filterValues.endDate));
+      }
+
+      // Try different endpoints with better error handling
+      let timesheetData = [];
       try {
-        // If base endpoint fails, try the /all endpoint
-        const response = await api.get(`${API_URL}/all?${queryParams.toString()}`);
-        console.log("Timesheet data fetched from /all endpoint:", response.data);
-        
+        // First try the base endpoint without /all
+        const response = await api.get(`${API_URL}?${queryParams.toString()}`);
+        console.log(
+          "Timesheet data fetched from base endpoint:",
+          response.data
+        );
+
         // Handle different response structures
         if (Array.isArray(response.data)) {
           timesheetData = response.data;
@@ -534,44 +288,67 @@ const fetchTimesheets = async () => {
         } else {
           console.error("Unexpected response format:", response.data);
         }
-      } catch (fallbackError) {
-        console.error("All timesheet endpoints failed:", fallbackError);
-        // Continue with empty timesheet data
+      } catch (error) {
+        console.log("Error fetching from base endpoint, trying /all endpoint");
+        try {
+          // If base endpoint fails, try the /all endpoint
+          const response = await api.get(
+            `${API_URL}/all?${queryParams.toString()}`
+          );
+          console.log(
+            "Timesheet data fetched from /all endpoint:",
+            response.data
+          );
+
+          // Handle different response structures
+          if (Array.isArray(response.data)) {
+            timesheetData = response.data;
+          } else if (response.data.timesheets) {
+            timesheetData = response.data.timesheets;
+          } else if (response.data.data) {
+            timesheetData = response.data.data;
+          } else {
+            console.error("Unexpected response format:", response.data);
+          }
+        } catch (fallbackError) {
+          console.error("All timesheet endpoints failed:", fallbackError);
+          // Continue with empty timesheet data
+        }
       }
-    }
 
-    // Log the first timesheet to see its structure
-    if (timesheetData.length > 0) {
-      console.log("Sample timesheet:", timesheetData[0]);
-    }
-
-    // Enhance timesheet data with employee names if needed
-    const enhancedTimesheetData = timesheetData.map((timesheet) => {
-      // If the timesheet already has an employeeName, use it
-      if (timesheet.employeeName && timesheet.employeeName !== "Unknown Employee") {
-        return timesheet;
+      // Log the first timesheet to see its structure
+      if (timesheetData.length > 0) {
+        console.log("Sample timesheet:", timesheetData[0]);
       }
 
-      // Otherwise, try to find the employee name from the employees list
-      const employeeId = timesheet.employeeId;
-      const employeeName = getEmployeeNameById(employeeId);
+      // Enhance timesheet data with employee names if needed
+      const enhancedTimesheetData = timesheetData.map((timesheet) => {
+        // If the timesheet already has an employeeName, use it
+        if (
+          timesheet.employeeName &&
+          timesheet.employeeName !== "Unknown Employee"
+        ) {
+          return timesheet;
+        }
 
-      return {
-        ...timesheet,
-        employeeName: employeeName,
-      };
-    });
+        // Otherwise, try to find the employee name from the employees list
+        const employeeId = timesheet.employeeId;
+        const employeeName = getEmployeeNameById(employeeId);
 
-    setTimesheets(enhancedTimesheetData);
-  } catch (error) {
-    console.error("Error fetching timesheets:", error);
-    setTimesheets([]);
-  } finally {
-    setLoading(false);
-  }
-};
+        return {
+          ...timesheet,
+          employeeName: employeeName,
+        };
+      });
 
-
+      setTimesheets(enhancedTimesheetData);
+    } catch (error) {
+      console.error("Error fetching timesheets:", error);
+      setTimesheets([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const calculateStats = (data) => {
     if (!data || data.length === 0) {
@@ -1303,27 +1080,6 @@ const fetchTimesheets = async () => {
             Filter Attendance Records
           </Typography>
           <Stack spacing={2}>
-            {/* <Autocomplete
-  options={employees}
-  getOptionLabel={(option) => {
-    // Handle different employee data structures
-    if (option.name) return option.name;
-    if (option.personalInfo) {
-      return `${option.personalInfo.firstName || ''} ${option.personalInfo.lastName || ''}`;
-    }
-    return option.employeeId || "Unknown Employee";
-  }}
-  value={filterValues.employee}
-  onChange={handleEmployeeChange}
-  renderInput={(params) => (
-    <TextField
-      {...params}
-      label="Employee"
-      size="small"
-      fullWidth
-    />
-  )}
-/> */}
             <Autocomplete
               options={employees}
               getOptionLabel={(option) => {
@@ -1559,29 +1315,6 @@ const fetchTimesheets = async () => {
                           },
                         }}
                       >
-                        {/* <TableCell>
-                                              <Box
-                                                sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                                              >
-                                                <Avatar
-                                                  sx={{
-                                                    bgcolor: theme.palette.primary.main,
-                                                    width: 32,
-                                                    height: 32,
-                                                  }}
-                                                >
-                                                  {timesheet.employeeName ? timesheet.employeeName[0] : "U"}
-                                                </Avatar>
-                                                <Box>
-                                                  <Typography variant="body2" fontWeight={500}>
-                                                    {timesheet.employeeName || "Unknown Employee"}
-                                                  </Typography>
-                                                  <Typography variant="caption" color="text.secondary">
-                                                    {timesheet.employeeId || "No ID"}
-                                                  </Typography>
-                                                </Box>
-                                              </Box>
-                                            </TableCell> */}
                         <TableCell>
                           <Box
                             sx={{

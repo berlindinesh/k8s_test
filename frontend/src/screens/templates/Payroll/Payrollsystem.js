@@ -1207,7 +1207,7 @@ const PayrollSystem = () => {
       department: "",
       designation: "",
       // email: "",
-      workEmail: "", 
+      workEmail: "",
       status: "Active",
     });
   };
@@ -1374,8 +1374,7 @@ const PayrollSystem = () => {
 
       // Use a direct endpoint instead of trying to construct it from API_URL
       // This is more reliable when we're not sure about the structure of API_URL
-      // const endpoint = `${process.env.REACT_APP_API_URL}/api/payroll/payslips/generate`;
-      const endpoint = 'payroll/payslips/generate';
+      const endpoint = "payroll/payslips/generate";
 
       console.log("Using endpoint:", endpoint);
 
@@ -1401,7 +1400,6 @@ const PayrollSystem = () => {
   const downloadPayslip = async (payslipId) => {
     try {
       // Use a direct endpoint instead of trying to construct it from API_URL
-      // const endpoint = `${process.env.REACT_APP_API_URL}/api/payroll/payslips/download/${payslipId}`;
       const endpoint = `payroll/payslips/download/${payslipId}`;
 
       console.log(`Downloading payslip from: ${endpoint}`);
@@ -3176,18 +3174,6 @@ const PayrollSystem = () => {
             <Button onClick={handleCloseAllowancePreview} variant="outlined">
               Close
             </Button>
-            {/* <Button
-              variant="contained"
-              startIcon={<EditIcon />}
-              onClick={() => {
-                handleCloseAllowancePreview();
-                setEditMode(false);
-                setBulkEmployeeId(previewEmployee.empId);
-                setOpenDialog(true);
-              }}
-            >
-              Manage Allowances & Deductions
-            </Button> */}
           </DialogActions>
         </Dialog>
 
@@ -3856,25 +3842,6 @@ const PayrollSystem = () => {
                         Add
                       </Button>
                     </Box>
-                    {/* <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-  <Typography variant="body2">
-    Total Percentage: 
-    <Box component="span" sx={{ 
-      fontWeight: 'bold',
-      color: calculateTotalAllowancePercentage() === 100 ? 'green' : 'orange'
-    }}>
-      {' '}{calculateTotalAllowancePercentage()}%
-    </Box>
-  </Typography>
-  
-  {calculateTotalAllowancePercentage() !== 100 && (
-    <Typography variant="caption" color="warning.main">
-      {calculateTotalAllowancePercentage() > 100 
-        ? "Warning: Total exceeds 100%" 
-        : "Warning: Total is less than 100%"}
-    </Typography>
-  )}
-</Box> */}
                     <Box
                       sx={{
                         mt: 2,

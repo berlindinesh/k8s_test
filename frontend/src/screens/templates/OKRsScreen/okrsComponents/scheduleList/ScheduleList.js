@@ -1,31 +1,3 @@
-// // src/components/ScheduleList.js
-// import React from 'react';
-// import './ScheduleList.css';
-
-// const ScheduleList = ({ selectedDate, schedules }) => {
-//   const schedule = schedules.find(sch => sch.date === selectedDate);
-
-//   return (
-//     <div className="schedule-list">
-//       <h3>{selectedDate || 'Select a date'}</h3>
-//       {schedule ? (
-//         schedule.events.map((event, index) => (
-//           <div key={index} className="schedule-item">
-//             <h4>{event.title}</h4>
-//             <p>{event.time}</p>
-//             <p>{event.location}</p>
-//           </div>
-//         ))
-//       ) : (
-//         <p>No events for this day.</p>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default ScheduleList;
-
-
 import React from 'react';
 import './ScheduleList.css';
 
