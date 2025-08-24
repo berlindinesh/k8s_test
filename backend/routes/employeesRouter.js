@@ -915,32 +915,6 @@ router.get('/bank-info/:employeeId', async (req, res) => {
   }
 });
 
-// router.put('/bank-info/:employeeId', async (req, res) => {
-//   try {
-//     // Get company code from authenticated user
-//     const companyCode = req.companyCode;
-    
-//     if (!companyCode) {
-//       return res.status(401).json({ 
-//         error: 'Authentication required', 
-//         message: 'Company code not found in request' 
-//       });
-//     }
-    
-//     // Get company-specific Employee model
-//     const CompanyEmployee = await getModelForCompany(companyCode, 'Employee', Employee.schema);
-    
-//     const employee = await CompanyEmployee.findOneAndUpdate(
-//       { Emp_ID: req.params.employeeId },
-//       { bankInfo: req.body },
-//       { new: true }
-//     );
-//     res.json(employee.bankInfo);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error updating bank info' });
-//   }
-// });
-
 router.put('/bank-info/:employeeId', async (req, res) => {
   try {
     const companyCode = req.companyCode;

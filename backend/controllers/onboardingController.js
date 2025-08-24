@@ -234,50 +234,6 @@ export const deleteCandidate = async (req, res) => {
     });
   }
 };
-
-// // Send email notification
-// export const sendEmail = async (req, res) => {
-//   try {
-//     // Get company code from authenticated user
-//     const companyCode = req.companyCode;
-    
-//     if (!companyCode) {
-//       return res.status(401).json({ 
-//         error: 'Authentication required', 
-//         message: 'Company code not found in request' 
-//       });
-//     }
-    
-//     const { email, name, jobPosition, joiningDate } = req.body;
-    
-//     if (!email || !name || !jobPosition || !joiningDate) {
-//       return res.status(400).json({
-//         error: 'Validation error',
-//         message: 'Missing required fields: email, name, jobPosition, and joiningDate are required'
-//       });
-//     }
-    
-//     console.log(`Sending onboarding email to ${email} for company: ${companyCode}`);
-    
-//     await sendOnboardingEmail(email, {
-//       name,
-//       jobPosition,
-//       joiningDate: new Date(joiningDate).toLocaleDateString()
-//     });
-    
-//     console.log(`Onboarding email sent successfully to ${email}`);
-//     res.status(200).json({ message: 'Email sent successfully' });
-//   } catch (error) {
-//     console.error('Error sending onboarding email:', error);
-//     res.status(500).json({ 
-//       error: 'Error sending email', 
-//       message: error.message,
-//       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-//     });
-//   }
-// };
-
-// Send email notification
 export const sendEmail = async (req, res) => {
   try {
     // Get company code from authenticated user
