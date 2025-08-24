@@ -95,64 +95,6 @@ const TimesheetDashboard = () => {
     }
   }, [todayTimesheet?.status]);
 
-  // const fetchTimesheetData = async () => {
-  //   try {
-  //     setTodayLoading(true);
-  //     const todayResponse = await timesheetService.getTodayTimesheet(
-  //       employeeId
-  //     );
-  //     setTodayTimesheet(todayResponse.data.timesheet);
-  //     setTodayLoading(false);
-
-  //     setWeeklyLoading(true);
-  //     const weeklyResponse = await timesheetService.getWeeklyTimesheets(
-  //       employeeId
-  //     );
-  //     setWeeklyTimesheets(weeklyResponse.data.timesheets);
-  //     calculateWeeklyStats(weeklyResponse.data.timesheets);
-  //     setWeeklyLoading(false);
-  //   } catch (error) {
-  //     console.error("Failed to fetch timesheet data:", error);
-  //     setTodayLoading(false);
-  //     setWeeklyLoading(false);
-  //   }
-  // };
-
-  // const calculateWeeklyStats = (timesheets) => {
-  //   if (!timesheets.length) return;
-
-  //   const totalSeconds = timesheets.reduce(
-  //     (acc, curr) => acc + (curr.duration || 0),
-  //     0
-  //   );
-  //   const daysWorked = timesheets.length;
-  //   const standardDaySeconds = 8 * 3600;
-
-  //   const onTimeCount = timesheets.filter((timesheet) => {
-  //     const checkInTime = new Date(timesheet.checkInTime);
-  //     return checkInTime.getHours() <= 9 && checkInTime.getMinutes() <= 15;
-  //   }).length;
-
-  //   const overtimeSeconds = timesheets.reduce((acc, curr) => {
-  //     return acc + Math.max(0, (curr.duration || 0) - standardDaySeconds);
-  //   }, 0);
-
-  //   setWeeklyStats({
-  //     totalHours: formatDuration(totalSeconds),
-  //     averageDaily: formatDuration(totalSeconds / daysWorked),
-  //     onTimePercentage: Math.round((onTimeCount / timesheets.length) * 100),
-  //     overtime: formatDuration(overtimeSeconds),
-  //   });
-  // };
-
-  // const formatDuration = (seconds) => {
-  //   const hours = Math.floor(seconds / 3600);
-  //   const minutes = Math.floor((seconds % 3600) / 60);
-  //   return `${hours}h ${minutes}m`;
-  // };
-
-  // Improve the calculateWeeklyStats function to handle empty data better
-
   const fetchTimesheetData = async () => {
     try {
       setTodayLoading(true);
@@ -216,15 +158,6 @@ const TimesheetDashboard = () => {
       overtime: formatDuration(overtimeSeconds),
     });
   };
-
-  // Improve the formatDuration function to handle edge cases
-  // const formatDuration = (seconds) => {
-  //   if (!seconds || isNaN(seconds)) return "0h 0m";
-
-  //   const hours = Math.floor(seconds / 3600);
-  //   const minutes = Math.floor((seconds % 3600) / 60);
-  //   return `${hours}h ${minutes}m`;
-  // };
 
   const formatDuration = (seconds) => {
     if (!seconds || isNaN(seconds)) return "0h 0m";
@@ -380,57 +313,6 @@ const TimesheetDashboard = () => {
 
             <Card.Body>
               <div className="table-responsive-mobile">
-                {/* <Table hover className="custom-table">
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Check-in</th>
-                      <th>Check-out</th>
-                      <th>Duration</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {weeklyTimesheets.map((timesheet, index) => (
-                      <tr
-                        key={index}
-                        className={`timesheet-row ${
-                          timesheet.status === "active" ? "active-row" : ""
-                        }`}
-                        style={{
-                          animation: `fadeIn 0.5s ease-out ${index * 0.1}s`,
-                        }}
-                      >
-                        <td className="date-cell">
-                          {new Date(timesheet.checkInTime).toLocaleDateString(
-                            "en-US",
-                            {
-                              weekday: "short",
-                              month: "short",
-                              day: "numeric",
-                            }
-                          )}
-                        </td>
-                        <td>
-                          {new Date(timesheet.checkInTime).toLocaleTimeString()}
-                        </td>
-                        <td>
-                          {timesheet.checkOutTime
-                            ? new Date(
-                                timesheet.checkOutTime
-                              ).toLocaleTimeString()
-                            : "-"}
-                        </td>
-                        <td className="duration-cell">
-                          {formatDuration(timesheet.duration || 0)}
-                        </td>
-                        <td>
-                          <StatusBadge status={timesheet.status} />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table> */}
                 <Table hover className="custom-table">
                   <thead>
                     <tr>

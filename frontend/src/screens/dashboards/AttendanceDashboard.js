@@ -40,41 +40,6 @@ function AttendanceDashboard() {
   useEffect(() => {
     fetchDashboardData();
   }, []);
-
-
-// // Update the fetchDashboardData function to include auth token
-// const fetchDashboardData = async () => {
-//   try {
-//     setLoading(true);
-
-//     // Get the authentication token
-//     // const token = getAuthToken();
-//     // const authHeader = { headers: { 'Authorization': `Bearer ${token}` } };
-
-//     // Fetch all employees with auth token
-//     const employeesResponse = await api.get(EMPLOYEES_API_URL);
-//     const employeeData = employeesResponse.data;
-//     setEmployees(employeeData);
-    
-//     // Fetch all timesheet records with auth token
-//     let timesheetResponse;
-//     try {
-//       // Try the /all endpoint first as used in AttendanceRecords.js
-//       timesheetResponse = await api.get(`${TIMESHEET_API_URL}/all`);
-//     } catch (error) {
-//       console.log("Error fetching from /all endpoint, trying alternative endpoint");
-//       // If /all endpoint fails, try the base endpoint
-//       timesheetResponse = await api.get(TIMESHEET_API_URL);
-//     }
-    
-//     // Fetch time-off requests with auth token
-//     const timeOffResponse = await api.get(TIME_OFF_API_URL);
-    
-//     // Rest of the function remains the same
-//   } catch (error) {
-//     // Error handling remains the same
-//   }
-// };
 const fetchDashboardData = async () => {
   try {
     setLoading(true);

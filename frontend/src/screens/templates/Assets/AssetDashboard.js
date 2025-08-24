@@ -114,40 +114,10 @@ const AssetDashboard = () => {
   useEffect(() => {
     fetchAssetData();
   }, []);
-
-  // const fetchAssetData = async () => {
-  //   setLoading(true);
-  //   setError(null);
-  //   try {
-  //     // Fetch assets data
-  //     const assetsResponse = await axios.get(`${API_URL}/api/assets`);
-
-  //     // Fetch asset batches data
-  //     const batchesResponse = await axios.get(`${API_URL}/api/asset-batches`);
-
-  //     // Set the raw data
-  //     setAssets(assetsResponse.data);
-  //     setAssetBatches(batchesResponse.data);
-
-  //     // Process data for dashboard summary
-  //     processDataForDashboard(assetsResponse.data, batchesResponse.data);
-  //   } catch (error) {
-  //     console.error("Error fetching asset data:", error);
-  //     setError("Failed to load asset data. Please try again.");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-
-  // Update the fetchAssetData function
   const fetchAssetData = async () => {
     setLoading(true);
     setError(null);
     try {
-      // // Get the authentication token
-      // const token = getAuthToken();
-      // const authHeader = { headers: { 'Authorization': `Bearer ${token}` } };
       
       // Fetch assets data with auth token
       const assetsResponse = await api.get('/assets');
@@ -567,30 +537,6 @@ const AssetDashboard = () => {
         </Box>
 
         <Stack direction="row" spacing={1}>
-          {/* <MuiTooltip title="Export Data">
-            <IconButton 
-              color="primary"
-              sx={{ 
-                backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                '&:hover': { backgroundColor: alpha(theme.palette.primary.main, 0.2) }
-              }}
-            >
-              <Download />
-            </IconButton>
-          </MuiTooltip>
-          
-          <MuiTooltip title="Print Dashboard">
-            <IconButton 
-              color="primary"
-              sx={{ 
-                backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                '&:hover': { backgroundColor: alpha(theme.palette.primary.main, 0.2) }
-              }}
-            >
-              <Print />
-            </IconButton> 
-          </MuiTooltip>*/}
-
           <MuiTooltip title="Refresh Data">
             <IconButton
               onClick={handleRefresh}
@@ -1582,30 +1528,6 @@ const AssetDashboard = () => {
                       >
                         Number of Assets
                       </TableCell>
-                      {/* <TableCell
-                        sx={{
-                          fontWeight: 600,
-                          color: theme.palette.text.primary,
-                          backgroundColor: alpha(
-                            theme.palette.primary.main,
-                            0.05
-                          ),
-                        }}
-                      >
-                        Vendor
-                      </TableCell> */}
-                      {/* <TableCell
-                        sx={{
-                          fontWeight: 600,
-                          color: theme.palette.text.primary,
-                          backgroundColor: alpha(
-                            theme.palette.primary.main,
-                            0.05
-                          ),
-                        }}
-                      >
-                        Total Cost
-                      </TableCell> */}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -1648,20 +1570,6 @@ const AssetDashboard = () => {
                         >
                           {batch.numberOfAssets}
                         </TableCell>
-                        {/* <TableCell sx={{ color: theme.palette.text.secondary }}>
-                          {batch.vendor}
-                        </TableCell>
-                        <TableCell
-                          sx={{
-                            color: theme.palette.success.main,
-                            fontWeight: 500,
-                          }}
-                        >
-                          $
-                          {batch.totalCost
-                            ? batch.totalCost.toFixed(2)
-                            : "0.00"}
-                        </TableCell> */}
                       </TableRow>
                     ))}
                   </TableBody>
@@ -1835,34 +1743,6 @@ const AssetDashboard = () => {
                 </Grid>
 
                 <Grid item xs={12} md={4}>
-                  {/* <Card
-                    sx={{
-                      borderRadius: "12px",
-                      boxShadow: "none",
-                      border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
-                      height: "100%",
-                      p: 2,
-                    }}
-                  >
-                    {/* <Typography
-                      variant="subtitle2"
-                      sx={{ color: theme.palette.text.secondary, mb: 1 }}
-                    >
-                      Total Investment
-                    </Typography> 
-                    <Typography
-                      variant="h4"
-                      sx={{
-                        color: theme.palette.success.main,
-                        fontWeight: 600,
-                      }}
-                    >
-                      $
-                      {assetBatches
-                        .reduce((sum, batch) => sum + (batch.totalCost || 0), 0)
-                        .toFixed(2)}
-                    </Typography>
-                  </Card> */}
                 </Grid>
               </Grid>
             </Paper>

@@ -75,24 +75,10 @@ function RestrictLeaves() {
     fetchRestrictLeaves();
   }, []);
 
-  // const fetchRestrictLeaves = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const { data } = await axios.get(`${apiBaseURL}/api/restrictLeaves`);
-  //     setRestrictLeaves(data);
-  //   } catch (err) {
-  //     console.error("Error fetching restricted leaves:", err);
-  //     showSnackbar("Error fetching restricted leaves", "error");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   // Update the fetchRestrictLeaves function
   const fetchRestrictLeaves = async () => {
     try {
       setLoading(true);
-      // const token = getAuthToken();
       const { data } = await api.get("/restrictLeaves");
       setRestrictLeaves(data);
     } catch (err) {
@@ -110,40 +96,6 @@ function RestrictLeaves() {
     const year = String(date.getFullYear()).slice(-2);
     return `${day}-${month}-${year}`;
   };
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   // Apply sentence case only for text fields
-  //   const transformedValue = ["title", "description"].includes(name)
-  //     ? toSentenceCase(value)
-  //     : value;
-  //   setFormData({ ...formData, [name]: transformedValue });
-  // };
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   // Apply sentence case only for text fields
-  //   const transformedValue = ["title", "description"].includes(name)
-  //     ? toSentenceCase(value)
-  //     : value;
-
-  //   setFormData({ ...formData, [name]: transformedValue });
-
-  //   // Add validation for title field
-  //   if (name === "title" && value) {
-  //     if (!validateTitle(value)) {
-  //       setValidationErrors({
-  //         ...validationErrors,
-  //         title: "Title should contain only letters and spaces",
-  //       });
-  //     } else {
-  //       setValidationErrors({
-  //         ...validationErrors,
-  //         title: "",
-  //       });
-  //     }
-  //   }
-  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -190,69 +142,6 @@ function RestrictLeaves() {
     }
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   // Check for validation errors
-  //   if (validationErrors.title) {
-  //     showSnackbar(validationErrors.title, "error");
-  //     return;
-  //   }
-
-  //   // Check for validation errors
-  //   if (validationErrors.title || validationErrors.endDate) {
-  //     showSnackbar(validationErrors.title || validationErrors.endDate, "error");
-  //     return;
-  //   }
-
-  //   // Additional validation for dates
-  //   if (!validateEndDate(formData.startDate, formData.endDate)) {
-  //     showSnackbar("End date must be equal to or after start date", "error");
-  //     return;
-  //   }
-  //   setLoading(true);
-
-  //   // Format dates before submitting
-  //   const formattedFormData = {
-  //     ...formData,
-  //     startDate: new Date(formData.startDate).toISOString(), // Convert to ISO format
-  //     endDate: new Date(formData.endDate).toISOString(), // Convert to ISO format
-  //   };
-
-  //   try {
-  //     if (isEditing) {
-  //       await axios.put(
-  //         `${apiBaseURL}/api/restrictLeaves/${editId}`,
-  //         formattedFormData
-  //       );
-  //       console.log(`Updated restricted leave with ID: ${editId}`);
-  //       showSnackbar("Restricted leave updated successfully");
-  //     } else {
-  //       await axios.post(`${apiBaseURL}/api/restrictLeaves`, formattedFormData);
-  //       console.log(`Added new restricted leave`);
-  //       showSnackbar("Restricted leave added successfully");
-  //     }
-  //     fetchRestrictLeaves();
-  //     setIsAddModalOpen(false);
-  //     setFormData({
-  //       title: "",
-  //       startDate: "",
-  //       endDate: "",
-  //       department: "",
-  //       jobPosition: "",
-  //       description: "",
-  //     });
-  //     setIsEditing(false);
-  //     setEditId(null);
-  //     setValidationErrors({ title: "", endDate: "" });
-  //   } catch (err) {
-  //     console.error("Error creating/updating restricted leave:", err);
-  //     showSnackbar("Error saving restricted leave", "error");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // Update the handleSubmit function
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Check for validation errors
@@ -358,26 +247,6 @@ function RestrictLeaves() {
     setDeleteDialogOpen(false);
     setLeaveToDelete(null);
   };
-
-  // const handleConfirmDelete = async () => {
-  //   if (!leaveToDelete) return;
-
-  //   try {
-  //     setLoading(true);
-  //     await axios.delete(
-  //       `${apiBaseURL}/api/restrictLeaves/${leaveToDelete._id}`
-  //     );
-  //     console.log(`Deleted restricted leave with ID: ${leaveToDelete._id}`);
-  //     fetchRestrictLeaves();
-  //     showSnackbar("Restricted leave deleted successfully");
-  //   } catch (err) {
-  //     console.error("Error deleting restricted leave:", err);
-  //     showSnackbar("Error deleting restricted leave", "error");
-  //   } finally {
-  //     setLoading(false);
-  //     handleCloseDeleteDialog();
-  //   }
-  // };
 
   // Update the handleConfirmDelete function
   const handleConfirmDelete = async () => {
@@ -891,19 +760,6 @@ function RestrictLeaves() {
           <DialogContent sx={{ padding: isMobile ? "20px" : "32px" }}>
             <form onSubmit={handleSubmit}>
               <Stack spacing={3} sx={{ mt: 2 }}>
-                {/* <TextField
-                  fullWidth
-                  label="Title"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  required
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: "8px",
-                    },
-                  }}
-                /> */}
                 <TextField
                   fullWidth
                   label="Title"
@@ -919,41 +775,6 @@ function RestrictLeaves() {
                     },
                   }}
                 />
-
-                {/* <Stack direction={isMobile ? "column" : "row"} spacing={2}>
-                  <TextField
-                    fullWidth
-                    type="date"
-                    label="Start Date"
-                    name="startDate"
-                    value={formData.startDate}
-                    onChange={handleChange}
-                    InputLabelProps={{ shrink: true }}
-                    required
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "8px",
-                      },
-                    }}
-                  />
-
-                  <TextField
-                    fullWidth
-                    type="date"
-                    label="End Date"
-                    name="endDate"
-                    value={formData.endDate}
-                    onChange={handleChange}
-                    InputLabelProps={{ shrink: true }}
-                    required
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "8px",
-                      },
-                      mt: isMobile ? 0 : undefined,
-                    }}
-                  />
-                </Stack> */}
                 <Stack direction={isMobile ? "column" : "row"} spacing={2}>
                   <TextField
                     fullWidth

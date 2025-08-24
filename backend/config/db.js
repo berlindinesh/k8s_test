@@ -29,52 +29,6 @@ const connectMainDB = async () => {
     }
 };
 
-// // Connect to company databases
-// const getCompanyConnection = async (companyCode) => {
-//     if (!companyCode) {
-//         throw new Error('Company code is required');
-//     }
-    
-//     // Normalize company code
-//     companyCode = companyCode.toUpperCase();
-    
-//     // Return existing connection if available
-//     if (connections[companyCode]) {
-//         console.log(`Using existing connection for company ${companyCode}`);
-//         return connections[companyCode];
-//     }
-    
-//     // Create a new connection for this company
-//     try {
-//         // Create a new connection with a specific database name for this company
-//         const dbName = `hrms_${companyCode.toLowerCase()}`;
-        
-//         // Fix: Properly construct the connection URL
-//         const baseUrl = URL.split('?')[0];
-//         const queryParams = URL.split('?')[1] || '';
-//         const connectionString = `${baseUrl}/${dbName}?${queryParams}`;
-        
-//         console.log(`Creating new connection to ${dbName} for company ${companyCode}`);
-//         console.log(`Connection string: ${connectionString}`);
-        
-//         const connection = await mongoose.createConnection(connectionString);
-        
-//         // Verify connection was successful
-//         if (!connection) {
-//             throw new Error(`Failed to create connection for ${companyCode}`);
-//         }
-        
-//         console.log(`🚀 Company DB Connected: ${connection.name || dbName} for ${companyCode}`.green.underline);
-        
-//         // Store the connection
-//         connections[companyCode] = connection;
-//         return connection;
-//     } catch (error) {
-//         console.log(`Error connecting to company database: ${error.message}`.red.underline.bold);
-//         throw error;
-//     }
-// };
-
 // Get or create a connection for a specific company
 const getCompanyConnection = async (companyCode) => {
     if (!companyCode) {

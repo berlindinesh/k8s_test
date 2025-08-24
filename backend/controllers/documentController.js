@@ -11,24 +11,7 @@ export const documentController = {
     }
   },
 
-  // Create new document
-//   createDocument: async (req, res) => {
-//     try {
-//       const newDocument = new Document({
-//         title: req.body.title,
-//         employee: req.body.employee,
-//         format: req.body.format,
-//         maxSize: req.body.maxSize,
-//         description: req.body.description,
-//         details: [req.body.employee]
-//       });
-//       const savedDocument = await newDocument.save();
-//       res.status(201).json(savedDocument);
-//     } catch (error) {
-//       res.status(400).json({ message: error.message });
-//     }
-//   },
-     // Create new document
+ // Create new document
 createDocument: async (req, res) => {
     try {
       const documentData = {

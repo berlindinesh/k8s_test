@@ -63,10 +63,6 @@ const RecruitmentSurvey = () => {
   const [itemToDelete, setItemToDelete] = useState(null);
   const [parentTemplateId, setParentTemplateId] = useState(null); // For question deletion
 
-    // const getAuthToken = () => {
-    //   return localStorage.getItem('token');
-    // };
-
   // Replace the existing handleDeleteTemplate function with this:
   const handleDeleteTemplateClick = (templateId) => {
     setDeleteType("template");
@@ -148,14 +144,9 @@ const RecruitmentSurvey = () => {
       useEffect(() => {
         const fetchTemplates = async () => {
           try {
-            // const token = getAuthToken();
             const response = await api.get(
               "/recruitment-survey",
-              // {
-              //   headers: {
-              //     'Authorization': `Bearer ${token}`
-              //   }
-              // }
+
             );
             console.log("Fetched templates:", response.data);
             setTemplates(response.data);
@@ -177,14 +168,9 @@ const RecruitmentSurvey = () => {
 const fetchRegisteredEmployees = async () => {
   try {
     setLoadingEmployees(true);
-    // const token = getAuthToken();
     const response = await api.get(
       "/employees/registered",
-      // {
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`
-      //   }
-      // }
+
     );
     console.log("Fetched employees:", response.data);
     setRegisteredEmployees(response.data);
@@ -239,7 +225,6 @@ const handleAddTemplate = async () => {
   if (newTemplateName && newQuestion && newType) {
     try {
       setLoading(true);
-      // const token = getAuthToken();
 
       // Create the question object with employee data
       const questionData = {
@@ -270,11 +255,6 @@ const handleAddTemplate = async () => {
       const { data } = await api.post(
         "/recruitment-survey/add",
         newTemplate,
-        // {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
       );
 
       console.log("Template added response:", data);
@@ -314,7 +294,6 @@ const handleAddQuestionToTemplate = async () => {
 
   try {
     setLoading(true);
-    // const token = getAuthToken();
 
     // Create request data with employee fields directly
     const requestData = {
@@ -339,11 +318,6 @@ const handleAddQuestionToTemplate = async () => {
     const { data } = await api.post(
       `/recruitment-survey/${currentTemplateId}/questions`,
       requestData,
-      // {
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`
-      //   }
-      // }
     );
 
     console.log("Question added response:", data);
@@ -404,7 +378,6 @@ const handleAddQuestionToTemplate = async () => {
 const handleSaveEdit = async () => {
   try {
     setLoading(true);
-    // const token = getAuthToken();
 
     // Create request data with employee fields directly
     const requestData = {
@@ -429,11 +402,6 @@ const handleSaveEdit = async () => {
     const { data } = await api.put(
       `/recruitment-survey/${currentTemplateId}/questions/${currentQuestionId}`,
       requestData,
-      // {
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`
-      //   }
-      // }
     );
 
     console.log("Edit saved response:", data);

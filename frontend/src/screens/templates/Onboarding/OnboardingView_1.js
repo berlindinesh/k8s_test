@@ -112,15 +112,6 @@ function OnboardingView() {
     setSelectedCandidateId(null);
   };
 
-  // const confirmDelete = async () => {
-  //   try {
-  //     await handleDeleteCandidate(selectedCandidateId);
-  //     closeDeleteConfirm();
-  //   } catch (error) {
-  //     console.error("Error deleting candidate:", error);
-  //   }
-  // };
-
   const openMailConfirm = (candidate) => {
     setSelectedCandidateForMail(candidate);
     setMailConfirmOpen(true);
@@ -131,72 +122,9 @@ function OnboardingView() {
     setSelectedCandidateForMail(null);
   };
 
-  // const confirmSendMail = async () => {
-  //   try {
-  //     await sendMailToCandidate(selectedCandidateForMail);
-  //     closeMailConfirm();
-  //   } catch (error) {
-  //     console.error("Error sending mail:", error);
-  //   }
-  // };
-
-  // Update the handleDeleteCandidate function to not require confirmation
-  // since we'll handle that separately
-  // const handleDeleteCandidate = async (id) => {
-  //   try {
-  //     await axios.delete(`${process.env.REACT_APP_API_URL}/api/onboarding/${id}`);
-  //     setCandidates(candidates.filter((candidate) => candidate._id !== id));
-  //   } catch (error) {
-  //     console.error("Error deleting candidate:", error);
-  //   }
-  // };
-
   useEffect(() => {
     fetchCandidates();
   }, [stageFilter]);
-
-  // const handleInputChange = (e, field) => {
-  //   const value = e.target.value;
-
-  //   switch (field) {
-  //     case "mobile":
-  //       if (value === "" || /^\d+$/.test(value)) {
-  //         setNewCandidate({ ...newCandidate, mobile: value });
-  //         setValidationErrors({
-  //           ...validationErrors,
-  //           phone: validatePhone(value)
-  //             ? ""
-  //             : "Please enter a valid 10-digit phone number",
-  //         });
-  //       }
-  //       break;
-
-  //     case "email":
-  //       setNewCandidate({ ...newCandidate, email: value });
-  //       setValidationErrors({
-  //         ...validationErrors,
-  //         email: validateEmail(value)
-  //           ? ""
-  //           : "Please enter a valid email address",
-  //       });
-  //       break;
-
-  //     case "jobPosition":
-  //       if (value === "" || /^[a-zA-Z\s]+$/.test(value)) {
-  //         setNewCandidate({ ...newCandidate, jobPosition: value });
-  //         setValidationErrors({
-  //           ...validationErrors,
-  //           position: validatePosition(value)
-  //             ? ""
-  //             : "Position should contain only letters",
-  //         });
-  //       }
-  //       break;
-
-  //     default:
-  //       setNewCandidate({ ...newCandidate, [field]: value });
-  //   }
-  // };
 
   const handleInputChange = (e, field) => {
     const value = e.target.value;
@@ -255,15 +183,9 @@ function OnboardingView() {
     candidate.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  //   // Add this function to get the auth token
-  // const getAuthToken = () => {
-  //   return localStorage.getItem('token');
-  // };
-
   // Update the fetchCandidates function
   const fetchCandidates = async () => {
     try {
-      // const token = getAuthToken();
       const url =
         stageFilter === "All"
           ? "/onboarding"
@@ -271,11 +193,6 @@ function OnboardingView() {
 
       const response = await api.get(
         url
-        //    {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
       );
       setCandidates(response.data);
     } catch (error) {
@@ -283,58 +200,6 @@ function OnboardingView() {
     }
   };
 
-  // // Update the handleCreateCandidate function
-  // const handleCreateCandidate = async (e) => {
-  //   e.preventDefault();
-
-  //   const errors = {
-  //     phone: validatePhone(newCandidate.mobile) ? "" : "Invalid phone number",
-  //     email: validateEmail(newCandidate.email) ? "" : "Invalid email",
-  //     position: validatePosition(newCandidate.jobPosition)
-  //       ? ""
-  //       : "Invalid position",
-  //   };
-
-  //   setValidationErrors(errors);
-
-  //   if (Object.values(errors).some((error) => error !== "")) {
-  //     return;
-  //   }
-
-  //   try {
-  //     // const token = getAuthToken();
-  //     const response = await api.post(
-  //       "/onboarding",
-  //       newCandidate,
-  //       // {
-  //       //   headers: {
-  //       //     'Authorization': `Bearer ${token}`
-  //       //   }
-  //       // }
-  //     );
-  //     setCandidates([...candidates, response.data]);
-  //     setNewCandidate({
-  //       name: "",
-  //       email: "",
-  //       jobPosition: "",
-  //       mobile: "",
-  //       joiningDate: "",
-  //       stage: "Test",
-  //       portalStatus: "Active",
-  //       taskStatus: "Pending",
-  //     });
-  //     setValidationErrors({
-  //       phone: "",
-  //       email: "",
-  //       position: "",
-  //     });
-  //     setShowCreateForm(false);
-  //   } catch (error) {
-  //     console.error("Error creating candidate:", error);
-  //   }
-  // };
-
-  // Update the handleCreateCandidate function to include name validation
   const handleCreateCandidate = async (e) => {
     e.preventDefault();
 
@@ -383,15 +248,9 @@ function OnboardingView() {
   // Update the handleUpdateCandidate function if it exists
   const handleUpdateCandidate = async (id, updatedData) => {
     try {
-      // const token = getAuthToken();
       const response = await api.put(
         `onboarding/${id}`,
         updatedData
-        // {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
       );
       setCandidates(
         candidates.map((candidate) =>
@@ -406,45 +265,14 @@ function OnboardingView() {
   // Update the handleDeleteCandidate function
   const handleDeleteCandidate = async (id) => {
     try {
-      // const token = getAuthToken();
       await api.delete(
         `onboarding/${id}`
-        //   {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
       );
       setCandidates(candidates.filter((candidate) => candidate._id !== id));
     } catch (error) {
       console.error("Error deleting candidate:", error);
     }
   };
-
-  // // Update the sendMailToCandidate function
-  // const sendMailToCandidate = async (candidate) => {
-  //   try {
-  //     // const token = getAuthToken();
-  //     await api.post(
-  //       "/onboarding/send-email",
-  //       {
-  //         email: candidate.email,
-  //         name: candidate.name,
-  //         jobPosition: candidate.jobPosition,
-  //         joiningDate: candidate.joiningDate,
-  //       },
-  //       // {
-  //       //   headers: {
-  //       //     'Authorization': `Bearer ${token}`
-  //       //   }
-  //       // }
-  //     );
-  //     alert("Onboarding email sent successfully!");
-  //   } catch (error) {
-  //     console.error("Error sending email:", error);
-  //     alert("Failed to send email. Please try again.");
-  //   }
-  // };
 
   const sendMailToCandidate = async (candidate) => {
     try {
@@ -465,18 +293,12 @@ function OnboardingView() {
   // For example, if there's a function to handle stage changes:
   const handleStageChange = async (id, newStage) => {
     try {
-      // const token = getAuthToken();
       const candidate = candidates.find((c) => c._id === id);
       if (candidate) {
         const updatedCandidate = { ...candidate, stage: newStage };
         await api.put(
           `onboarding/${id}`,
           updatedCandidate
-          // {
-          //   headers: {
-          //     'Authorization': `Bearer ${token}`
-          //   }
-          // }
         );
         fetchCandidates(); // Refresh the list
       }
@@ -488,14 +310,8 @@ function OnboardingView() {
   // Update the confirmDelete function if it exists
   const confirmDelete = async () => {
     try {
-      // const token = getAuthToken();
       await api.delete(
         `onboarding/${selectedCandidateId}`
-        // {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
       );
       closeDeleteConfirm();
       fetchCandidates();
@@ -507,7 +323,6 @@ function OnboardingView() {
   // Update the confirmSendMail function if it exists
   const confirmSendMail = async () => {
     try {
-      // const token = getAuthToken();
       await api.post(
         "onboarding/send-email",
         {
@@ -516,11 +331,6 @@ function OnboardingView() {
           jobPosition: selectedCandidateForMail.jobPosition,
           joiningDate: selectedCandidateForMail.joiningDate,
         }
-        // {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
       );
       closeMailConfirm();
     } catch (error) {
@@ -1054,52 +864,6 @@ function OnboardingView() {
                         {candidate.stage}
                       </span>
                     </td>
-                    {/* <td style={{ padding: "14px 16px" }}>
-                      <span
-                        style={{
-                          display: "inline-block",
-                          padding: "6px 12px",
-                          borderRadius: "20px",
-                          fontSize: "12px",
-                          fontWeight: "600",
-                          backgroundColor:
-                            candidate.portalStatus === "Active"
-                              ? "#e8f5e9"
-                              : "#ffebee",
-                          color:
-                            candidate.portalStatus === "Active"
-                              ? "#2e7d32"
-                              : "#c62828",
-                        }}
-                      >
-                        {candidate.portalStatus}
-                      </span>
-                    </td>
-                    <td style={{ padding: "14px 16px" }}>
-                      <span
-                        style={{
-                          display: "inline-block",
-                          padding: "6px 12px",
-                          borderRadius: "20px",
-                          fontSize: "12px",
-                          fontWeight: "600",
-                          backgroundColor:
-                            candidate.taskStatus === "Completed"
-                              ? "#e8f5e9"
-                              : candidate.taskStatus === "Pending"
-                              ? "#fff8e1"
-                              : "#f5f5f5",
-                          color:
-                            candidate.taskStatus === "Completed"
-                              ? "#2e7d32"
-                              : candidate.taskStatus === "Pending"
-                              ? "#f57c00"
-                              : "#616161",
-                        }}
-                      >
-                        {candidate.taskStatus}
-                      </span>
-                    </td> */}
                     <td style={{ padding: "14px 16px", textAlign: "center" }}>
                       <div
                         style={{

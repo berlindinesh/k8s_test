@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import './DocumentCard.css';
 import { Card } from 'react-bootstrap';

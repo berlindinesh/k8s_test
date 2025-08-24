@@ -90,25 +90,14 @@ const fetchDashboardData = async () => {
   setLoading(true);
   setError(null);
   try {
-    // Get the authentication token
-    // const token = getAuthToken();
-    
     // Fetch objectives data with auth token
     const objectivesResponse = await api.get('/objectives'
-    //   , {
-    //   headers: {
-    //     'Authorization': `Bearer ${token}`
-    //   }
-    // }
+
   );
     
     // Fetch feedback data with auth token
     const feedbackResponse = await api.get('/feedback'
-    //   , {
-    //   headers: {
-    //     'Authorization': `Bearer ${token}`
-    //   }
-    // }
+
   );
     
     // Process objectives data
@@ -736,14 +725,6 @@ const handleRefresh = () => {
               <Paper className="perf-data-table-container">
                 <Box className="perf-data-table-header">
                   <Typography variant="h6">Recent Feedback</Typography>
-                  {/* <Button 
-                    variant="outlined" 
-                    size="small"
-                    onClick={() => window.location.href = 'Dashboards/feedback'}
-                    className="perf-button"
-                  >
-                    View All
-                  </Button> */}
                 </Box>
                 <Divider />
                 <Box className="perf-data-table-body">

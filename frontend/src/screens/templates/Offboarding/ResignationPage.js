@@ -123,13 +123,6 @@ const ResignationPage = () => {
   const [currentUserEmail, setCurrentUserEmail] = useState("");
   const [currentUserPosition, setCurrentUserPosition] = useState("");
 
-// // Add this helper function to get the auth token
-// const getAuthToken = () => {
-//   return localStorage.getItem('token');
-// };
-
-
-
   const handleStatusMenuOpen = (event, item) => {
     setStatusMenuAnchorEl(event.currentTarget);
     setSelectedItem(item);
@@ -195,48 +188,7 @@ const handleStatusChange = async (newStatus) => {
     }
   }, [isMobile]);
 
-  // // Modify the fetchResignations function to properly handle user roles
-  // const fetchResignations = async () => {
-  //   try {
-  //     setLoading(true);
-
-  //     // Get the user's role and ID from localStorage
-  //     const userRole = localStorage.getItem("userRole");
-  //     const userId = localStorage.getItem("userId");
-
-  //     if (!userId) {
-  //       console.error("No user ID found in localStorage");
-  //       setError("User not authenticated");
-  //       setLoading(false);
-  //       return;
-  //     }
-
-  //     // Determine which API endpoint to use based on user role
-  //     let url;
-  //     if (userRole && (userRole.includes("admin") || userRole.includes("hr"))) {
-  //       // Admin or HR can see all resignations
-  //       console.log("Fetching all resignations for admin/HR");
-  //       url = "${process.env.REACT_APP_API_URL}/api/resignations";
-  //     } else {
-  //       // Regular users can only see their own resignations
-  //       console.log("Fetching resignations for user:", userId);
-  //       url = `${process.env.REACT_APP_API_URL}/api/resignations/user/${userId}`;
-  //     }
-
-  //     const response = await axios.get(url);
-  //     console.log("Fetched resignations:", response.data);
-  //     setData(response.data);
-  //     setError(null);
-  //   } catch (err) {
-  //     setError("Failed to fetch resignations");
-  //     console.error("Error:", err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
- // Modify the fetchResignations function to properly handle user roles
-const fetchResignations = async () => {
+ const fetchResignations = async () => {
   try {
     setLoading(true);
 
@@ -282,46 +234,7 @@ const fetchResignations = async () => {
     }
   }, [currentUserId]);
 
-  // // Modify the useEffect that fetches user data to also fetch resignations
-  // useEffect(() => {
-  //   const fetchCurrentUser = async () => {
-  //     try {
-  //       const userId = localStorage.getItem("userId");
-  //       if (userId) {
-  //         setCurrentUserId(userId);
-
-  //         // Fetch user details
-  //         const response = await axios.get(
-  //           `${process.env.REACT_APP_API_URL}/api/employees/by-user/${userId}`
-  //         );
-  //         const userData = response.data.data;
-
-  //         if (userData) {
-  //           // Set user information
-  //           setCurrentUserName(
-  //             `${userData.personalInfo?.firstName || ""} ${
-  //               userData.personalInfo?.lastName || ""
-  //             }`
-  //           );
-  //           setCurrentUserEmail(userData.personalInfo?.email || "");
-  //           setCurrentUserPosition(
-  //             userData.joiningDetails?.initialDesignation || ""
-  //           );
-  //         }
-
-  //         // Fetch resignations after user data is loaded
-  //         await fetchResignations();
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching current user:", error);
-  //     }
-  //   };
-
-  //   fetchCurrentUser();
-  // }, []);
-
-  // Modify the useEffect that fetches user data to also fetch resignations
-useEffect(() => {
+  useEffect(() => {
   const fetchCurrentUser = async () => {
     try {
       const userId = localStorage.getItem("userId");
@@ -389,32 +302,6 @@ useEffect(() => {
     setDeleteDialogOpen(true);
   };
 
-  // const handleConfirmDelete = async () => {
-  //   try {
-  //     setLoading(true);
-  //     await axios.delete(
-  //       `${process.env.REACT_APP_API_URL}/api/resignations/${itemToDelete._id}`
-  //     );
-  //     await fetchResignations();
-  //     setDeleteDialogOpen(false);
-  //     setItemToDelete(null);
-  //     setSnackbar({
-  //       open: true,
-  //       message: "Resignation letter deleted successfully",
-  //       severity: "success",
-  //     });
-  //   } catch (error) {
-  //     console.error("Error deleting resignation:", error);
-  //     setSnackbar({
-  //       open: true,
-  //       message: "Failed to delete resignation letter",
-  //       severity: "error",
-  //     });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
 const handleConfirmDelete = async () => {
   try {
     setLoading(true);
@@ -480,30 +367,6 @@ const handleConfirmDelete = async () => {
       description: "",
     });
   };
-
-  // const handleSendEmail = async (employee) => {
-  //   try {
-  //     await axios.post("${process.env.REACT_APP_API_URL}/api/resignations/email", {
-  //       name: employee.name,
-  //       email: employee.email,
-  //       position: employee.position,
-  //       status: employee.status,
-  //       description: employee.description,
-  //     });
-  //     setSnackbar({
-  //       open: true,
-  //       message: `Resignation email sent successfully to ${employee.email}`,
-  //       severity: "success",
-  //     });
-  //   } catch (error) {
-  //     console.error("Error sending email:", error);
-  //     setSnackbar({
-  //       open: true,
-  //       message: "Failed to send email",
-  //       severity: "error",
-  //     });
-  //   }
-  // };
 
 const handleSendEmail = async (employee) => {
   try {
@@ -618,68 +481,6 @@ const handleSendEmail = async (employee) => {
         </Typography>
       </Box>
     );
-
-  // const handleSave = async () => {
-  //   if (isSaving) return;
-
-  //   try {
-  //     setIsSaving(true);
-  //     const userId = localStorage.getItem("userId");
-
-  //     if (!userId) {
-  //       setSnackbar({
-  //         open: true,
-  //         message: "User not authenticated",
-  //         severity: "error",
-  //       });
-  //       setIsSaving(false);
-  //       return;
-  //     }
-
-  //     const resignationData = {
-  //       name: newResignation.name,
-  //       email: newResignation.email,
-  //       position: newResignation.title,
-  //       status: newResignation.status,
-  //       description: newResignation.description,
-  //       userId: userId, // Ensure userId is included
-  //     };
-
-  //     if (isEditing) {
-  //       await axios.put(
-  //         `${process.env.REACT_APP_API_URL}/api/resignations/${currentId}`,
-  //         resignationData
-  //       );
-  //       setSnackbar({
-  //         open: true,
-  //         message: "Resignation letter updated successfully",
-  //         severity: "success",
-  //       });
-  //     } else {
-  //       await axios.post(
-  //         "${process.env.REACT_APP_API_URL}/api/resignations",
-  //         resignationData
-  //       );
-  //       setSnackbar({
-  //         open: true,
-  //         message: "Resignation letter created successfully",
-  //         severity: "success",
-  //       });
-  //     }
-
-  //     await fetchResignations();
-  //     handleClosePopup();
-  //   } catch (error) {
-  //     console.error("Error saving resignation:", error);
-  //     setSnackbar({
-  //       open: true,
-  //       message: "Error saving resignation letter",
-  //       severity: "error",
-  //     });
-  //   } finally {
-  //     setIsSaving(false);
-  //   }
-  // };
 
 const handleSave = async () => {
   if (isSaving) return;
@@ -1700,22 +1501,6 @@ const handleSave = async () => {
                               <EmailOutlined fontSize="small" />
                             </IconButton>
                           </Tooltip>
-                          {/* <Tooltip title="Change Status">
-                            <IconButton
-                              size="small"
-                              onClick={(e) => handleStatusMenuOpen(e, item)}
-                              sx={{
-                                color: "#4caf50",
-                                "&:hover": {
-                                  backgroundColor: "#e8f5e9",
-                                  transform: "translateY(-2px)",
-                                },
-                                transition: "all 0.2s ease",
-                              }}
-                            >
-                              <MoreVert fontSize="small" />
-                            </IconButton>
-                          </Tooltip> */}
                         </Stack>
                       </TableCell>
                     </TableRow>

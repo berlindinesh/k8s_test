@@ -87,10 +87,6 @@ const fetchNotifications = useCallback(async (userId) => {
     console.error('User ID is required to add a notification');
     return null;
   }
-
-  // const token = getAuthToken();
-  // if (!token) return null;
-
   try {
     const response = await api.post('/notifications', {
       message,
@@ -162,10 +158,6 @@ const addLeaveRequestNotification = useCallback(async (employeeName, status, use
     return null;
   }
 
-  // // Get authentication token
-  // const token = getAuthToken();
-  // if (!token) return null;
-
   // Enhanced logging
   console.log("Adding resignation notification with params:", {
     employeeName, 
@@ -210,10 +202,6 @@ const addLeaveRequestNotification = useCallback(async (employeeName, status, use
       console.error("Cannot send notification: No user ID provided");
       return;
     }
-
-    // // Get authentication token
-    // const token = getAuthToken();
-    // if (!token) return null;
 
     const message = `Your time off request for ${new Date(date).toLocaleDateString()} has been ${status}`;
     
@@ -336,10 +324,6 @@ const addRotatingWorktypeNotification = useCallback(async (employeeName, status,
     return null;
   }
 
-  // // Get authentication token
-  // const token = getAuthToken();
-  // if (!token) return null;
-
   const statusText = status === "Approved" ? "approved" : "rejected";
   const message = `Your ${requestedWorktype} worktype request from ${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()} has been ${statusText}`;
   
@@ -369,9 +353,6 @@ const addRotatingWorktypeNotification = useCallback(async (employeeName, status,
 
 
   const deleteNotification = useCallback(async (id) => {
-  // const token = getAuthToken();
-  // if (!token) return;
-  
   try {
     await api.delete(`/notifications/${id}`
   );
@@ -387,10 +368,6 @@ const addRotatingWorktypeNotification = useCallback(async (employeeName, status,
 
   const clearAll = useCallback(async (userId) => {
   if (!userId) return;
-  
-  // const token = getAuthToken();
-  // if (!token) return;
-  
   try {
     await api.delete(`/notifications/user/${userId}/clear-all`
   );
@@ -563,11 +540,7 @@ const addRotatingWorktypeNotification = useCallback(async (employeeName, status,
 
 const sendRotatingShiftNotification = async (userId, message, status, relatedId) => {
   try {
-    // const token = getAuthToken();
-    // if (!token) return null;
 
-    // const response = await api.post(
-    //   `${API_URL}/notifications`,
     const response = await api.post(
       'notifications',
       {
@@ -593,11 +566,7 @@ const sendRotatingShiftNotification = async (userId, message, status, relatedId)
 
 const markRotatingShiftNotificationAsRead = async (notificationId) => {
   try {
-    // const token = getAuthToken();
-    // if (!token) return;
 
-    // const response = await api.put(
-    //   `${API_URL}/notifications/${notificationId}/read`,
     const response = await api.put(
   `notifications/${notificationId}/read`,
       {}

@@ -1,28 +1,7 @@
-// const User = require('../models/User');
-
 import Profile from '../models/profileModels.js';
 import bcrypt from 'bcryptjs';
 import jwt  from 'jsonwebtoken';
 
-// Register User
-// exports.registerUser = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-//     const userExists = await User.findOne({ email });
-//     if (userExists) return res.status(400).json({ msg: 'User already exists' });
-
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     const user = new User({ ...req.body, password: hashedPassword });
-//     await user.save();
-
-//     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-//     res.json({ token, user });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
-// Get User Profile
 const getUserProfile = async (req, res) => {
   try {
     const profile = await Profile.findById(req.params.id);

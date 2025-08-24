@@ -226,16 +226,8 @@ const Contract = () => {
   const fetchEmployees = useCallback(async () => {
     try {
       setLoadingEmployees(true);
-      // const token = getAuthToken();
-
       const response = await api.get(
         "/employees/registered"
-        // ,
-        // {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`
-        //   }
-        // }
       );
       if (response.data) {
         setEmployees(response.data);
@@ -2737,8 +2729,6 @@ const Contract = () => {
           <tbody>
             {getCurrentPageItems().length > 0 ? (
               getCurrentPageItems().map((contract, index) => {
-                // Determine if this is one of the last rows
-                //  const isLastRows = index >= getCurrentPageItems().length - 2;
 
                 return (
                   <tr key={contract._id}>

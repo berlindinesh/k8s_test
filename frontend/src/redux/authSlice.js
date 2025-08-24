@@ -13,51 +13,6 @@ const initialState = {
   isAuthenticated: !!localStorage.getItem('token')
 };
 
-// // Async thunks for authentication actions
-// export const loginUser = createAsyncThunk(
-//   'auth/login',
-//   async (credentials, { rejectWithValue }) => {
-//     try {
-//       console.log('Redux: Attempting login with credentials:', {
-//         email: credentials.email,
-//         companyCode: credentials.companyCode,
-//         passwordProvided: !!credentials.password
-//       });
-      
-//       const response = await authService.login(credentials);
-      
-//       console.log('Redux: Login response received:', {
-//         success: response.success,
-//         userReceived: !!response.user,
-//         tokenReceived: !!response.token
-//       });
-      
-//       return response;
-//     } catch (error) {
-//       console.error('Redux: Login error:', error);
-      
-//       if (error.response) {
-//         // Handle verification required case
-//         if (error.response.status === 403 && error.response.data?.requiresVerification) {
-//           return rejectWithValue({
-//             requiresVerification: true,
-//             email: error.response.data.email || credentials.email,
-//             message: 'Email not verified. Please verify your email to continue.'
-//           });
-//         }
-        
-//         return rejectWithValue(error.response.data?.message || 
-//           `Login failed (${error.response.status}): ${error.response.statusText}`);
-//       } else if (error.request) {
-//         return rejectWithValue('No response from server. Please check your internet connection.');
-//       } else {
-//         return rejectWithValue(`Error: ${error.message}`);
-//       }
-//     }
-//   }
-// );
-
-// Update the loginUser thunk
 export const loginUser = createAsyncThunk(
   'auth/login',
   async (credentials, { rejectWithValue }) => {

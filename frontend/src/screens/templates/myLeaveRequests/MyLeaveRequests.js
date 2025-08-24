@@ -369,18 +369,6 @@ const MyLeaveRequests = () => {
     }
   };
 
-  // const fetchLeaveStatistics = async () => {
-  //   try {
-  //     const response = await api.get(
-  //       `${API_URL}/statistics/${employee.code}`
-  //     );
-
-  //     setStatistics(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching leave statistics:", error);
-  //   }
-  // };
-
   // Update the fetchUpdatedEarnedLeaveBalance function
   const fetchUpdatedEarnedLeaveBalance = async () => {
     try {
@@ -1192,37 +1180,6 @@ const MyLeaveRequests = () => {
                   </Typography>
                   <Box sx={{ height: isMobile ? 250 : 300 }}>
                     {statistics ? (
-                      // <ResponsiveContainer width="100%" height="100%">
-                      //   <PieChart>
-                      //     <Pie
-                      //       data={getLeaveTypeChartData(statistics)}
-                      //       cx="50%"
-                      //       cy="50%"
-                      //       labelLine={false}
-                      //       outerRadius={isMobile ? 70 : 80}
-                      //       fill="#8884d8"
-                      //       dataKey="value"
-                      //       nameKey="type"
-                      //       label={
-                      //         isMobile
-                      //           ? undefined
-                      //           : ({ type, value }) => `${type}: ${value}`
-                      //       }
-                      //     >
-                      //       {getLeaveTypeChartData(statistics).map(
-                      //         (entry, index) => (
-                      //           <Cell
-                      //             key={`cell-${index}`}
-                      //             fill={COLORS[index % COLORS.length]}
-                      //           />
-                      //         )
-                      //       )}
-                      //     </Pie>
-                      //     <RechartsTooltip />
-                      //     <Legend />
-                      //   </PieChart>
-                      // </ResponsiveContainer>
-
                       // Replace the existing PieChart component with this updated version
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>

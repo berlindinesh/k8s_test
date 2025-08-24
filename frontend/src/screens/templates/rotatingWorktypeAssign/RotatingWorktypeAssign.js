@@ -209,19 +209,11 @@ const socket = io(baseURL, {
   useEffect(() => {
     loadWorktypeRequests();
   }, [tabValue]);
-
-
-  // Add this function at the beginning of your component to get the auth token
-// const getAuthToken = () => {
-//   return localStorage.getItem('token');
-// };
-
   
 const fetchCurrentUser = async () => {
   try {
     setLoadingCurrentUser(true);
     const userId = localStorage.getItem("userId");
-    // const token = getAuthToken();
 
     if (!userId) {
       console.error("No user ID found in localStorage");
@@ -235,12 +227,7 @@ const fetchCurrentUser = async () => {
 
     const response = await api.get(
       `/employees/by-user/${userId}`
-      // ,
-      // {
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`
-      //   }
-      // }
+
     );
 
     if (response.data.success) {
@@ -281,26 +268,19 @@ const fetchCurrentUser = async () => {
 const loadWorktypeRequests = async () => {
   try {
     const userId = localStorage.getItem("userId");
-    // const token = getAuthToken();
 
     if (tabValue === 0) {
       // For Rotating Worktype Requests tab, only show the current user's requests
       const endpoint = userId ? USER_API_URL(userId) : API_URL;
       const response = await api.get(endpoint, 
-      //   {
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`
-      //   }
-      // }
+
     );
       setWorktypeRequests(response.data);
     } else {
       // For Review tab, show all requests that need review (admin view)
       const response = await api.get(API_URL, {
         params: { forReview: true },
-        // headers: {
-        //   'Authorization': `Bearer ${token}`
-        // }
+
       });
       setReviewRequests(response.data);
     }
@@ -592,7 +572,6 @@ const handleApprove = async (id, e) => {
 const handleCreateWorktype = async () => {
   try {
     const userId = localStorage.getItem("userId");
-    // const token = getAuthToken();
     
     if (!userId) {
       setSnackbar({
@@ -665,11 +644,7 @@ const handleCreateWorktype = async () => {
     console.log("Creating worktype request with data:", worktypeData);
 
     const response = await api.post(API_URL, worktypeData
-    //   , {
-    //   headers: {
-    //     'Authorization': `Bearer ${token}`
-    //   }
-    // }
+
   );
     console.log("Worktype request created:", response.data);
 
@@ -714,7 +689,6 @@ const handleCreateWorktype = async () => {
 const handleSaveEdit = async () => {
   try {
     const userId = localStorage.getItem("userId");
-    // const token = getAuthToken();
 
     const updatedData = {
       name: formData.employee,
@@ -727,11 +701,7 @@ const handleSaveEdit = async () => {
     };
 
     await api.put(`${API_URL}/${editingWorktype._id}`, updatedData
-    //   , {
-    //   headers: {
-    //     'Authorization': `Bearer ${token}`
-    //   }
-    // }
+
   );
     await loadWorktypeRequests();
     setEditDialogOpen(false);
@@ -774,14 +744,11 @@ const handleConfirmDelete = async () => {
   try {
     setLoading(true);
     const userId = localStorage.getItem("userId");
-    // const token = getAuthToken();
 
     if (deleteType === "worktype" && itemToDelete) {
       await api.delete(`${API_URL}/${itemToDelete._id}`, {
         params: { userId }, // Pass userId as a query parameter
-        // headers: {
-        //   'Authorization': `Bearer ${token}`
-        // }
+
       });
       await loadWorktypeRequests();
       setSnackbar({
@@ -794,10 +761,7 @@ const handleConfirmDelete = async () => {
         selectedAllocations.map((id) =>
           api.delete(`${API_URL}/${id}`, {
             params: { userId }
-            // ,
-            // headers: {
-            //   'Authorization': `Bearer ${token}`
-            // }
+
           }
         )
         )

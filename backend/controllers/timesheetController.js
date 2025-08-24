@@ -35,61 +35,6 @@ const checkAndHandleStaleSession = async (CompanyTimesheet, employeeId) => {
   
   return { autoCheckedOut: false };
 };
-
-// // Check-in handler
-// export const checkIn = async (req, res) => {
-//     try {
-//         // Get company code from authenticated user
-//         const companyCode = req.companyCode;
-        
-//         if (!companyCode) {
-//             return res.status(401).json({ 
-//                 error: 'Authentication required', 
-//                 message: 'Company code not found in request' 
-//             });
-//         }
-        
-//         console.log(`Processing check-in for company: ${companyCode}`);
-        
-//         // Get company-specific Timesheet model
-//         const CompanyTimesheet = await getModelForCompany(companyCode, 'Timesheet', timesheetSchema);
-        
-//         const { employeeId, employeeName } = req.body;
-        
-//         if (!employeeId || !employeeName) {
-//             return res.status(400).json({
-//                 error: 'Validation error',
-//                 message: 'Employee ID and name are required'
-//             });
-//         }
-       
-//         const existingActiveTimesheet = await CompanyTimesheet.findOne({
-//             employeeId,
-//             status: 'active'
-//         });
- 
-//         if (existingActiveTimesheet) {
-//             return res.status(400).json({ message: 'Already checked in' });
-//         }
- 
-//         const timesheet = await CompanyTimesheet.create({
-//             employeeId,
-//             employeeName,
-//             checkInTime: new Date()
-//         });
- 
-//         res.status(201).json(timesheet);
-//     } catch (error) {
-//         console.error('Error during check-in:', error);
-//         res.status(500).json({ 
-//             error: 'Error during check-in', 
-//             message: error.message,
-//             stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-//         });
-//     }
-// };
-
-// Update the checkIn function
 export const checkIn = async (req, res) => {
     try {
         const companyCode = req.companyCode;

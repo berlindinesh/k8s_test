@@ -165,24 +165,13 @@ const TimeOffRequestsAdmin = () => {
     return timeString;
   };
 
-
-//   // Add this function to get the auth token
-// const getAuthToken = () => {
-//   return localStorage.getItem('token');
-// };
-
 // Update the fetchRequests function
 const fetchRequests = async () => {
   try {
     setLoading(true);
-    // const token = getAuthToken();
     const response = await api.get(
       `/time-off-requests?searchTerm=${searchTerm}&status=${filterStatus}`,
-      // {
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`
-      //   }
-      // }
+
     );
     setRequests(response.data);
   } catch (error) {
@@ -196,14 +185,9 @@ const fetchRequests = async () => {
 // Update the handlePreview function
 const handlePreview = async (id) => {
   try {
-    // const token = getAuthToken();
     const response = await api.get(
       `/time-off-requests/${id}`,
-      // {
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`
-      //   }
-      // }
+
     );
     setSelectedRequest(response.data);
     setPreviewOpen(true);
@@ -216,7 +200,6 @@ const handlePreview = async (id) => {
 const handleReviewSubmit = async () => {
   try {
     setLoading(true);
-    // const token = getAuthToken();
 
     const response = await api.put(
       `/time-off-requests/${selectedRequest._id}`,

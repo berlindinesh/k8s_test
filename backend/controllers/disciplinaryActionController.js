@@ -27,61 +27,6 @@ const storage = multer.diskStorage({
 
 export const upload = multer({ storage: storage });
 
-// export const getAllActions = async (req, res) => {
-//   try {
-//     console.log('getAllActions called with req:', req);
-//     const companyCode = req.companyCode;
-//     console.log('companyCode:', companyCode);
-//     if (!companyCode) {
-//       return res.status(401).json({
-//         error: "Authentication required",
-//         message: "Company code not found in request",
-//       });
-//     }
-
-//     const CompanyDisciplinaryAction = await getModelForCompany(
-//       companyCode,
-//       "DisciplinaryAction",
-//       disciplinaryActionSchema
-//     );
-//     console.log('CompanyDisciplinaryAction:', CompanyDisciplinaryAction);
-
-//     const query = {};
-//     console.log('req.userRole:', req.userRole);
-//     if (req.userRole === "employee") {
-//       const employeeId = String(req.currentUser.employeeId || req.currentUser.Emp_ID || req.currentUser.empId);
-//       console.log('employeeId:', employeeId);
-//       query.employeeId = employeeId;
-//     }
-
-//     if (req.query.searchQuery) {
-//       query.$or = [
-//         { employee: { $regex: req.query.searchQuery, $options: "i" } },
-//         { action: { $regex: req.query.searchQuery, $options: "i" } },
-//         { description: { $regex: req.query.searchQuery, $options: "i" } },
-//         { employeeId: { $regex: req.query.searchQuery, $options: "i" } },
-//         { department: { $regex: req.query.searchQuery, $options: "i" } },
-//       ];
-//     }
-
-//     if (req.query.status) {
-//       query.status = req.query.status;
-//     }
-
-//     console.log('query:', query);
-//     const actions = await CompanyDisciplinaryAction.find(query).sort({
-//       createdAt: -1,
-//     });
-//     console.log('actions:', actions);
-//     res.json(actions);
-//   } catch (error) {
-//     console.error("Error fetching disciplinary actions:", error);
-//     res.status(500).json({ error: "Error fetching disciplinary actions" });
-//   }
-// };
-
-// Update the getAllActions function with this modified version:
-
 export const getAllActions = async (req, res) => {
   try {
     console.log('getAllActions called with req:', req);

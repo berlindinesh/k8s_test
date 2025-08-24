@@ -8,30 +8,6 @@ dns.setDefaultResultOrder('ipv4first');
 
 console.log("User:", process.env.USER);
 console.log("Pass:", process.env.PASS);
- 
- 
- 
-// export const sendOnboardingEmail = async (
-//   email,
-//   { name, jobPosition, joiningDate }
-// ) => {
-//   const mailOptions = {
-//     from: process.env.USER,
-//     to: email,
-//     subject: "Welcome to DB4Cloud Technologies!",
-//     html: `
-//       <h2>Welcome ${name}!</h2>
-//       <p>We're excited to have you join our team as ${jobPosition}.</p>
-//       <p>Your joining date is confirmed for ${joiningDate}.</p>
-//       <p>Please complete your onboarding tasks and documentation before the joining date.</p>
-//       <br>
-//       <p>Best regards,</p>
-//       <p>HR Team</p>
-//     `,
-//   };
- 
-//   return await transporter.sendMail(mailOptions);
-// };
 
 export const sendOnboardingEmail = async (
   email,
@@ -62,8 +38,6 @@ console.log("Email Pass length:", process.env.PASS ? process.env.PASS.length : 0
 const transporter = nodemailer.createTransport({
   service: 'gmail', // Use your email service provider
   auth: {
-    // user: process.env.USER, // Your email
-    // pass: process.env.PASS // Your email password or app password
     user: process.env.USER ,
     pass : process.env.PASS 
   }
