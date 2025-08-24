@@ -38,7 +38,7 @@ import { authenticate, companyFilter } from './middleware/companyAuth.js';
 import invitationRoutes from './routes/invitationRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import { startAllJobs } from './Jobs/index.js'; // Import the job scheduler
-import { startExpiryReminderScheduler } from './jobs/paymentExpiryScheduler.js';
+import { startExpiryReminderScheduler } from './Jobs/paymentExpiryScheduler.js';
 import objectiveRoutes from './routes/objectiveRoutes.js';
 import offboardingRoutes from './routes/offboardingRoutes.js';
 import resignationRoutes from './routes/resignationRoutes.js';
