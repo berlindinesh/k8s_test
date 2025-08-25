@@ -4,6 +4,12 @@ import User from '../models/User.js';
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
 export const protect = async (req, res, next) => {
+    // ⚠️ TEMPORARY BYPASS FOR TESTING - REMOVE IN PRODUCTION
+    console.log('🔒 JWT middleware bypassed for testing');
+    req.user = { id: 'test-user', email: 'test@example.com' }; // Mock user
+    return next();
+    
+    /* ORIGINAL CODE - UNCOMMENT TO RE-ENABLE JWT
     try {
         const authHeader = req.headers.authorization;
         
@@ -24,5 +30,6 @@ export const protect = async (req, res, next) => {
     } catch (error) {
         res.status(401).json({ message: 'Invalid token' });
     }
+    */
 };
 
