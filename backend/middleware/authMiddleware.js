@@ -10,12 +10,12 @@ export const protect = async (req, res, next) => {
         return next();
     }
     
-    // ⚠️ TEMPORARY BYPASS FOR TESTING - REMOVE IN PRODUCTION
-    console.log('🔒 JWT middleware bypassed for testing');
-    req.user = { id: 'test-user', email: 'test@example.com' }; // Mock user
-    return next();
+    // // ⚠️ TEMPORARY BYPASS FOR TESTING - REMOVE IN PRODUCTION
+    // console.log('🔒 JWT middleware bypassed for testing');
+    // req.user = { id: 'test-user', email: 'test@example.com' }; // Mock user
+    // return next();
     
-    /* ORIGINAL CODE - UNCOMMENT TO RE-ENABLE JWT
+    // ORIGINAL CODE - UNCOMMENT TO RE-ENABLE JWT
     try {
         const authHeader = req.headers.authorization;
         
@@ -36,6 +36,6 @@ export const protect = async (req, res, next) => {
     } catch (error) {
         res.status(401).json({ message: 'Invalid token' });
     }
-    */
+    
 };
 

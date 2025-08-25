@@ -13,7 +13,7 @@ export default function authHeader() {
     }
     
     if (companyCode) {
-      headers['X-Company-Code'] = companyCode;
+      headers['x-Company-Code'] = companyCode;
     }
     
     return headers;
