@@ -266,6 +266,15 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 
+// Health check endpoint (no auth required)
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'healthy', 
+    timestamp: new Date().toISOString(),
+    service: 'hrms-backend'
+  });
+});
+
 app.use('/api/users', userRoutes);
 
 // IMPORTANT: Do NOT apply authentication middleware globally here

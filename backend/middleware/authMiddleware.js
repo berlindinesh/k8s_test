@@ -4,6 +4,12 @@ import User from '../models/User.js';
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
 export const protect = async (req, res, next) => {
+    // Skip authentication for health check endpoint
+    if (req.path === '/health' || req.originalUrl === '/api/health') {
+        console.log('🏥 Health check - skipping auth');
+        return next();
+    }
+    
     // ⚠️ TEMPORARY BYPASS FOR TESTING - REMOVE IN PRODUCTION
     console.log('🔒 JWT middleware bypassed for testing');
     req.user = { id: 'test-user', email: 'test@example.com' }; // Mock user
