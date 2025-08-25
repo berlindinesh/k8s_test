@@ -17,24 +17,24 @@ const router = express.Router();
 router.use(authenticate);
 
 // Get all survey templates
-router.get('/api/recruitment-survey', getAllTemplates);
+router.get('/recruitment-survey', getAllTemplates);
 
 // Add a new template
-router.post('/api/recruitment-survey/add', addTemplate);
+router.post('/recruitment-survey/add', addTemplate);
 
 // Add a new question to an existing template
-router.post('/api/recruitment-survey/:templateId/questions', addQuestionToTemplate);
+router.post('/recruitment-survey/:templateId/questions', addQuestionToTemplate);
 
 // Edit a template by ID
-router.put('/api/recruitment-survey/:id', updateTemplate);
+router.put('/recruitment-survey/:id', updateTemplate);
 
 // Edit a question in a template
-router.put('/api/recruitment-survey/:templateId/questions/:questionId', updateQuestion);
+router.put('/recruitment-survey/:templateId/questions/:questionId', updateQuestion);
 
 // Delete a question by template and question ID
-router.delete('/api/recruitment-survey/:templateId/questions/:questionId', deleteQuestion);
+router.delete('/recruitment-survey/:templateId/questions/:questionId', deleteQuestion);
 
 // Delete a template by ID
-router.delete('/api/recruitment-survey/:id', deleteTemplate);
+router.delete('/recruitment-survey/:id', deleteTemplate);
 
 export default router;

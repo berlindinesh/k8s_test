@@ -15,21 +15,21 @@ const router = express.Router();
 router.use(authenticate);
 
 // Get all skills
-router.get('/api/skill-zone', getAllSkills);
+router.get('/skill-zone', getAllSkills);
 
 // Add a new skill
-router.post('/api/skill-zone', addSkill);
+router.post('/skill-zone', addSkill);
 
 // Add a candidate to a skill
-router.post('/api/skill-zone/:skillId/candidates', addCandidate);
+router.post('/skill-zone/:skillId/candidates', addCandidate);
 
 // Update a candidate in a skill
-router.put('/api/skill-zone/:skillId/candidates/:candidateId', updateCandidate);
+router.put('/skill-zone/:skillId/candidates/:candidateId', updateCandidate);
 
 // Delete a candidate from a skill
-router.delete('/api/skill-zone/:skillId/candidates/:candidateId', deleteCandidate);
+router.delete('/skill-zone/:skillId/candidates/:candidateId', deleteCandidate);
 
 // Delete a skill
-router.delete('/api/skill-zone/:skillId', deleteSkill);
+router.delete('/skill-zone/:skillId', deleteSkill);
 
 export default router;

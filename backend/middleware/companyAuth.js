@@ -6,6 +6,25 @@ export const authenticate = async (req, res, next) => {
   try {
     console.log("Authentication middleware called for:", req.method, req.url);
     console.log("Headers:", req.headers);
+
+    // ✅ Skip auth for public + infra requests
+    const publicExact = new Set([
+      '/',                // root
+      '/favicon.ico',     // browser favicon fetch
+      '/api/health'       // health endpoint already public
+    ]);
+
+    // Skip CORS preflight and static uploads
+    const isPreflight = req.method === 'OPTIONS';
+    const isPublicExact = publicExact.has(req.path);
+    const isUploads = req.path?.startsWith('/uploads/');
+
+    if (isPreflight || isPublicExact || isUploads) {
+      return next();
+    }
+
+    console.log("Authentication middleware called for:", req.method, req.url);
+    console.log("Headers:", req.headers);
     
     // Get token from header
     const authHeader = req.headers.authorization;
@@ -20,7 +39,7 @@ export const authenticate = async (req, res, next) => {
     console.log("Token extracted:", token.substring(0, 10) + "...");
     
     // Get company code from header
-    const companyCode = req.headers['x-company-code'];
+    const companyCode = req.headers['x-Company-Code'];
     if (!companyCode) {
       console.log("Missing company code header");
       return res.status(401).json({ message: 'Company code required' });
@@ -116,7 +135,7 @@ export const authorize = (permissions) => {
 // Company filter middleware
 export const companyFilter = (req, res, next) => {
   // Add company code to request if it exists in headers
-  const companyCode = req.headers['x-company-code'];
+  const companyCode = req.headers['x-Company-Code'];
   if (companyCode) {
     req.companyCode = companyCode;
   }

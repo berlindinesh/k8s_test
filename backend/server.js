@@ -295,11 +295,11 @@ app.use('/api/payments', (req, res, next) => {
 // Protected routes - these routes should handle their own authentication
 app.use("/api/employees", employeesRouter);
 app.use("/api/profiles", profileRouter);
-app.use(candidateRoutes);
-app.use(surveyRoutes);
+app.use('/api', candidateRoutes);
+app.use('/api',surveyRoutes);
 app.use('/api/applicantProfiles', applicantProfileRoutes);
 app.use('/api/interviews', interviewRoutes);
-app.use(skillZoneRoutes);
+app.use('/api',skillZoneRoutes);
 app.use('/api/employees',employeeRoutes);
 app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/dashboard', assetDashboardRoutes);
