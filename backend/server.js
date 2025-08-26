@@ -35,6 +35,7 @@ import companyRoutes from './routes/companyRoutes.js';
 import roleRoutes from './routes/roleRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import { authenticate, companyFilter } from './middleware/companyAuth.js';
+import { protect } from "./middleware/authMiddleware.js";
 import invitationRoutes from './routes/invitationRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import { startAllJobs } from './Jobs/index.js'; // Import the job scheduler
@@ -210,7 +211,8 @@ const corsOptions = {
     'Authorization',
     'Access-Control-Allow-Methods',
     'Access-Control-Allow-Origin',
-    'X-Company-Code'
+    'X-Company-Code',
+    'x-company-code'
   ]
 };
 app.use(cors(corsOptions));
@@ -275,7 +277,12 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-app.use('/api/users', userRoutes);
+app.get('/', (req, res) => {
+  res.send('Welcome to the HRMS Backend API');
+});
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+
+app.use("/logo", express.static(path.join(__dirname, "public/logo")));
 
 // IMPORTANT: Do NOT apply authentication middleware globally here
 // Instead, apply it within each route file for protected routes only
@@ -342,7 +349,7 @@ app.use('/api/invitations', invitationRoutes);
 // After creating the io instance
 app.set('io', io);
 
-app.use('/api/roles', roleRoutes);
+
 
 const PORT = process.env.PORT || 5002;
 
